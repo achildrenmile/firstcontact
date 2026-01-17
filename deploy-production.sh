@@ -20,29 +20,27 @@ echo "=========================================="
 echo "Deploying $CONTAINER_NAME to Synology"
 echo "=========================================="
 
-# Check if remote directory exists, if not clone the repo
+# Step 1: Pull latest changes on Synology
 echo ""
-echo "[1/4] Checking remote directory..."
+echo "[1/3] Pulling latest changes..."
 if ssh $SYNOLOGY_HOST "[ -d $REMOTE_DIR ]"; then
-  echo "Directory exists, pulling latest changes..."
   ssh $SYNOLOGY_HOST "cd $REMOTE_DIR && git pull"
 else
   echo "Directory does not exist, cloning repository..."
   ssh $SYNOLOGY_HOST "git clone https://github.com/achildrenmile/firstcontact.git $REMOTE_DIR"
 fi
 
-# Build Docker image (npm install happens inside Docker)
+# Step 2: Build Docker image on Synology (bundling happens inside Docker)
 echo ""
-echo "[2/4] Building Docker image..."
+echo "[2/3] Building Docker image (bundling JS with hash filename)..."
 ssh $SYNOLOGY_HOST "/usr/local/bin/docker build -t $IMAGE_NAME $REMOTE_DIR"
 
-# Stop and remove old container
+# Step 3: Restart container
 echo ""
-echo "[3/4] Restarting container..."
+echo "[3/3] Restarting container..."
 ssh $SYNOLOGY_HOST "/usr/local/bin/docker stop $CONTAINER_NAME 2>/dev/null || true"
 ssh $SYNOLOGY_HOST "/usr/local/bin/docker rm $CONTAINER_NAME 2>/dev/null || true"
 
-# Start new container
 ssh $SYNOLOGY_HOST "/usr/local/bin/docker run -d \
   --name $CONTAINER_NAME \
   --restart unless-stopped \
@@ -56,14 +54,9 @@ ssh $SYNOLOGY_HOST "/usr/local/bin/docker run -d \
 
 # Verify
 echo ""
-echo "[4/4] Verifying deployment..."
-sleep 5
+echo "[Verify] Checking deployment..."
+sleep 3
 
-# First check local port
-LOCAL_CHECK=$(ssh $SYNOLOGY_HOST "curl -s -o /dev/null -w '%{http_code}' --max-time 5 http://localhost:3401/" 2>/dev/null || echo "000")
-echo "Local check (port 3401): HTTP $LOCAL_CHECK"
-
-# Then check public URL
 HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$SITE_URL" 2>/dev/null || echo "000")
 
 if [ "$HTTP_CODE" = "200" ]; then
@@ -73,13 +66,13 @@ if [ "$HTTP_CODE" = "200" ]; then
   echo "$SITE_URL is responding (HTTP $HTTP_CODE)"
   echo "=========================================="
 else
+  # Check local port
+  LOCAL_CHECK=$(ssh $SYNOLOGY_HOST "curl -s -o /dev/null -w '%{http_code}' --max-time 5 http://localhost:3401/" 2>/dev/null || echo "000")
   echo ""
   echo "Local container check: HTTP $LOCAL_CHECK"
   echo "Public URL check: HTTP $HTTP_CODE"
-  echo ""
   if [ "$LOCAL_CHECK" = "200" ]; then
     echo "Container is running. Cloudflare tunnel may need configuration."
-    echo "Add route for firstcontact.oeradio.at -> http://localhost:3401"
   else
     echo "WARNING: Container may not be healthy"
     echo "Check logs: ssh $SYNOLOGY_HOST '/usr/local/bin/docker logs $CONTAINER_NAME'"

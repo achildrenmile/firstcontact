@@ -6,6 +6,7 @@
   "scripts": {
     "build": "esbuild js/app.js --bundle --minify --outfile=dist/app.bundle.js --format=iife",
     "build:dev": "esbuild js/app.js --bundle --outfile=dist/app.bundle.js --format=iife --sourcemap",
+    "build:prod": "rm -rf dist && esbuild js/app.js --bundle --minify --outdir=dist --entry-names=app.[hash] --format=iife",
     "watch": "esbuild js/app.js --bundle --outfile=dist/app.bundle.js --format=iife --sourcemap --watch",
     "serve": "python3 -m http.server 8000"
   },

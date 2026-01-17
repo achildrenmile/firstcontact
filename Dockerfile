@@ -1,5 +1,5 @@
 # First Contact - Shortwave Propagation Simulator
-# Multi-stage build: Node.js for bundling, nginx for serving
+# Multi-stage build: Node.js for bundling with hash, nginx for serving
 
 # Stage 1: Build
 FROM node:20-alpine AS builder
@@ -14,22 +14,26 @@ RUN npm install
 
 # Copy source files
 COPY js/ ./js/
+COPY index.prod.html ./
 
-# Bundle JavaScript
-RUN npm run build
+# Bundle JavaScript with hash filename and update HTML
+RUN npm run build:prod && \
+    BUNDLE_FILE=$(ls dist/ | grep -E '^app\.[a-zA-Z0-9]+\.js$' | head -1) && \
+    echo "Generated bundle: $BUNDLE_FILE" && \
+    sed -i "s|app\.[a-zA-Z0-9_]*\.js|$BUNDLE_FILE|g" index.prod.html
 
 # Stage 2: Production
 FROM nginx:alpine
 
 # Copy static files
-COPY index.prod.html /usr/share/nginx/html/index.html
 COPY css/ /usr/share/nginx/html/css/
 COPY favicon.svg /usr/share/nginx/html/
 COPY world.json /usr/share/nginx/html/
 COPY countries.json /usr/share/nginx/html/
 
-# Copy bundled JavaScript from builder
-COPY --from=builder /app/dist/app.bundle.js /usr/share/nginx/html/
+# Copy bundled JavaScript and updated HTML from builder
+COPY --from=builder /app/dist/*.js /usr/share/nginx/html/
+COPY --from=builder /app/index.prod.html /usr/share/nginx/html/index.html
 
 # Custom nginx config
 RUN echo 'server { \
@@ -42,7 +46,7 @@ RUN echo 'server { \
         try_files $uri $uri/ /index.html; \
     } \
     \
-    # Cache static assets \
+    # Cache static assets with hash in filename forever \
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|json)$ { \
         expires 1y; \
         add_header Cache-Control "public, immutable"; \
