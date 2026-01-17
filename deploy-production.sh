@@ -22,7 +22,7 @@ echo "=========================================="
 
 # Check if remote directory exists, if not clone the repo
 echo ""
-echo "[1/5] Checking remote directory..."
+echo "[1/4] Checking remote directory..."
 if ssh $SYNOLOGY_HOST "[ -d $REMOTE_DIR ]"; then
   echo "Directory exists, pulling latest changes..."
   ssh $SYNOLOGY_HOST "cd $REMOTE_DIR && git pull"
@@ -31,19 +31,14 @@ else
   ssh $SYNOLOGY_HOST "git clone https://github.com/achildrenmile/firstcontact.git $REMOTE_DIR"
 fi
 
-# Install npm dependencies for build
+# Build Docker image (npm install happens inside Docker)
 echo ""
-echo "[2/5] Installing build dependencies..."
-ssh $SYNOLOGY_HOST "cd $REMOTE_DIR && npm install"
-
-# Build Docker image
-echo ""
-echo "[3/5] Building Docker image..."
+echo "[2/4] Building Docker image..."
 ssh $SYNOLOGY_HOST "/usr/local/bin/docker build -t $IMAGE_NAME $REMOTE_DIR"
 
 # Stop and remove old container
 echo ""
-echo "[4/5] Restarting container..."
+echo "[3/4] Restarting container..."
 ssh $SYNOLOGY_HOST "/usr/local/bin/docker stop $CONTAINER_NAME 2>/dev/null || true"
 ssh $SYNOLOGY_HOST "/usr/local/bin/docker rm $CONTAINER_NAME 2>/dev/null || true"
 
@@ -61,7 +56,7 @@ ssh $SYNOLOGY_HOST "/usr/local/bin/docker run -d \
 
 # Verify
 echo ""
-echo "[5/5] Verifying deployment..."
+echo "[4/4] Verifying deployment..."
 sleep 5
 
 # First check local port
