@@ -582,11 +582,12 @@ export default {
         title: 'Imprint',
         info: 'Information according to § 5 ECG and § 25 MedienG (Austrian law)',
         operator: 'Operator',
-        operatorName: 'Strali',
+        operatorName: 'Michael Linder',
         operatorCallsign: 'OE8YML',
-        operatorAddress: 'Carinthia, Austria',
+        operatorAddress: 'Nötsch 219, 9611 Nötsch',
+        operatorCountry: 'Austria',
         contact: 'Contact',
-        contactEmail: 'oe8yml@oevsv.at',
+        contactEmail: 'oe8yml@rednil.at',
         liability: {
             title: 'Liability for Content',
             text: 'The contents of this website have been created with the greatest care. However, we cannot guarantee the accuracy, completeness, or timeliness of the content. This website serves exclusively educational purposes and simulates shortwave propagation.'

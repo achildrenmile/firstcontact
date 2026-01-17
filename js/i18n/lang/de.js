@@ -582,11 +582,12 @@ export default {
         title: 'Impressum',
         info: 'Angaben gemäß § 5 ECG und § 25 MedienG',
         operator: 'Betreiber',
-        operatorName: 'Strali',
+        operatorName: 'Michael Linder',
         operatorCallsign: 'OE8YML',
-        operatorAddress: 'Kärnten, Österreich',
+        operatorAddress: 'Nötsch 219, 9611 Nötsch',
+        operatorCountry: 'Österreich',
         contact: 'Kontakt',
-        contactEmail: 'oe8yml@oevsv.at',
+        contactEmail: 'oe8yml@rednil.at',
         liability: {
             title: 'Haftung für Inhalte',
             text: 'Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte übernehmen wir jedoch keine Gewähr. Diese Website dient ausschließlich Bildungszwecken und simuliert die Kurzwellenausbreitung.'

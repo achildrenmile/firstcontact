@@ -268,6 +268,7 @@ class FirstContactApp {
                             <p><strong>${t('imprint.operatorName')}</strong></p>
                             <p>${t('imprint.operatorCallsign')}</p>
                             <p>${t('imprint.operatorAddress')}</p>
+                            <p>${t('imprint.operatorCountry')}</p>
                         </div>
                     </div>
 
