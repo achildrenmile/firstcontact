@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Contact - Demo</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div>
+                <h1 class="app-title">First Contact</h1>
+                <p class="app-subtitle">Deine Reise in die Welt der Kurzwelle</p>
+            </div>
+            <div class="header-actions">
+                <span class="version">v0.1.0</span>
+            </div>
+        </header>
+        <aside class="panel panel-left">
+            <div id="controls-panel"></div>
+        </aside>
+        <main class="panel panel-center">
+            <div class="map-container">
+                <canvas id="world-map"></canvas>
+            </div>
+        </main>
+        <aside class="panel panel-right">
+            <div id="feedback-panel"></div>
+        </aside>
+    </div>
+    <script type="module">
+        import { initI18n, t } from './js/i18n/i18n.js';
+        import { Location, PRESET_LOCATIONS, calculateDistance } from './js/models/location.js';
+        import { HF_BANDS } from './js/models/bands.js';
+        import { evaluatePropagation } from './js/systems/propagation-engine.js';
+        import { generateExplanation } from './js/systems/explanation-engine.js';
+        import { getLightingCondition } from './js/systems/sun-position.js';
+        import { WorldMap } from './js/ui/world-map.js';
+        import { ControlsPanel } from './js/ui/controls-panel.js';
+        import { FeedbackPanel } from './js/ui/feedback-panel.js';
+
+        async function init() {
+            await initI18n();
+            
+            const state = {
+                playerLocation: PRESET_LOCATIONS.newYork,
+                targetLocation: PRESET_LOCATIONS.berlin,
+                selectedBand: '20m',
+                currentTime: new Date('2025-01-15T14:00:00Z'),
+                lastResult: null,
+                lastBandResult: {},
+                contactAttempts: 1,
+                successfulContacts: 0,
+                bandsTriedSet: new Set(['20m']),
+                discoveries: {},
+                dayFailedNightSucceeded: false,
+                higherBandFartherSuccess: false
+            };
+
+            // Update header
+            document.querySelector('.app-title').textContent = t('app.title');
+            document.querySelector('.app-subtitle').textContent = t('app.subtitle');
+
+            const worldMap = new WorldMap('world-map', { onLocationClick: () => {} });
+            worldMap.setPlayerLocation(state.playerLocation);
+            worldMap.setTime(state.currentTime);
+
+            const controlsPanel = new ControlsPanel('controls-panel', {
+                onBandChange: () => {},
+                onTimeChange: () => {}
+            });
+
+            const feedbackPanel = new FeedbackPanel('feedback-panel');
+
+            // Auto contact attempt
+            setTimeout(() => {
+                worldMap.setTargetLocation(state.targetLocation);
+                
+                const result = evaluatePropagation({
+                    source: state.playerLocation,
+                    target: state.targetLocation,
+                    bandId: state.selectedBand,
+                    dateTime: state.currentTime
+                });
+
+                const explanation = generateExplanation(result, {
+                    bandId: state.selectedBand,
+                    source: state.playerLocation,
+                    target: state.targetLocation,
+                    dateTime: state.currentTime
+                });
+
+                worldMap.showSignalPath(result.path, result.success);
+                feedbackPanel.showResult(explanation);
+            }, 1000);
+        }
+
+        init();
+    </script>
+</body>
+</html>

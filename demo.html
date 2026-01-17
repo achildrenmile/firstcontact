@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Contact - Demo</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div>
+                <h1 class="app-title">First Contact</h1>
+                <p class="app-subtitle">Your Journey into Shortwave Radio</p>
+            </div>
+            <div class="header-actions">
+                <span class="version">v0.1.0 DEMO</span>
+            </div>
+        </header>
+        <aside class="panel panel-left">
+            <div id="controls-panel"></div>
+        </aside>
+        <main class="panel panel-center">
+            <div class="map-container">
+                <canvas id="world-map"></canvas>
+            </div>
+        </main>
+        <aside class="panel panel-right">
+            <div id="feedback-panel"></div>
+        </aside>
+    </div>
+    <script type="module">
+        import { Location, PRESET_LOCATIONS, calculateDistance } from './js/models/location.js';
+        import { HF_BANDS } from './js/models/bands.js';
+        import { evaluatePropagation } from './js/systems/propagation-engine.js';
+        import { generateExplanation } from './js/systems/explanation-engine.js';
+        import { getLightingCondition } from './js/systems/sun-position.js';
+        import { WorldMap } from './js/ui/world-map.js';
+        import { ControlsPanel } from './js/ui/controls-panel.js';
+        import { FeedbackPanel } from './js/ui/feedback-panel.js';
+
+        class FirstContactDemo {
+            constructor() {
+                this.state = {
+                    playerLocation: PRESET_LOCATIONS.newYork,
+                    targetLocation: null,
+                    selectedBand: '20m',
+                    currentTime: new Date(),
+                    lastResult: null,
+                    lastBandResult: {},
+                    contactAttempts: 0,
+                    successfulContacts: 0,
+                    bandsTriedSet: new Set(),
+                    discoveries: {},
+                    dayFailedNightSucceeded: false,
+                    higherBandFartherSuccess: false
+                };
+                this.initializeUI();
+                this.setTime(new Date('2025-01-15T14:00:00Z'));
+                
+                // Auto-demo: attempt contact with Tokyo after 1 second
+                setTimeout(() => this.runDemo(), 1500);
+            }
+
+            initializeUI() {
+                this.worldMap = new WorldMap('world-map', {
+                    onLocationClick: (location) => this.handleLocationClick(location)
+                });
+                this.worldMap.setPlayerLocation(this.state.playerLocation);
+                this.controlsPanel = new ControlsPanel('controls-panel', {
+                    onBandChange: (bandId) => this.handleBandChange(bandId),
+                    onTimeChange: (time) => this.handleTimeChange(time)
+                });
+                this.feedbackPanel = new FeedbackPanel('feedback-panel');
+                this.updateConditionsDisplay();
+            }
+
+            runDemo() {
+                // Simulate clicking on Tokyo
+                this.handleLocationClick(PRESET_LOCATIONS.tokyo);
+            }
+
+            handleLocationClick(location) {
+                if (location === this.state.playerLocation) return;
+                this.state.targetLocation = location;
+                this.worldMap.setTargetLocation(location);
+                this.attemptContact();
+            }
+
+            handleBandChange(bandId) {
+                this.state.selectedBand = bandId;
+                this.state.bandsTriedSet.add(bandId);
+                if (this.state.targetLocation) this.attemptContact();
+            }
+
+            handleTimeChange(time) {
+                this.setTime(time);
+                if (this.state.targetLocation) this.attemptContact();
+            }
+
+            setTime(time) {
+                this.state.currentTime = time;
+                this.worldMap.setTime(time);
+                this.updateConditionsDisplay();
+            }
+
+            attemptContact() {
+                if (!this.state.targetLocation) return;
+                const result = evaluatePropagation({
+                    source: this.state.playerLocation,
+                    target: this.state.targetLocation,
+                    bandId: this.state.selectedBand,
+                    dateTime: this.state.currentTime
+                });
+                this.state.lastResult = result;
+                this.state.lastBandResult[this.state.selectedBand] = result;
+                this.state.contactAttempts++;
+                if (result.success) this.state.successfulContacts++;
+
+                const explanation = generateExplanation(result, {
+                    bandId: this.state.selectedBand,
+                    source: this.state.playerLocation,
+                    target: this.state.targetLocation,
+                    dateTime: this.state.currentTime
+                });
+                this.worldMap.showSignalPath(result.path, result.success);
+                this.feedbackPanel.showResult(explanation);
+                this.updateConditionsDisplay();
+            }
+
+            updateConditionsDisplay() {
+                const conditions = getLightingCondition(
+                    this.state.playerLocation.latitude,
+                    this.state.playerLocation.longitude,
+                    this.state.currentTime
+                );
+                let html = '<div class="current-conditions">' +
+                    '<div class="condition-item"><span class="condition-label">Your location:</span>' +
+                    '<span class="condition-value">' + this.state.playerLocation.name + '</span></div>' +
+                    '<div class="condition-item"><span class="condition-label">Local conditions:</span>' +
+                    '<span class="condition-value">' + conditions.description + '</span></div>' +
+                    '<p class="condition-note">' + conditions.educational + '</p></div>';
+
+                if (this.state.targetLocation) {
+                    const targetConditions = getLightingCondition(
+                        this.state.targetLocation.latitude,
+                        this.state.targetLocation.longitude,
+                        this.state.currentTime
+                    );
+                    const distance = calculateDistance(
+                        this.state.playerLocation.latitude, this.state.playerLocation.longitude,
+                        this.state.targetLocation.latitude, this.state.targetLocation.longitude
+                    );
+                    html += '<div class="target-conditions">' +
+                        '<div class="condition-item"><span class="condition-label">Target:</span>' +
+                        '<span class="condition-value">' + this.state.targetLocation.name + '</span></div>' +
+                        '<div class="condition-item"><span class="condition-label">Distance:</span>' +
+                        '<span class="condition-value">' + Math.round(distance).toLocaleString() + ' km</span></div>' +
+                        '<div class="condition-item"><span class="condition-label">Target conditions:</span>' +
+                        '<span class="condition-value">' + targetConditions.description + '</span></div></div>';
+                }
+                this.controlsPanel.updateConditionsDisplay(html);
+            }
+        }
+
+        window.app = new FirstContactDemo();
+    </script>
+</body>
+</html>
