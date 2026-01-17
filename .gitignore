@@ -9,9 +9,15 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Node modules (if added later)
+# Node modules
 node_modules/
+
+# Build output
+dist/
 
 # Temporary files
 *.tmp
 *.log
+
+# Package lock (optional, can be committed)
+package-lock.json

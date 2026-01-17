@@ -149,7 +149,7 @@ firstcontact/
 - Safari 13+
 - Edge 80+
 
-## Docker
+## Docker (Production)
 
 ```bash
 # Build and run with Docker
@@ -162,9 +162,14 @@ docker-compose up -d
 
 Open `http://localhost:8080` in your browser.
 
+The Docker build:
+- Bundles all JavaScript into a single minified file (~50KB)
+- Uses nginx:alpine for minimal image size (~25MB)
+- Enables gzip compression and caching
+
 ## Development
 
-No build process required! Just edit files and refresh.
+For development, use ES modules directly (no build required):
 
 ```bash
 # Start development server
@@ -173,6 +178,28 @@ python3 -m http.server 8000
 # Or with Node.js
 npx serve .
 ```
+
+Open `http://localhost:8000` - uses `index.html` with ES modules.
+
+## Build
+
+To create a production bundle locally:
+
+```bash
+# Install dependencies
+npm install
+
+# Build minified bundle
+npm run build
+
+# Build with sourcemaps (for debugging)
+npm run build:dev
+
+# Watch mode (auto-rebuild on changes)
+npm run watch
+```
+
+Output: `dist/app.bundle.js`
 
 ## License
 

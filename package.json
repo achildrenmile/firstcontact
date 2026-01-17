@@ -1,0 +1,23 @@
+{
+  "name": "firstcontact",
+  "version": "0.1.0",
+  "description": "Shortwave Radio Propagation Simulator",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild js/app.js --bundle --minify --outfile=dist/app.bundle.js --format=iife",
+    "build:dev": "esbuild js/app.js --bundle --outfile=dist/app.bundle.js --format=iife --sourcemap",
+    "watch": "esbuild js/app.js --bundle --outfile=dist/app.bundle.js --format=iife --sourcemap --watch",
+    "serve": "python3 -m http.server 8000"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.0"
+  },
+  "keywords": [
+    "amateur-radio",
+    "shortwave",
+    "propagation",
+    "simulator",
+    "education"
+  ],
+  "license": "MIT"
+}

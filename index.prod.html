@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Contact - Your Journey into Shortwave Radio</title>
+    <meta name="description" content="Learn how shortwave radio propagation works through experimentation, visual feedback, and guided discovery.">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div>
+                <h1 class="app-title">First Contact</h1>
+                <p class="app-subtitle">Your Journey into Shortwave Radio</p>
+            </div>
+            <div class="header-actions">
+                <button class="header-button" id="tutorial-button">
+                    <span>📚</span> <span class="btn-text">Tutorial</span>
+                </button>
+                <button class="header-button" id="help-button">
+                    <span>❓</span> <span class="btn-text">Help</span>
+                </button>
+                <span class="version">v0.1.0</span>
+            </div>
+        </header>
+
+        <!-- Left Panel: Controls -->
+        <aside class="panel panel-left">
+            <div id="controls-panel"></div>
+        </aside>
+
+        <!-- Center: World Map -->
+        <main class="panel panel-center">
+            <div class="map-container">
+                <canvas id="world-map"></canvas>
+            </div>
+        </main>
+
+        <!-- Right Panel: Feedback -->
+        <aside class="panel panel-right">
+            <div id="feedback-panel"></div>
+        </aside>
+    </div>
+
+    <!-- Bundled application -->
+    <script src="app.bundle.js"></script>
+</body>
+</html>

@@ -4,9 +4,6 @@
 
 # Documentation (not needed in container)
 *.md
-ARCHITECTURE.md
-EDUCATIONAL_DESIGN.md
-EXPANSION_ROADMAP.md
 
 # Demo and screenshot files
 demo*.html
@@ -25,7 +22,9 @@ world-map-data.txt
 .DS_Store
 Thumbs.db
 
-# Docker
-Dockerfile
-docker-compose.yml
-.dockerignore
+# Node modules (will be installed in container)
+node_modules/
+dist/
+
+# Development files
+index.html
