@@ -501,6 +501,11 @@ body {
     border: 1px solid rgba(100, 150, 200, 0.2);
     position: relative;
     z-index: 0;
+    /* Mobile touch optimization */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    max-width: 100%;
+    height: auto;
 }
 
 /* Feedback Panel */
@@ -963,6 +968,17 @@ body {
         grid-template-rows: auto auto auto auto;
     }
 
+    .app-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
     .panel-left {
         grid-column: 1;
         grid-row: 2;
@@ -971,11 +987,161 @@ body {
     .panel-center {
         grid-column: 1;
         grid-row: 3;
+        min-height: 300px;
     }
 
     .panel-right {
         grid-column: 1;
         grid-row: 4;
+    }
+
+    .map-container {
+        min-height: 280px;
+    }
+
+    #world-map {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* Mobile phones */
+@media (max-width: 600px) {
+    .app-header {
+        padding: 0.75rem;
+    }
+
+    .app-title {
+        font-size: 1.2rem;
+    }
+
+    .app-subtitle {
+        font-size: 0.8rem;
+    }
+
+    .header-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .header-button {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .panel {
+        padding: 0.75rem;
+    }
+
+    .control-section h3 {
+        font-size: 0.75rem;
+    }
+
+    .band-button {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .time-presets {
+        flex-wrap: wrap;
+    }
+
+    .time-preset {
+        flex: 1 1 45%;
+        padding: 0.4rem;
+        font-size: 0.75rem;
+    }
+
+    /* Language buttons */
+    .lang-button {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    .lang-name {
+        display: none;
+    }
+
+    /* Feedback panel */
+    .result-card {
+        padding: 1rem;
+    }
+
+    .result-title {
+        font-size: 1.1rem;
+    }
+
+    .factor-item {
+        padding: 0.5rem;
+    }
+
+    /* Help modal */
+    .help-modal {
+        margin: 0.5rem;
+        max-height: 90vh;
+    }
+
+    .help-modal-header {
+        padding: 1rem;
+    }
+
+    .help-modal-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .help-modal-content {
+        padding: 1rem;
+    }
+
+    .help-section h3 {
+        font-size: 0.9rem;
+    }
+
+    .help-section p,
+    .help-section li {
+        font-size: 0.85rem;
+    }
+
+    /* Tutorial */
+    .tutorial-tooltip {
+        max-width: 280px;
+        padding: 1rem;
+    }
+
+    .tutorial-tooltip h3 {
+        font-size: 1rem;
+    }
+
+    .tutorial-tooltip p {
+        font-size: 0.85rem;
+    }
+
+    .tutorial-nav button {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Touch-friendly adjustments */
+@media (hover: none) and (pointer: coarse) {
+    /* Larger touch targets */
+    .band-button,
+    .time-preset,
+    .header-button,
+    .lang-button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Better spacing for touch */
+    .band-selector {
+        gap: 0.5rem;
+    }
+
+    /* Remove hover effects that don't work on touch */
+    .band-button:hover,
+    .time-preset:hover {
+        transform: none;
     }
 }
 

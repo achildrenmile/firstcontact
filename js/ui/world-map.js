@@ -23,12 +23,14 @@ export class WorldMap {
         this.canvas = document.getElementById(canvasId);
         this.ctx = this.canvas.getContext('2d');
 
-        // Map dimensions and projection
-        this.width = options.width || 900;
-        this.height = options.height || 450;
+        // Map dimensions and projection (base size, will be scaled)
+        this.baseWidth = options.width || 900;
+        this.baseHeight = options.height || 450;
+        this.width = this.baseWidth;
+        this.height = this.baseHeight;
 
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
+        // Initial sizing
+        this.updateCanvasSize();
 
         // State
         this.currentTime = new Date();
@@ -69,6 +71,66 @@ export class WorldMap {
 
         // Load world map TopoJSON data
         this.loadTopoJSON();
+
+        // Setup resize handler
+        this.setupResizeHandler();
+    }
+
+    /**
+     * Update canvas size based on container width
+     */
+    updateCanvasSize() {
+        const container = this.canvas.parentElement;
+        if (!container) {
+            this.canvas.width = this.baseWidth;
+            this.canvas.height = this.baseHeight;
+            return;
+        }
+
+        // Get available width (with some padding)
+        const availableWidth = container.clientWidth - 20;
+        const maxWidth = Math.min(availableWidth, this.baseWidth);
+
+        // Maintain 2:1 aspect ratio
+        this.width = Math.max(300, maxWidth);
+        this.height = this.width / 2;
+
+        // Set canvas dimensions
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+
+        // For high-DPI displays
+        const dpr = window.devicePixelRatio || 1;
+        if (dpr > 1) {
+            this.canvas.width = this.width * dpr;
+            this.canvas.height = this.height * dpr;
+            this.canvas.style.width = this.width + 'px';
+            this.canvas.style.height = this.height + 'px';
+            this.ctx.scale(dpr, dpr);
+        }
+    }
+
+    /**
+     * Setup window resize handler
+     */
+    setupResizeHandler() {
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            // Debounce resize events
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                this.updateCanvasSize();
+                this.render();
+            }, 100);
+        });
+
+        // Also handle orientation change on mobile
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                this.updateCanvasSize();
+                this.render();
+            }, 200);
+        });
     }
 
     /**
@@ -211,36 +273,85 @@ export class WorldMap {
     }
 
     /**
+     * Get canvas coordinates from event (handles scaling)
+     */
+    getCanvasCoords(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        // Scale coordinates from display size to logical size
+        const scaleX = this.width / rect.width;
+        const scaleY = this.height / rect.height;
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
+        return { x, y };
+    }
+
+    /**
      * Setup mouse/touch event listeners
      */
     setupEventListeners() {
-        this.canvas.addEventListener('click', (e) => {
+        // Handle both click and touch events
+        const handleInteraction = (e) => {
+            // Prevent default to avoid double-firing on touch devices
+            if (e.type === 'touchend') {
+                e.preventDefault();
+            }
+
+            // Get coordinates from touch or click
+            let clientX, clientY;
+            if (e.changedTouches && e.changedTouches.length > 0) {
+                clientX = e.changedTouches[0].clientX;
+                clientY = e.changedTouches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
             const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            const scaleX = this.width / rect.width;
+            const scaleY = this.height / rect.height;
+            const x = (clientX - rect.left) * scaleX;
+            const y = (clientY - rect.top) * scaleY;
 
             // Convert to lat/lon
             const { lat, lon } = this.pixelToLatLon(x, y);
 
-            // Find nearest preset location
-            const nearest = this.findNearestLocation(lat, lon);
+            // Find nearest preset location (larger touch target on mobile)
+            const isMobile = e.type.startsWith('touch');
+            const nearest = this.findNearestLocation(lat, lon, isMobile ? 60 : 50);
 
             if (nearest) {
                 this.onLocationClick(nearest);
             }
-        });
+        };
 
-        // Hover effect
+        this.canvas.addEventListener('click', handleInteraction);
+        this.canvas.addEventListener('touchend', handleInteraction, { passive: false });
+
+        // Hover effect (desktop only)
         this.canvas.addEventListener('mousemove', (e) => {
-            const rect = this.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
+            const { x, y } = this.getCanvasCoords(e);
             const { lat, lon } = this.pixelToLatLon(x, y);
             const nearest = this.findNearestLocation(lat, lon, 30);
 
             this.canvas.style.cursor = nearest ? 'pointer' : 'default';
         });
+
+        // Prevent default touch behaviors on canvas (scrolling, zooming)
+        this.canvas.addEventListener('touchstart', (e) => {
+            // Only prevent if touching a location
+            const touch = e.touches[0];
+            const rect = this.canvas.getBoundingClientRect();
+            const scaleX = this.width / rect.width;
+            const scaleY = this.height / rect.height;
+            const x = (touch.clientX - rect.left) * scaleX;
+            const y = (touch.clientY - rect.top) * scaleY;
+            const { lat, lon } = this.pixelToLatLon(x, y);
+            const nearest = this.findNearestLocation(lat, lon, 60);
+
+            if (nearest) {
+                e.preventDefault();
+            }
+        }, { passive: false });
     }
 
     /**
