@@ -1,0 +1,31 @@
+# Git
+.git
+.gitignore
+
+# Documentation (not needed in container)
+*.md
+ARCHITECTURE.md
+EDUCATIONAL_DESIGN.md
+EXPANSION_ROADMAP.md
+
+# Demo and screenshot files
+demo*.html
+demo*.png
+screenshot*.png
+world-map-data.txt
+
+# Editor/IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

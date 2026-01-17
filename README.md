@@ -149,6 +149,19 @@ firstcontact/
 - Safari 13+
 - Edge 80+
 
+## Docker
+
+```bash
+# Build and run with Docker
+docker build -t firstcontact .
+docker run -p 8080:80 firstcontact
+
+# Or with Docker Compose
+docker-compose up -d
+```
+
+Open `http://localhost:8080` in your browser.
+
 ## Development
 
 No build process required! Just edit files and refresh.
