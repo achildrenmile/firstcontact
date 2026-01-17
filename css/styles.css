@@ -1407,3 +1407,198 @@ body {
 .tutorial-btn-start:hover {
     background-color: #2563eb;
 }
+
+/* === Footer === */
+.app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    text-align: center;
+    z-index: 100;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: var(--text-primary);
+}
+
+.footer-separator {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+/* Adjust app container to account for footer */
+.app-container {
+    padding-bottom: 2.5rem;
+}
+
+/* === Legal Modals (Imprint/Privacy) === */
+.legal-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 1rem;
+}
+
+.legal-modal {
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    max-width: 600px;
+    max-height: 85vh;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.legal-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.legal-modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--text-primary);
+}
+
+.legal-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.legal-modal-close:hover {
+    color: var(--text-primary);
+}
+
+.legal-modal-content {
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: calc(85vh - 80px);
+}
+
+.legal-section {
+    margin-bottom: 1.5rem;
+}
+
+.legal-section:last-child {
+    margin-bottom: 0;
+}
+
+.legal-section h3 {
+    color: var(--accent-primary);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.legal-section p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.legal-section ul {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0.5rem 0 0 1.5rem;
+    padding: 0;
+}
+
+.legal-section li {
+    margin-bottom: 0.25rem;
+}
+
+.legal-info {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+}
+
+.legal-address {
+    background-color: var(--bg-tertiary);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+}
+
+.legal-address p {
+    margin: 0.25rem 0;
+}
+
+.legal-email {
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+
+.legal-email:hover {
+    text-decoration: underline;
+}
+
+/* Mobile adjustments for footer */
+@media (max-width: 600px) {
+    .app-footer {
+        padding: 0.4rem 0.75rem;
+    }
+
+    .footer-links a {
+        font-size: 0.75rem;
+    }
+
+    .footer-separator {
+        font-size: 0.75rem;
+    }
+
+    .legal-modal {
+        max-height: 90vh;
+        margin: 0.5rem;
+    }
+
+    .legal-modal-header {
+        padding: 1rem;
+    }
+
+    .legal-modal-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .legal-modal-content {
+        padding: 1rem;
+        max-height: calc(90vh - 70px);
+    }
+}

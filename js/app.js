@@ -114,6 +114,9 @@ class FirstContactApp {
 
         // Setup header buttons
         this.setupHeaderButtons();
+
+        // Setup footer links
+        this.setupFooterLinks();
     }
 
     /**
@@ -210,6 +213,153 @@ class FirstContactApp {
         };
 
         // ESC key closes
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                overlay.remove();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    }
+
+    /**
+     * Setup footer link event listeners
+     */
+    setupFooterLinks() {
+        const imprintLink = document.getElementById('imprint-link');
+        const privacyLink = document.getElementById('privacy-link');
+
+        if (imprintLink) {
+            imprintLink.onclick = (e) => {
+                e.preventDefault();
+                this.showImprint();
+            };
+        }
+
+        if (privacyLink) {
+            privacyLink.onclick = (e) => {
+                e.preventDefault();
+                this.showPrivacy();
+            };
+        }
+    }
+
+    /**
+     * Show imprint modal
+     */
+    showImprint() {
+        const existing = document.querySelector('.legal-modal-overlay');
+        if (existing) existing.remove();
+
+        const overlay = document.createElement('div');
+        overlay.className = 'legal-modal-overlay';
+        overlay.innerHTML = `
+            <div class="legal-modal">
+                <div class="legal-modal-header">
+                    <h2>${t('imprint.title')}</h2>
+                    <button class="legal-modal-close">&times;</button>
+                </div>
+                <div class="legal-modal-content">
+                    <p class="legal-info">${t('imprint.info')}</p>
+
+                    <div class="legal-section">
+                        <h3>${t('imprint.operator')}</h3>
+                        <div class="legal-address">
+                            <p><strong>${t('imprint.operatorName')}</strong></p>
+                            <p>${t('imprint.operatorCallsign')}</p>
+                            <p>${t('imprint.operatorAddress')}</p>
+                        </div>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${t('imprint.contact')}</h3>
+                        <p><a href="mailto:${t('imprint.contactEmail')}" class="legal-email">${t('imprint.contactEmail')}</a></p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${t('imprint.liability.title')}</h3>
+                        <p>${t('imprint.liability.text')}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${t('imprint.copyright.title')}</h3>
+                        <p>${t('imprint.copyright.text')}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        this.setupModalCloseHandlers(overlay);
+    }
+
+    /**
+     * Show privacy modal
+     */
+    showPrivacy() {
+        const existing = document.querySelector('.legal-modal-overlay');
+        if (existing) existing.remove();
+
+        const overlay = document.createElement('div');
+        overlay.className = 'legal-modal-overlay';
+        overlay.innerHTML = `
+            <div class="legal-modal">
+                <div class="legal-modal-header">
+                    <h2>${t('privacy.title')}</h2>
+                    <button class="legal-modal-close">&times;</button>
+                </div>
+                <div class="legal-modal-content">
+                    <p class="legal-info">${t('privacy.intro')}</p>
+
+                    <div class="legal-section">
+                        <h3>${t('privacy.noData.title')}</h3>
+                        <p>${t('privacy.noData.text')}</p>
+                        <ul>
+                            <li>${t('privacy.noDataList.forms')}</li>
+                            <li>${t('privacy.noDataList.cookies')}</li>
+                            <li>${t('privacy.noDataList.tracking')}</li>
+                            <li>${t('privacy.noDataList.server')}</li>
+                        </ul>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${t('privacy.localStorage.title')}</h3>
+                        <p>${t('privacy.localStorage.text')}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${t('privacy.cloudflare.title')}</h3>
+                        <p>${t('privacy.cloudflare.text')}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${t('privacy.rights.title')}</h3>
+                        <p>${t('privacy.rights.text')}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${t('privacy.contact.title')}</h3>
+                        <p>${t('privacy.contact.text')}</p>
+                        <p><a href="mailto:${t('imprint.contactEmail')}" class="legal-email">${t('imprint.contactEmail')}</a></p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        this.setupModalCloseHandlers(overlay);
+    }
+
+    /**
+     * Setup close handlers for modals
+     */
+    setupModalCloseHandlers(overlay) {
+        const closeBtn = overlay.querySelector('.legal-modal-close');
+        closeBtn.onclick = () => overlay.remove();
+        overlay.onclick = (e) => {
+            if (e.target === overlay) overlay.remove();
+        };
+
         const escHandler = (e) => {
             if (e.key === 'Escape') {
                 overlay.remove();

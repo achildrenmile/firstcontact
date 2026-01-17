@@ -568,5 +568,64 @@ export default {
                 text: 'Probiere verschiedene Band/Zeit-Kombinationen aus. Es gibt keine Fehler - nur Lerngelegenheiten!'
             }
         }
+    },
+
+    // Footer
+    footer: {
+        imprint: 'Impressum',
+        privacy: 'Datenschutz',
+        github: 'GitHub'
+    },
+
+    // Imprint (Impressum)
+    imprint: {
+        title: 'Impressum',
+        info: 'Angaben gemäß § 5 ECG und § 25 MedienG',
+        operator: 'Betreiber',
+        operatorName: 'Strali',
+        operatorCallsign: 'OE8YML',
+        operatorAddress: 'Kärnten, Österreich',
+        contact: 'Kontakt',
+        contactEmail: 'oe8yml@oevsv.at',
+        liability: {
+            title: 'Haftung für Inhalte',
+            text: 'Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte übernehmen wir jedoch keine Gewähr. Diese Website dient ausschließlich Bildungszwecken und simuliert die Kurzwellenausbreitung.'
+        },
+        copyright: {
+            title: 'Urheberrecht',
+            text: 'Die durch den Betreiber erstellten Inhalte und Werke auf dieser Website unterliegen dem österreichischen Urheberrecht. Der Quellcode ist unter der MIT-Lizenz auf GitHub verfügbar.'
+        }
+    },
+
+    // Privacy Policy (Datenschutz)
+    privacy: {
+        title: 'Datenschutzerklärung',
+        intro: 'Der Schutz Ihrer persönlichen Daten ist uns wichtig. Diese Datenschutzerklärung informiert Sie über die Datenverarbeitung auf dieser Website.',
+        noData: {
+            title: 'Keine Datenerhebung',
+            text: 'Diese Website ist ein reines Client-Side-Tool und erhebt, speichert oder verarbeitet keine personenbezogenen Daten. Es gibt:'
+        },
+        noDataList: {
+            forms: 'Keine Formulare oder Benutzereingaben',
+            cookies: 'Keine Cookies (außer der Spracheinstellung im localStorage)',
+            tracking: 'Kein Tracking oder Analytics',
+            server: 'Keine serverseitige Datenverarbeitung'
+        },
+        localStorage: {
+            title: 'Lokale Speicherung',
+            text: 'Die einzige gespeicherte Information ist Ihre Sprachpräferenz (Deutsch/Englisch), die lokal in Ihrem Browser gespeichert wird. Diese Daten werden nicht an Server übertragen und können jederzeit durch Löschen der Browser-Daten entfernt werden.'
+        },
+        cloudflare: {
+            title: 'Cloudflare',
+            text: 'Diese Website wird über Cloudflare bereitgestellt. Cloudflare kann technisch notwendige Verbindungsdaten verarbeiten. Weitere Informationen finden Sie in der Datenschutzerklärung von Cloudflare.'
+        },
+        rights: {
+            title: 'Ihre Rechte',
+            text: 'Da wir keine personenbezogenen Daten erheben, entfallen die üblichen DSGVO-Rechte wie Auskunft, Berichtigung oder Löschung. Bei Fragen können Sie uns dennoch kontaktieren.'
+        },
+        contact: {
+            title: 'Kontakt',
+            text: 'Bei Fragen zur Datenverarbeitung wenden Sie sich an:'
+        }
     }
 };

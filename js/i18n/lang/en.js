@@ -568,5 +568,64 @@ export default {
                 text: 'Try different band/time combinations. There are no mistakes - only learning opportunities!'
             }
         }
+    },
+
+    // Footer
+    footer: {
+        imprint: 'Imprint',
+        privacy: 'Privacy',
+        github: 'GitHub'
+    },
+
+    // Imprint
+    imprint: {
+        title: 'Imprint',
+        info: 'Information according to § 5 ECG and § 25 MedienG (Austrian law)',
+        operator: 'Operator',
+        operatorName: 'Strali',
+        operatorCallsign: 'OE8YML',
+        operatorAddress: 'Carinthia, Austria',
+        contact: 'Contact',
+        contactEmail: 'oe8yml@oevsv.at',
+        liability: {
+            title: 'Liability for Content',
+            text: 'The contents of this website have been created with the greatest care. However, we cannot guarantee the accuracy, completeness, or timeliness of the content. This website serves exclusively educational purposes and simulates shortwave propagation.'
+        },
+        copyright: {
+            title: 'Copyright',
+            text: 'The content and works created by the operator on this website are subject to Austrian copyright law. The source code is available under the MIT license on GitHub.'
+        }
+    },
+
+    // Privacy Policy
+    privacy: {
+        title: 'Privacy Policy',
+        intro: 'The protection of your personal data is important to us. This privacy policy informs you about data processing on this website.',
+        noData: {
+            title: 'No Data Collection',
+            text: 'This website is a pure client-side tool and does not collect, store, or process any personal data. There are:'
+        },
+        noDataList: {
+            forms: 'No forms or user inputs',
+            cookies: 'No cookies (except language preference in localStorage)',
+            tracking: 'No tracking or analytics',
+            server: 'No server-side data processing'
+        },
+        localStorage: {
+            title: 'Local Storage',
+            text: 'The only stored information is your language preference (German/English), which is saved locally in your browser. This data is not transmitted to servers and can be removed at any time by clearing browser data.'
+        },
+        cloudflare: {
+            title: 'Cloudflare',
+            text: 'This website is served via Cloudflare. Cloudflare may process technically necessary connection data. For more information, see Cloudflare\'s privacy policy.'
+        },
+        rights: {
+            title: 'Your Rights',
+            text: 'Since we do not collect personal data, the usual GDPR rights such as access, correction, or deletion do not apply. If you have questions, you can still contact us.'
+        },
+        contact: {
+            title: 'Contact',
+            text: 'For questions about data processing, contact:'
+        }
     }
 };
