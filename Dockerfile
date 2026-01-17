@@ -24,6 +24,7 @@ FROM nginx:alpine
 # Copy static files
 COPY index.prod.html /usr/share/nginx/html/index.html
 COPY css/ /usr/share/nginx/html/css/
+COPY favicon.svg /usr/share/nginx/html/
 COPY world.json /usr/share/nginx/html/
 COPY countries.json /usr/share/nginx/html/
 
