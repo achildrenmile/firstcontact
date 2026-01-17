@@ -15,6 +15,43 @@
  * Band definitions with educational metadata
  */
 export const HF_BANDS = {
+    '160m': {
+        id: '160m',
+        name: '160 Meters',
+        frequencyRange: { min: 1.8, max: 2.0 },
+        centerFrequency: 1.9,
+        wavelengthMeters: 160,
+
+        // Personality helps learners remember band behavior
+        personality: 'The Top Band Challenge',
+        tagline: 'The ultimate night-time adventure',
+
+        // Educational descriptions at different detail levels
+        simpleDescription: 'Only works at night. Completely absorbed during day. A challenging but rewarding band.',
+        detailedDescription: `The 160 meter band, known as "Top Band", uses very long radio waves that are
+            almost completely absorbed by the D layer during daylight. This band only comes alive
+            after dark when the D layer disappears. It requires patience, good antennas, and often
+            more power, but making contacts on 160m is especially rewarding.`,
+
+        // Behavioral characteristics (0-1 scale for easy comparison)
+        characteristics: {
+            dayAbsorption: 0.98,     // Almost completely absorbed during day
+            nightAbsorption: 0.3,    // Some absorption even at night
+            fLayerReflection: 0.8,   // Reflects well when it gets there
+            typicalHopDistance: 500, // km per hop (shorter due to lower angle)
+            maxHops: 2               // Practical limit - signals weaken quickly
+        },
+
+        // Guidance for player experimentation
+        bestTimeOfDay: 'night only',
+        typicalRange: 'regional to continental at night',
+        learningHint: 'This band teaches you just how strong the D layer absorption is - try it during day vs night!',
+
+        // Visual representation
+        color: '#8e44ad',
+        icon: '🌑'
+    },
+
     '80m': {
         id: '80m',
         name: '80 Meters',
@@ -260,7 +297,16 @@ export function suggestBand(isDay, distanceKm) {
             });
         }
     } else {
-        if (distanceKm < 2000) {
+        if (distanceKm < 1000) {
+            suggestions.push({
+                bandId: '160m',
+                reason: '160m (Top Band) works at night for regional contacts - challenging but rewarding!'
+            });
+            suggestions.push({
+                bandId: '80m',
+                reason: '80m comes alive at night for regional contacts'
+            });
+        } else if (distanceKm < 2000) {
             suggestions.push({
                 bandId: '80m',
                 reason: '80m comes alive at night for regional contacts'

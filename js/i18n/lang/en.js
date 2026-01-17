@@ -65,6 +65,16 @@ export default {
 
     // HF Bands
     bands: {
+        '160m': {
+            name: '160 Meters',
+            personality: 'The Top Band Challenge',
+            tagline: 'The ultimate night-time adventure',
+            simpleDescription: 'Only works at night. Completely absorbed during day. A challenging but rewarding band.',
+            detailedDescription: 'The 160 meter band, known as "Top Band", uses very long radio waves that are almost completely absorbed by the D layer during daylight. This band only comes alive after dark when the D layer disappears. It requires patience, good antennas, and often more power, but making contacts on 160m is especially rewarding.',
+            learningHint: 'This band teaches you just how strong the D layer absorption is - try it during day vs night!',
+            bestTimeOfDay: 'night only',
+            typicalRange: 'regional to continental at night'
+        },
         '80m': {
             name: '80 Meters',
             personality: 'The Night Owl',
@@ -547,6 +557,7 @@ export default {
         bands: {
             title: 'Frequency Bands',
             text: 'Each band has its own "personality":',
+            '160m': 'Night only, completely absorbed during day - "Top Band"',
             '80m': 'Good at night, heavily absorbed during day',
             '40m': 'Versatile, often works day and night',
             '20m': 'The "workhorse" - good for long distances during day',

@@ -175,6 +175,7 @@ class FirstContactApp {
                         <h3>📻 ${t('help.bands.title')}</h3>
                         <p>${t('help.bands.text')}</p>
                         <ul>
+                            <li><strong>160m</strong> - ${t('help.bands.160m')}</li>
                             <li><strong>80m</strong> - ${t('help.bands.80m')}</li>
                             <li><strong>40m</strong> - ${t('help.bands.40m')}</li>
                             <li><strong>20m</strong> - ${t('help.bands.20m')}</li>

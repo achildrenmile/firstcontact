@@ -65,6 +65,16 @@ export default {
 
     // HF Bands
     bands: {
+        '160m': {
+            name: '160 Meter',
+            personality: 'Die Top-Band Herausforderung',
+            tagline: 'Das ultimative Nacht-Abenteuer',
+            simpleDescription: 'Funktioniert nur nachts. Tagsüber komplett absorbiert. Ein anspruchsvolles aber lohnendes Band.',
+            detailedDescription: 'Das 160-Meter-Band, bekannt als "Top Band", nutzt sehr lange Radiowellen, die von der D-Schicht tagsüber fast vollständig absorbiert werden. Dieses Band erwacht erst nach Einbruch der Dunkelheit zum Leben, wenn die D-Schicht verschwindet. Es erfordert Geduld, gute Antennen und oft mehr Leistung, aber Verbindungen auf 160m sind besonders lohnend.',
+            learningHint: 'Dieses Band zeigt dir, wie stark die D-Schicht-Absorption wirklich ist - probiere es bei Tag und Nacht!',
+            bestTimeOfDay: 'nur nachts',
+            typicalRange: 'regional bis kontinental nachts'
+        },
         '80m': {
             name: '80 Meter',
             personality: 'Die Nachteule',
@@ -547,6 +557,7 @@ export default {
         bands: {
             title: 'Frequenzbänder',
             text: 'Jedes Band hat seinen eigenen "Charakter":',
+            '160m': 'Nur nachts, tagsüber komplett absorbiert - "Top Band"',
             '80m': 'Nachts gut, tagsüber stark gedämpft',
             '40m': 'Vielseitig, funktioniert oft Tag und Nacht',
             '20m': 'Das "Arbeitspferd" - gut für weite Entfernungen tagsüber',
