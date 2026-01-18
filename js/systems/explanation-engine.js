@@ -296,11 +296,14 @@ export function explainBandChange(oldBandId, newBandId, result1, result2) {
 
     if (comparison.strengthChange > 20) {
         comparison.explanation = t('comparison.muchBetter', { band: newBandName });
-    } else if (comparison.strengthChange > 0) {
+    } else if (comparison.strengthChange > 5) {
         comparison.explanation = t('comparison.slightlyBetter', { band: newBandName });
     } else if (comparison.strengthChange < -20) {
+        comparison.explanation = t('comparison.muchWorse', { oldBand: oldBandName });
+    } else if (comparison.strengthChange < -5) {
         comparison.explanation = t('comparison.wasBetter', { oldBand: oldBandName });
     } else {
+        // -5 to +5: truly similar
         comparison.explanation = t('comparison.similar');
     }
 

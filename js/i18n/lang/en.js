@@ -803,6 +803,7 @@ export default {
         title: 'Band Comparison',
         muchBetter: '{band} works much better!',
         slightlyBetter: '{band} is slightly better.',
+        muchWorse: '{oldBand} was working much better!',
         wasBetter: '{oldBand} was working better.',
         similar: 'Both bands are performing similarly.',
         higherLessAbsorbed: 'The higher frequency of {band} is less affected by D layer absorption and can travel farther per hop.',
