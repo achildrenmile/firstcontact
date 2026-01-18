@@ -15,6 +15,7 @@ import { ControlsPanel } from './ui/controls-panel.js';
 import { FeedbackPanel } from './ui/feedback-panel.js';
 import { initI18n, t, formatDistance, getCurrentLanguage } from './i18n/i18n.js';
 import { Tutorial, showTutorialPrompt } from './ui/tutorial.js';
+import { icon } from './ui/icons.js';
 
 class FirstContactApp {
     constructor() {
@@ -103,15 +104,17 @@ class FirstContactApp {
         if (titleEl) titleEl.textContent = t('app.title');
         if (subtitleEl) subtitleEl.textContent = t('app.subtitle');
 
-        // Update button text
+        // Update button text and icons
         const tutorialBtn = document.getElementById('tutorial-button');
         const helpBtn = document.getElementById('help-button');
 
         if (tutorialBtn) {
+            tutorialBtn.querySelector('.btn-icon').innerHTML = icon('tutorial', 'header-icon', 18);
             tutorialBtn.querySelector('.btn-text').textContent = t('ui.buttons.tutorial');
             tutorialBtn.title = t('ui.buttons.tutorialTitle');
         }
         if (helpBtn) {
+            helpBtn.querySelector('.btn-icon').innerHTML = icon('help', 'header-icon', 18);
             helpBtn.querySelector('.btn-text').textContent = t('ui.buttons.help');
             helpBtn.title = t('ui.buttons.helpTitle');
         }

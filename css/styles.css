@@ -94,6 +94,32 @@ body {
     border-color: var(--accent-primary);
 }
 
+/* SVG Icons */
+.header-icon,
+.event-icon svg,
+.season-svg {
+    display: inline-block;
+    vertical-align: middle;
+    stroke: currentColor;
+    fill: none;
+}
+
+.btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.season-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.season-svg {
+    color: var(--accent-primary);
+}
+
 .version {
     color: var(--text-muted);
     font-size: 0.75rem;

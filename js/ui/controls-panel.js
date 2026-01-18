@@ -16,6 +16,7 @@ import { SOLAR_ACTIVITY_LEVELS, getAllActivityLevels } from '../models/solar-act
 import { POWER_LEVELS, getAllPowerLevels, formatPower } from '../models/power.js';
 import { ANTENNA_TYPES, getAllAntennaTypes, COMPASS_DIRECTIONS, getAllDirections } from '../models/antenna.js';
 import { PRESET_LOCATIONS } from '../models/location.js';
+import { icon } from './icons.js';
 
 export class ControlsPanel {
     constructor(containerId, options = {}) {
@@ -153,15 +154,15 @@ export class ControlsPanel {
                     <div class="special-events-control">
                         <div class="event-button-group">
                             <button class="mogel-dellinger-button ${this.mogelDellingerActive ? 'active' : ''}" id="mogel-dellinger-btn">
-                                <span class="event-icon">⚡</span>
+                                <span class="event-icon">${icon('solarFlare', '', 18)}</span>
                                 <span class="event-label">${t('ui.mogelDellinger.trigger')}</span>
                             </button>
                             <button class="aurora-button ${this.auroraActive ? 'active' : ''}" id="aurora-btn">
-                                <span class="event-icon">🌌</span>
+                                <span class="event-icon">${icon('aurora', '', 18)}</span>
                                 <span class="event-label">${t('ui.aurora.trigger')}</span>
                             </button>
                             <button class="sporadic-e-button ${this.sporadicEActive ? 'active' : ''}" id="sporadic-e-btn">
-                                <span class="event-icon">✨</span>
+                                <span class="event-icon">${icon('sporadicE', '', 18)}</span>
                                 <span class="event-label">${t('ui.sporadicE.trigger')}</span>
                             </button>
                         </div>
@@ -701,10 +702,10 @@ export class ControlsPanel {
         // Jun, Jul, Aug = Summer
         // Sep, Oct, Nov = Autumn
         const seasons = {
-            winter: { id: 'winter', icon: '❄️' },
-            spring: { id: 'spring', icon: '🌱' },
-            summer: { id: 'summer', icon: '☀️' },
-            autumn: { id: 'autumn', icon: '🍂' }
+            winter: { id: 'winter', icon: icon('winter', 'season-svg', 20) },
+            spring: { id: 'spring', icon: icon('spring', 'season-svg', 20) },
+            summer: { id: 'summer', icon: icon('summer', 'season-svg', 20) },
+            autumn: { id: 'autumn', icon: icon('autumn', 'season-svg', 20) }
         };
 
         let season;
