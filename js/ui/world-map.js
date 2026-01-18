@@ -17,6 +17,7 @@ import {
     getLightingCondition
 } from '../systems/sun-position.js';
 import { t } from '../i18n/i18n.js';
+import { icon } from './icons.js';
 
 export class WorldMap {
     constructor(canvasId, options = {}) {
@@ -38,6 +39,7 @@ export class WorldMap {
         this.targetLocation = null;
         this.signalPath = null;
         this.isAnimating = false;
+        this.showMaidenheadGrid = false;
 
         // Zoom and pan state
         this.zoom = 1;
@@ -66,7 +68,9 @@ export class WorldMap {
             signalFail: '#ef4444',
             signalPath: '#fbbf24',
             gridLine: 'rgba(100, 150, 200, 0.15)',
-            equator: 'rgba(255, 200, 100, 0.25)'
+            equator: 'rgba(255, 200, 100, 0.25)',
+            maidenheadGrid: 'rgba(255, 100, 100, 0.4)',
+            maidenheadLabel: 'rgba(255, 150, 150, 0.8)'
         };
 
         // TopoJSON data for land
@@ -159,7 +163,7 @@ export class WorldMap {
     }
 
     /**
-     * Create zoom control buttons
+     * Create zoom control buttons and map overlays toggle
      */
     createZoomControls() {
         const container = this.canvas.parentElement;
@@ -176,6 +180,19 @@ export class WorldMap {
 
         container.appendChild(controls);
 
+        // Create overlay toggles container
+        const overlayControls = document.createElement('div');
+        overlayControls.className = 'map-overlay-controls';
+        overlayControls.innerHTML = `
+            <label class="overlay-toggle" title="Maidenhead Grid Locator">
+                <input type="checkbox" id="maidenhead-toggle">
+                <span class="toggle-icon">${icon('grid', '', 16)}</span>
+                <span class="toggle-label">Grid</span>
+            </label>
+        `;
+
+        container.appendChild(overlayControls);
+
         // Event listeners
         controls.querySelector('.zoom-in').addEventListener('click', () => {
             this.setZoom(this.zoom * 1.3);
@@ -190,6 +207,11 @@ export class WorldMap {
             this.panX = 0;
             this.panY = 0;
             this.render();
+        });
+
+        // Maidenhead grid toggle
+        overlayControls.querySelector('#maidenhead-toggle').addEventListener('change', (e) => {
+            this.setMaidenheadGrid(e.target.checked);
         });
     }
 
@@ -697,6 +719,9 @@ export class WorldMap {
         // Draw base map
         this.drawBaseMap();
 
+        // Draw Maidenhead grid (before day/night so it's subtle)
+        this.drawMaidenheadGrid();
+
         // Draw day/night overlay
         this.drawDayNightOverlay();
 
@@ -1080,6 +1105,72 @@ export class WorldMap {
             this.isAnimating = false;
             this.render();
         }, 3000);
+    }
+
+    /**
+     * Toggle Maidenhead grid display
+     */
+    setMaidenheadGrid(show) {
+        this.showMaidenheadGrid = show;
+        this.render();
+    }
+
+    /**
+     * Draw Maidenhead grid locator overlay
+     * Fields are 20° longitude x 10° latitude, labeled AA-RR
+     */
+    drawMaidenheadGrid() {
+        if (!this.showMaidenheadGrid) return;
+
+        const ctx = this.ctx;
+
+        // Draw field boundaries (18 columns x 18 rows)
+        ctx.strokeStyle = this.colors.maidenheadGrid;
+        ctx.lineWidth = 1;
+
+        // Vertical lines (longitude) - every 20°
+        for (let i = 0; i <= 18; i++) {
+            const lon = -180 + i * 20;
+            const pixel = this.latLonToPixel(0, lon);
+            ctx.beginPath();
+            ctx.moveTo(pixel.x, 0);
+            ctx.lineTo(pixel.x, this.height);
+            ctx.stroke();
+        }
+
+        // Horizontal lines (latitude) - every 10°
+        for (let i = 0; i <= 18; i++) {
+            const lat = -90 + i * 10;
+            const pixel = this.latLonToPixel(lat, 0);
+            ctx.beginPath();
+            ctx.moveTo(0, pixel.y);
+            ctx.lineTo(this.width, pixel.y);
+            ctx.stroke();
+        }
+
+        // Draw field labels (e.g., JN, FN, etc.)
+        ctx.fillStyle = this.colors.maidenheadLabel;
+        ctx.font = 'bold 11px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        for (let lonIdx = 0; lonIdx < 18; lonIdx++) {
+            for (let latIdx = 0; latIdx < 18; latIdx++) {
+                const lon = -180 + lonIdx * 20 + 10; // Center of field
+                const lat = -90 + latIdx * 10 + 5;   // Center of field
+
+                // Maidenhead field letters: A-R for both lon and lat
+                const lonChar = String.fromCharCode(65 + lonIdx); // A-R
+                const latChar = String.fromCharCode(65 + latIdx); // A-R
+                const label = lonChar + latChar;
+
+                const pixel = this.latLonToPixel(lat, lon);
+                ctx.fillText(label, pixel.x, pixel.y);
+            }
+        }
+
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'alphabetic';
     }
 
     /**
