@@ -13,7 +13,7 @@ RUN npm install
 COPY js/ ./js/
 COPY css/ ./css/
 COPY scripts/ ./scripts/
-COPY index.html favicon.svg world.json ./
+COPY index.html favicon.svg world.json VERSION ./
 
 # Run build script
 RUN npm run build
