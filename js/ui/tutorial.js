@@ -306,17 +306,26 @@ export class Tutorial {
             return;
         }
 
-        const rect = target.getBoundingClientRect();
-        const padding = 8;
+        // Scroll the target element into view (smooth scroll within its container)
+        target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
 
-        this.highlight.style.display = 'block';
-        this.highlight.style.left = `${rect.left - padding}px`;
-        this.highlight.style.top = `${rect.top - padding}px`;
-        this.highlight.style.width = `${rect.width + padding * 2}px`;
-        this.highlight.style.height = `${rect.height + padding * 2}px`;
+        // Wait a bit for scroll to complete, then position highlight
+        setTimeout(() => {
+            const rect = target.getBoundingClientRect();
+            const padding = 8;
 
-        // Allow or block clicks on highlighted element
-        this.highlight.style.pointerEvents = step.allowClick ? 'none' : 'auto';
+            this.highlight.style.display = 'block';
+            this.highlight.style.left = `${rect.left - padding}px`;
+            this.highlight.style.top = `${rect.top - padding}px`;
+            this.highlight.style.width = `${rect.width + padding * 2}px`;
+            this.highlight.style.height = `${rect.height + padding * 2}px`;
+
+            // Allow or block clicks on highlighted element
+            this.highlight.style.pointerEvents = step.allowClick ? 'none' : 'auto';
+
+            // Also reposition tooltip after scroll
+            this.positionTooltip(step);
+        }, 150);
     }
 
     /**
