@@ -48,14 +48,14 @@ body {
 .app-header {
     grid-column: 1 / -1;
     background-color: var(--bg-secondary);
-    padding: 1rem 1.5rem;
+    padding: 0.5rem 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .app-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-primary);
 }
@@ -209,7 +209,7 @@ body {
 /* Panels */
 .panel {
     background-color: var(--bg-secondary);
-    padding: 1rem;
+    padding: 0.75rem;
     overflow-y: auto;
 }
 
@@ -232,7 +232,7 @@ body {
 .controls-panel {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .control-section h3 {
@@ -245,9 +245,9 @@ body {
 
 /* Language Selector */
 .language-section {
-    padding-bottom: 1rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--border-color);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .language-selector {
@@ -337,7 +337,7 @@ body {
 .band-details {
     background-color: var(--bg-tertiary);
     border-radius: 0.5rem;
-    padding: 1rem;
+    padding: 0.75rem;
 }
 
 .band-header {
@@ -357,8 +357,8 @@ body {
 }
 
 .band-description {
-    font-size: 0.9rem;
-    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
 }
 
 .band-hint {
@@ -504,27 +504,29 @@ body {
 }
 
 .event-button-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
 }
 
 .mogel-dellinger-button,
 .aurora-button,
 .sporadic-e-button {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 0.25rem;
-    padding: 0.75rem 0.75rem;
+    gap: 0.3rem;
+    padding: 0.5rem 0.6rem;
     background-color: var(--bg-tertiary);
     border-radius: 0.5rem;
     cursor: pointer;
     transition: all 0.2s;
     color: var(--text-primary);
     font-weight: 500;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    flex: 1 1 auto;
+    min-width: 70px;
 }
 
 .mogel-dellinger-button {
@@ -597,7 +599,7 @@ body {
 }
 
 .event-icon {
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .event-label {
@@ -606,19 +608,7 @@ body {
 }
 
 .event-hints {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.mogel-dellinger-hint,
-.aurora-hint {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    text-align: center;
-    font-style: italic;
-    line-height: 1.3;
+    display: none;
 }
 
 /* Conditions Display */
@@ -1156,13 +1146,14 @@ body {
 @media (max-width: 900px) {
     .app-container {
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto auto;
+        grid-template-rows: auto 1fr auto auto;
     }
 
     .app-header {
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 0.5rem;
         text-align: center;
+        padding: 0.75rem;
     }
 
     .header-actions {
@@ -1170,29 +1161,43 @@ body {
         justify-content: center;
     }
 
-    .panel-left {
-        grid-column: 1;
-        grid-row: 2;
-    }
-
+    /* Map first on mobile */
     .panel-center {
         grid-column: 1;
-        grid-row: 3;
-        min-height: 300px;
+        grid-row: 2;
+        min-height: 40vh;
     }
 
+    /* Controls below map */
+    .panel-left {
+        grid-column: 1;
+        grid-row: 3;
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    /* Results at bottom */
     .panel-right {
         grid-column: 1;
         grid-row: 4;
     }
 
     .map-container {
-        min-height: 280px;
+        min-height: 35vh;
     }
 
     #world-map {
         max-width: 100%;
         height: auto;
+    }
+
+    /* Compact controls on mobile */
+    .controls-panel {
+        gap: 1rem;
+    }
+
+    .control-section h3 {
+        margin-bottom: 0.5rem;
     }
 }
 
