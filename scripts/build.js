@@ -19,6 +19,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const DIST = join(ROOT, 'dist');
 
+// Read version from VERSION file
+const VERSION = readFileSync(join(ROOT, 'VERSION'), 'utf8').trim();
+console.log(`Version: v${VERSION}\n`);
+
 // Clean dist directory
 if (existsSync(DIST)) {
     rmSync(DIST, { recursive: true });
@@ -67,6 +71,11 @@ const htmlOutput = htmlTemplate
     .replace(
         /href="css\/styles\.css"/,
         `href="css/${cssFilename}"`
+    )
+    // Inject version from VERSION file
+    .replace(
+        /\{\{VERSION\}\}/g,
+        `v${VERSION}`
     );
 writeFileSync(join(DIST, 'index.html'), htmlOutput);
 console.log('   Generated: index.html');
