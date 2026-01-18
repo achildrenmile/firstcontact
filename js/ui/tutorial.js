@@ -105,7 +105,7 @@ export class Tutorial {
             new TutorialStep({
                 id: 'maidenhead_grid',
                 targetSelector: '.map-overlay-controls',
-                position: 'right',
+                position: 'bottom',
                 waitForAction: 'click'
             }),
 
