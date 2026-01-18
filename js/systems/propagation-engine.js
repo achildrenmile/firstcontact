@@ -831,12 +831,15 @@ function buildSignalPath(source, target, hopAnalysis, success, isLongPath = fals
     path.totalDistance = hopAnalysis.distance;
     path.pathMode = isLongPath ? 'long' : 'short';
 
+    // For long path, use many more points to properly cross the date line
+    const basePoints = isLongPath ? 60 : 20;
+
     if (!success) {
         path.pathType = 'failed';
         path.points = generatePathPoints(
             source.latitude, source.longitude,
             target.latitude, target.longitude,
-            20,
+            basePoints,
             isLongPath
         );
         return path;
@@ -845,11 +848,26 @@ function buildSignalPath(source, target, hopAnalysis, success, isLongPath = fals
     path.pathType = hopAnalysis.actualHops === 1 ? 'single-hop' : 'multi-hop';
 
     const numHops = hopAnalysis.actualHops;
+
+    // For long path, generate many points along the entire path for smooth visualization
+    if (isLongPath) {
+        const numPoints = 60; // Enough points to smoothly cross date line
+        const allPoints = generatePathPoints(
+            source.latitude, source.longitude,
+            target.latitude, target.longitude,
+            numPoints,
+            true
+        );
+        path.points = allPoints;
+        return path;
+    }
+
+    // Short path: use hop arc visualization
     const groundPoints = generatePathPoints(
         source.latitude, source.longitude,
         target.latitude, target.longitude,
         numHops,
-        isLongPath
+        false
     );
 
     for (let i = 0; i < numHops; i++) {
