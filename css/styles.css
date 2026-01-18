@@ -699,41 +699,43 @@ body {
 /* Map Zoom Controls */
 .map-zoom-controls {
     position: absolute;
-    bottom: 1rem;
-    right: 1rem;
+    bottom: 0.5rem;
+    right: 0.5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    z-index: 10;
+    gap: 0.2rem;
+    z-index: 20;
+    pointer-events: auto;
 }
 
 .zoom-btn {
-    width: 36px;
-    height: 36px;
-    border: none;
-    border-radius: 6px;
-    background: rgba(30, 41, 59, 0.9);
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background: rgba(15, 23, 42, 0.85);
     color: var(--text-primary);
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: bold;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.15s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .zoom-btn:hover {
-    background: rgba(59, 130, 246, 0.8);
+    background: rgba(59, 130, 246, 0.9);
+    border-color: rgba(59, 130, 246, 0.5);
 }
 
 .zoom-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.9);
 }
 
 .zoom-reset {
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 /* Feedback Panel */

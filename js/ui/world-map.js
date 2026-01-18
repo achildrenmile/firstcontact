@@ -174,7 +174,6 @@ export class WorldMap {
             <button class="zoom-btn zoom-reset" title="Reset">⟲</button>
         `;
 
-        container.style.position = 'relative';
         container.appendChild(controls);
 
         // Event listeners
