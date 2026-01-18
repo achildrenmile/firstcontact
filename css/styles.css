@@ -402,6 +402,49 @@ body {
     text-align: center;
 }
 
+/* Month/Season Selector */
+.month-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.month-dropdown {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.month-dropdown:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+}
+
+.season-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.5rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.season-icon {
+    font-size: 1rem;
+}
+
+.season-name {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
 /* Band Selector */
 .band-selector {
     display: flex;

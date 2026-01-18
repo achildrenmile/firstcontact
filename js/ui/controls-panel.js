@@ -27,6 +27,7 @@ export class ControlsPanel {
         this.selectedAntenna = 'dipole';
         this.selectedDirection = 'N';
         this.playerLocation = options.initialLocation || PRESET_LOCATIONS.vienna;
+        this.selectedMonth = new Date().getMonth(); // 0-11
         this.currentTime = new Date();
         this.solarActivity = 'normal';
         this.mogelDellingerActive = false;
@@ -39,6 +40,7 @@ export class ControlsPanel {
         this.onAntennaChange = options.onAntennaChange || (() => {});
         this.onDirectionChange = options.onDirectionChange || (() => {});
         this.onLocationChange = options.onLocationChange || (() => {});
+        this.onMonthChange = options.onMonthChange || (() => {});
         this.onTimeChange = options.onTimeChange || (() => {});
         this.onSolarActivityChange = options.onSolarActivityChange || (() => {});
         this.onMogelDellingerToggle = options.onMogelDellingerToggle || (() => {});
@@ -118,6 +120,16 @@ export class ControlsPanel {
                         <div class="direction-selector" id="direction-buttons"></div>
                     </div>
                     <div class="antenna-info" id="antenna-info"></div>
+                </section>
+
+                <section class="control-section">
+                    <h3>${t('ui.season.title')}</h3>
+                    <div class="month-selector">
+                        <select id="month-select" class="month-dropdown">
+                            ${this.renderMonthOptions()}
+                        </select>
+                        <div class="season-info" id="season-info"></div>
+                    </div>
                 </section>
 
                 <section class="control-section">
@@ -207,6 +219,18 @@ export class ControlsPanel {
             .sort((a, b) => a.name.localeCompare(b.name))
             .map(loc => `<option value="${loc.name}">${loc.name}</option>`)
             .join('');
+    }
+
+    /**
+     * Render month options for dropdown
+     */
+    renderMonthOptions() {
+        const months = [];
+        for (let i = 0; i < 12; i++) {
+            const selected = i === this.selectedMonth ? 'selected' : '';
+            months.push(`<option value="${i}" ${selected}>${t(`ui.season.months.${i}`)}</option>`);
+        }
+        return months.join('');
     }
 
     /**
@@ -419,6 +443,14 @@ export class ControlsPanel {
         document.getElementById('sporadic-e-btn')?.addEventListener('click', () => {
             this.toggleSporadicE();
         });
+
+        // Month selector
+        document.getElementById('month-select')?.addEventListener('change', (e) => {
+            this.setMonth(parseInt(e.target.value));
+        });
+
+        // Initial season info update
+        this.updateSeasonInfo();
     }
 
     /**
@@ -593,8 +625,111 @@ export class ControlsPanel {
             dropdown.value = matchingOption ? matchingOption.name : '';
         }
 
+        // Update season info (may change with hemisphere)
+        this.updateSeasonInfo();
+
         // Notify callback
         this.onLocationChange(location);
+    }
+
+    /**
+     * Set the month
+     */
+    setMonth(month) {
+        this.selectedMonth = month;
+
+        // Update the dropdown
+        const dropdown = document.getElementById('month-select');
+        if (dropdown) {
+            dropdown.value = month;
+        }
+
+        // Update season info display
+        this.updateSeasonInfo();
+
+        // Update current time with the new month
+        this.updateTimeWithMonth();
+
+        // Notify callback
+        this.onMonthChange(month);
+    }
+
+    /**
+     * Update the time object to use the selected month
+     */
+    updateTimeWithMonth() {
+        const hours = this.currentTime.getUTCHours();
+        const mins = this.currentTime.getUTCMinutes();
+
+        // Create new date with selected month (use middle of month - 15th)
+        this.currentTime = new Date(Date.UTC(
+            new Date().getUTCFullYear(),
+            this.selectedMonth,
+            15, // Middle of month
+            hours,
+            mins,
+            0, 0
+        ));
+
+        this.onTimeChange(this.currentTime);
+    }
+
+    /**
+     * Update the season info display
+     */
+    updateSeasonInfo() {
+        const infoContainer = document.getElementById('season-info');
+        if (!infoContainer) return;
+
+        // Determine season based on month and hemisphere
+        const isNorthern = this.playerLocation ? this.playerLocation.latitude >= 0 : true;
+        const season = this.getSeasonForMonth(this.selectedMonth, isNorthern);
+
+        infoContainer.innerHTML = `
+            <span class="season-icon">${season.icon}</span>
+            <span class="season-name">${t(`ui.season.seasons.${season.id}`)}</span>
+        `;
+    }
+
+    /**
+     * Get season for a given month and hemisphere
+     */
+    getSeasonForMonth(month, isNorthern) {
+        // Season mapping (Northern hemisphere)
+        // Dec, Jan, Feb = Winter
+        // Mar, Apr, May = Spring
+        // Jun, Jul, Aug = Summer
+        // Sep, Oct, Nov = Autumn
+        const seasons = {
+            winter: { id: 'winter', icon: '❄️' },
+            spring: { id: 'spring', icon: '🌱' },
+            summer: { id: 'summer', icon: '☀️' },
+            autumn: { id: 'autumn', icon: '🍂' }
+        };
+
+        let season;
+        if (month === 11 || month === 0 || month === 1) {
+            season = seasons.winter;
+        } else if (month >= 2 && month <= 4) {
+            season = seasons.spring;
+        } else if (month >= 5 && month <= 7) {
+            season = seasons.summer;
+        } else {
+            season = seasons.autumn;
+        }
+
+        // Reverse for Southern hemisphere
+        if (!isNorthern) {
+            const opposite = {
+                winter: seasons.summer,
+                spring: seasons.autumn,
+                summer: seasons.winter,
+                autumn: seasons.spring
+            };
+            season = opposite[season.id];
+        }
+
+        return season;
     }
 
     /**
@@ -701,8 +836,15 @@ export class ControlsPanel {
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
 
-        this.currentTime = new Date();
-        this.currentTime.setUTCHours(hours, mins, 0, 0);
+        // Create date with selected month
+        this.currentTime = new Date(Date.UTC(
+            new Date().getUTCFullYear(),
+            this.selectedMonth,
+            15, // Middle of month
+            hours,
+            mins,
+            0, 0
+        ));
 
         this.updateTimeDisplay();
         this.onTimeChange(this.currentTime);
@@ -712,8 +854,15 @@ export class ControlsPanel {
      * Set to a specific hour
      */
     setHour(hour) {
-        this.currentTime = new Date();
-        this.currentTime.setUTCHours(hour, 0, 0, 0);
+        // Create date with selected month
+        this.currentTime = new Date(Date.UTC(
+            new Date().getUTCFullYear(),
+            this.selectedMonth,
+            15, // Middle of month
+            hour,
+            0,
+            0, 0
+        ));
 
         // Update slider
         document.getElementById('time-slider').value = hour * 60;
@@ -761,6 +910,7 @@ export class ControlsPanel {
             antenna: this.selectedAntenna,
             direction: this.selectedDirection,
             playerLocation: this.playerLocation,
+            month: this.selectedMonth,
             time: this.currentTime,
             solarActivity: this.solarActivity,
             mogelDellingerActive: this.mogelDellingerActive,

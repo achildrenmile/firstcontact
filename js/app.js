@@ -280,6 +280,17 @@ class FirstContactApp {
                     </div>
 
                     <div class="help-section">
+                        <h3>🗓️ ${t('help.season.title')}</h3>
+                        <p>${t('help.season.text')}</p>
+                        <ul>
+                            <li><strong>❄️</strong> ${t('help.season.winter')}</li>
+                            <li><strong>🌱🍂</strong> ${t('help.season.spring')}</li>
+                            <li><strong>☀️</strong> ${t('help.season.summer')}</li>
+                        </ul>
+                        <p><em>${t('help.season.hemisphere')}</em></p>
+                    </div>
+
+                    <div class="help-section">
                         <h3>💡 ${t('help.tips.title')}</h3>
                         <div class="help-tip">
                             <strong>${t('help.tips.tip1.title')}</strong><br>
@@ -503,6 +514,7 @@ class FirstContactApp {
             onAntennaChange: (antennaId) => this.handleAntennaChange(antennaId),
             onDirectionChange: (directionId) => this.handleDirectionChange(directionId),
             onLocationChange: (location) => this.handlePlayerLocationChange(location),
+            onMonthChange: (month) => this.handleMonthChange(month),
             onTimeChange: (time) => this.handleTimeChange(time),
             onSolarActivityChange: (activityId) => this.handleSolarActivityChange(activityId),
             onMogelDellingerToggle: (active) => this.handleMogelDellingerToggle(active),
@@ -658,6 +670,17 @@ class FirstContactApp {
         this.setTime(time);
 
         // If we have a target, re-evaluate
+        if (this.state.targetLocation) {
+            this.attemptContact();
+        }
+    }
+
+    /**
+     * Handle month change
+     */
+    handleMonthChange(month) {
+        // Time is already updated via the controls panel
+        // Just re-evaluate contact if we have a target
         if (this.state.targetLocation) {
             this.attemptContact();
         }

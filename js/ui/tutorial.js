@@ -150,7 +150,15 @@ export class Tutorial {
                 }
             }),
 
-            // Step 12: Time control intro
+            // Step 12: Season/Month selector
+            new TutorialStep({
+                id: 'season_intro',
+                targetSelector: '.month-selector',
+                position: 'right',
+                waitForAction: 'click'
+            }),
+
+            // Step 13: Time control intro
             new TutorialStep({
                 id: 'time_intro',
                 targetSelector: '.time-control',

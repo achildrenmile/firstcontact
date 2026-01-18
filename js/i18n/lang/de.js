@@ -105,6 +105,29 @@ export default {
                 }
             }
         },
+        season: {
+            title: 'Jahreszeit / Monat',
+            months: {
+                0: 'Januar',
+                1: 'Februar',
+                2: 'März',
+                3: 'April',
+                4: 'Mai',
+                5: 'Juni',
+                6: 'Juli',
+                7: 'August',
+                8: 'September',
+                9: 'Oktober',
+                10: 'November',
+                11: 'Dezember'
+            },
+            seasons: {
+                winter: 'Winter',
+                spring: 'Frühling',
+                summer: 'Sommer',
+                autumn: 'Herbst'
+            }
+        },
         antenna: {
             title: 'Antennentyp',
             gain: 'Gewinn',
@@ -926,6 +949,10 @@ export default {
                 title: 'Yagi-Richtung',
                 content: 'Bei einer Yagi-Antenne musst du sie auf dein Ziel ausrichten! Wähle die Strahlrichtung mit den Kompass-Buttons. Falsche Richtung = großer Signalverlust!'
             },
+            season_intro: {
+                title: 'Jahreszeit & Monat',
+                content: 'Der Monat beeinflusst, wie viel Tageslicht dein Standort bekommt! Winter bedeutet kürzere Tage und längere Nächte. Sommer bedeutet längere Tage. Das beeinflusst die Ausbreitung - die Ionosphäre ändert sich mit den Jahreszeiten!'
+            },
             time_intro: {
                 title: 'Zeitsteuerung',
                 content: 'Mit diesem Schieberegler kannst du die Tageszeit ändern. Beobachte, wie sich Tag und Nacht über die Karte bewegen!'
@@ -1054,6 +1081,14 @@ export default {
         time: {
             title: 'Zeit-Steuerung',
             text: 'Nutze den Zeitregler, um verschiedene Tageszeiten zu simulieren. Beobachte, wie sich die Ausbreitungsbedingungen ändern wenn Tag und Nacht über die Erde wandern!'
+        },
+        season: {
+            title: 'Jahreszeit & Monat',
+            text: 'Der Monat beeinflusst die Tageslichtdauer und ionosphärischen Bedingungen:',
+            winter: 'Winter - Kurze Tage, lange Nächte. Niedrige Bänder funktionieren besser. Nördliche Stationen haben sehr kurzes Tageslicht.',
+            spring: 'Frühling/Herbst - Übergangszeiten. Tag/Nacht relativ ausgeglichen. Gut zum Experimentieren.',
+            summer: 'Sommer - Lange Tage, kurze Nächte. Höhere Bänder funktionieren besser bei verlängertem Tageslicht. Beste Zeit für Sporadic E!',
+            hemisphere: 'Denk daran: Wenn auf der Nordhalbkugel Winter ist, ist auf der Südhalbkugel Sommer!'
         },
         tips: {
             title: 'Profi-Tipps',

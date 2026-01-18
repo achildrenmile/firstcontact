@@ -105,6 +105,29 @@ export default {
                 }
             }
         },
+        season: {
+            title: 'Season / Month',
+            months: {
+                0: 'January',
+                1: 'February',
+                2: 'March',
+                3: 'April',
+                4: 'May',
+                5: 'June',
+                6: 'July',
+                7: 'August',
+                8: 'September',
+                9: 'October',
+                10: 'November',
+                11: 'December'
+            },
+            seasons: {
+                winter: 'Winter',
+                spring: 'Spring',
+                summer: 'Summer',
+                autumn: 'Autumn'
+            }
+        },
         antenna: {
             title: 'Antenna Type',
             gain: 'Gain',
@@ -926,6 +949,10 @@ export default {
                 title: 'Yagi Direction',
                 content: 'When using a Yagi antenna, you must point it toward your target! Select the beam direction using the compass buttons. Wrong direction = big signal loss!'
             },
+            season_intro: {
+                title: 'Season & Month',
+                content: 'The month affects how much daylight your location gets! Winter means shorter days and longer nights. Summer means longer days. This affects propagation - the ionosphere changes with the seasons!'
+            },
             time_intro: {
                 title: 'Time Control',
                 content: 'This slider lets you change the time of day. Watch how day and night move across the map!'
@@ -1054,6 +1081,14 @@ export default {
         time: {
             title: 'Time Control',
             text: 'Use the time slider to simulate different times of day. Watch how propagation conditions change as day and night move across the Earth!'
+        },
+        season: {
+            title: 'Season & Month',
+            text: 'The month affects daylight hours and ionospheric conditions:',
+            winter: 'Winter - Short days, long nights. Lower bands work better. Northern stations have very short daylight.',
+            spring: 'Spring/Autumn - Transition periods. Day/night fairly balanced. Good for experimenting.',
+            summer: 'Summer - Long days, short nights. Higher bands work better during extended daylight. Best time for Sporadic E!',
+            hemisphere: 'Remember: When it\'s winter in the Northern Hemisphere, it\'s summer in the Southern Hemisphere!'
         },
         tips: {
             title: 'Pro Tips',
