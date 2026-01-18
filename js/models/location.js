@@ -344,37 +344,63 @@ export function generatePathPoints(lat1, lon1, lat2, lon2, numPoints = 20, longP
 
 /**
  * Interpolate a point along the long path (the other way around the globe)
+ * Uses the longer arc of the great circle connecting the two points.
  * @param {number} fraction - 0 to 1, where along the long path
  */
 function interpolateLongPath(lat1, lon1, lat2, lon2, fraction) {
-    // For long path, we go from lat1,lon1 in the opposite direction
-    // This is equivalent to going from lat1,lon1 to the antipodal point of lat2,lon2
-    // and then continuing to lat2,lon2
+    // Long path = going the "other way" around the great circle
+    // We achieve this by:
+    // 1. Starting at the source
+    // 2. Going in the OPPOSITE direction (bearing + 180°)
+    // 3. Traveling for (long path distance * fraction)
 
-    // Calculate the antipodal point of the destination
-    const antiLat2 = -lat2;
-    const antiLon2 = lon2 > 0 ? lon2 - 180 : lon2 + 180;
+    const shortPathBearing = calculateBearing(lat1, lon1, lat2, lon2);
+    const longPathBearing = (shortPathBearing + 180) % 360;
 
-    // The long path goes: start -> antipodal of end -> end
-    // Total angular distance for long path
     const shortDist = calculateDistance(lat1, lon1, lat2, lon2);
     const longDist = EARTH_CIRCUMFERENCE - shortDist;
 
-    // Distance to antipodal point
-    const distToAntipodal = calculateDistance(lat1, lon1, antiLat2, antiLon2);
+    // Distance to travel along the long path
+    const distanceToTravel = longDist * fraction;
 
-    // Fraction of journey where we pass through antipodal region
-    const antipodalFraction = distToAntipodal / longDist;
+    // Calculate destination point given start, bearing, and distance
+    return destinationPoint(lat1, lon1, longPathBearing, distanceToTravel);
+}
 
-    if (fraction <= antipodalFraction && antipodalFraction > 0) {
-        // First part: going towards the antipodal point
-        const subFraction = fraction / antipodalFraction;
-        return interpolateGreatCircle(lat1, lon1, antiLat2, antiLon2, subFraction);
-    } else {
-        // Second part: from antipodal point to destination
-        const remainingFraction = antipodalFraction < 1 ? (fraction - antipodalFraction) / (1 - antipodalFraction) : 1;
-        return interpolateGreatCircle(antiLat2, antiLon2, lat2, lon2, remainingFraction);
-    }
+/**
+ * Calculate destination point given start point, bearing, and distance
+ * @param {number} lat - Starting latitude in degrees
+ * @param {number} lon - Starting longitude in degrees
+ * @param {number} bearing - Bearing in degrees (0-360)
+ * @param {number} distance - Distance in kilometers
+ * @returns {object} Destination point {latitude, longitude}
+ */
+function destinationPoint(lat, lon, bearing, distance) {
+    const R = 6371; // Earth's radius in km
+    const d = distance / R; // Angular distance in radians
+    const brng = toRadians(bearing);
+    const lat1 = toRadians(lat);
+    const lon1 = toRadians(lon);
+
+    const lat2 = Math.asin(
+        Math.sin(lat1) * Math.cos(d) +
+        Math.cos(lat1) * Math.sin(d) * Math.cos(brng)
+    );
+
+    const lon2 = lon1 + Math.atan2(
+        Math.sin(brng) * Math.sin(d) * Math.cos(lat1),
+        Math.cos(d) - Math.sin(lat1) * Math.sin(lat2)
+    );
+
+    // Normalize longitude to -180 to +180
+    let lonDeg = toDegrees(lon2);
+    while (lonDeg > 180) lonDeg -= 360;
+    while (lonDeg < -180) lonDeg += 360;
+
+    return {
+        latitude: toDegrees(lat2),
+        longitude: lonDeg
+    };
 }
 
 /**
