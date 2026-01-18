@@ -14,7 +14,7 @@ import { HF_BANDS, getAllBands } from '../models/bands.js';
 import { t, LANGUAGES, getCurrentLanguage, setLanguage } from '../i18n/i18n.js';
 import { SOLAR_ACTIVITY_LEVELS, getAllActivityLevels } from '../models/solar-activity.js';
 import { POWER_LEVELS, getAllPowerLevels, formatPower } from '../models/power.js';
-import { ANTENNA_TYPES, getAllAntennaTypes } from '../models/antenna.js';
+import { ANTENNA_TYPES, getAllAntennaTypes, COMPASS_DIRECTIONS, getAllDirections } from '../models/antenna.js';
 
 export class ControlsPanel {
     constructor(containerId, options = {}) {
@@ -24,6 +24,7 @@ export class ControlsPanel {
         this.selectedBand = '20m';
         this.selectedPower = 'standard';
         this.selectedAntenna = 'dipole';
+        this.selectedDirection = 'N';
         this.currentTime = new Date();
         this.solarActivity = 'normal';
         this.mogelDellingerActive = false;
@@ -34,6 +35,7 @@ export class ControlsPanel {
         this.onBandChange = options.onBandChange || (() => {});
         this.onPowerChange = options.onPowerChange || (() => {});
         this.onAntennaChange = options.onAntennaChange || (() => {});
+        this.onDirectionChange = options.onDirectionChange || (() => {});
         this.onTimeChange = options.onTimeChange || (() => {});
         this.onSolarActivityChange = options.onSolarActivityChange || (() => {});
         this.onMogelDellingerToggle = options.onMogelDellingerToggle || (() => {});
@@ -75,6 +77,10 @@ export class ControlsPanel {
                 <section class="control-section">
                     <h3>${t('ui.antenna.title')}</h3>
                     <div class="antenna-selector" id="antenna-buttons"></div>
+                    <div class="antenna-direction-container" id="antenna-direction-container" style="display: none;">
+                        <div class="direction-label">${t('ui.antenna.direction')}</div>
+                        <div class="direction-selector" id="direction-buttons"></div>
+                    </div>
                     <div class="antenna-info" id="antenna-info"></div>
                 </section>
 
@@ -131,11 +137,13 @@ export class ControlsPanel {
         this.renderBandButtons();
         this.renderPowerButtons();
         this.renderAntennaButtons();
+        this.renderDirectionButtons();
         this.renderSolarActivityButtons();
         this.setupEventListeners();
         this.updateBandInfo();
         this.updatePowerInfo();
         this.updateAntennaInfo();
+        this.updateDirectionVisibility();
         this.updateSolarActivityInfo();
     }
 
@@ -210,6 +218,24 @@ export class ControlsPanel {
     }
 
     /**
+     * Render direction selection buttons (compass rose)
+     */
+    renderDirectionButtons() {
+        const container = document.getElementById('direction-buttons');
+        const directions = getAllDirections();
+
+        container.innerHTML = directions.map(dir => `
+            <button
+                class="direction-button ${dir.id === this.selectedDirection ? 'selected' : ''}"
+                data-direction="${dir.id}"
+                title="${t(`ui.antenna.directions.${dir.id}`)}"
+            >
+                ${dir.id}
+            </button>
+        `).join('');
+    }
+
+    /**
      * Render solar activity selection buttons
      */
     renderSolarActivityButtons() {
@@ -262,6 +288,14 @@ export class ControlsPanel {
             const button = e.target.closest('.antenna-button');
             if (button) {
                 this.selectAntenna(button.dataset.antenna);
+            }
+        });
+
+        // Direction buttons
+        document.getElementById('direction-buttons')?.addEventListener('click', (e) => {
+            const button = e.target.closest('.direction-button');
+            if (button) {
+                this.selectDirection(button.dataset.direction);
             }
         });
 
@@ -396,6 +430,9 @@ export class ControlsPanel {
         // Update info display
         this.updateAntennaInfo();
 
+        // Show/hide direction selector for Yagi
+        this.updateDirectionVisibility();
+
         // Notify callback
         this.onAntennaChange(antennaId);
     }
@@ -418,6 +455,31 @@ export class ControlsPanel {
                 </div>
             </div>
         `;
+    }
+
+    /**
+     * Update direction selector visibility (only show for Yagi)
+     */
+    updateDirectionVisibility() {
+        const container = document.getElementById('antenna-direction-container');
+        if (container) {
+            container.style.display = this.selectedAntenna === 'yagi' ? 'block' : 'none';
+        }
+    }
+
+    /**
+     * Select direction
+     */
+    selectDirection(directionId) {
+        this.selectedDirection = directionId;
+
+        // Update button states
+        document.querySelectorAll('.direction-button').forEach(btn => {
+            btn.classList.toggle('selected', btn.dataset.direction === directionId);
+        });
+
+        // Notify callback
+        this.onDirectionChange(directionId);
     }
 
     /**
@@ -582,6 +644,7 @@ export class ControlsPanel {
             band: this.selectedBand,
             power: this.selectedPower,
             antenna: this.selectedAntenna,
+            direction: this.selectedDirection,
             time: this.currentTime,
             solarActivity: this.solarActivity,
             mogelDellingerActive: this.mogelDellingerActive,

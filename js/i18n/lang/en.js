@@ -99,6 +99,17 @@ export default {
             title: 'Antenna Type',
             gain: 'Gain',
             angle: 'Takeoff Angle',
+            direction: 'Beam Direction',
+            directions: {
+                N: 'North',
+                NE: 'Northeast',
+                E: 'East',
+                SE: 'Southeast',
+                S: 'South',
+                SW: 'Southwest',
+                W: 'West',
+                NW: 'Northwest'
+            },
             types: {
                 dipole: {
                     name: 'Dipole',
@@ -479,7 +490,8 @@ export default {
             greyLineEffect: 'Grey Line Effect',
             pathGeometry: 'Path Geometry',
             power: 'Transmit Power',
-            antenna: 'Antenna'
+            antenna: 'Antenna',
+            direction: 'Beam Direction'
         },
 
         // Antenna effect messages
@@ -503,6 +515,16 @@ export default {
             standardDescription: 'Standard power (100W) - Normal signal level',
             highImpact: '+10 dB',
             highDescription: 'High power (1kW) - Strong signal, better margin'
+        },
+
+        // Direction effect messages (for Yagi)
+        direction: {
+            onTarget: 'Yagi pointed at target (bearing {bearing}°) - full gain',
+            slightlyOff: 'Yagi {diff}° off target - {penalty} dB loss',
+            sideOn: 'Yagi nearly sideways to target ({diff}° off) - {penalty} dB loss',
+            rearQuarter: 'Yagi rear quarter ({diff}° off target) - {penalty} dB loss',
+            backwards: 'Yagi pointing away from target ({diff}° off) - {penalty} dB loss',
+            unknown: 'Yagi direction unknown'
         },
 
         // Factor impacts
@@ -587,7 +609,13 @@ export default {
             antennaVerticalDx: 'The vertical antenna excels at DX! Its low takeoff angle (20°) sends most energy toward the horizon - perfect for long-distance skip. Omnidirectional means you can work all directions.',
             antennaYagiNvis: 'The Yagi antenna is poorly suited for NVIS. Its very low takeoff angle (15°) and directional pattern mean it sends energy toward the horizon, not straight up for nearby contacts.',
             antennaYagiMedium: 'At medium distances, the Yagi\'s high gain (8 dBi) helps, but remember it\'s directional - it must be pointed at the target station. The low angle may cause your signal to skip over closer stations.',
-            antennaYagiDx: 'The Yagi is the king of DX antennas! High gain (8 dBi) focuses energy in one direction, and the very low takeoff angle (15°) is perfect for long-distance propagation. Point it at your target and enjoy the DX!'
+            antennaYagiDx: 'The Yagi is the king of DX antennas! High gain (8 dBi) focuses energy in one direction, and the very low takeoff angle (15°) is perfect for long-distance propagation. Point it at your target and enjoy the DX!',
+            // Direction educational
+            directionOnTarget: 'Your Yagi is pointed at the target - you get the full antenna gain! The narrow beam focuses your signal exactly where it needs to go.',
+            directionSlightlyOff: 'Your Yagi is slightly off-target. You\'re losing some gain because the target isn\'t in the main beam. Try adjusting your beam heading.',
+            directionSideOn: 'Your Yagi is nearly sideways to the target. Most of the gain is lost because directional antennas have very weak side lobes. Rotate your beam toward the target!',
+            directionRearQuarter: 'Your Yagi is pointed mostly away from the target. You\'re receiving/transmitting through the back and side lobes, which are much weaker. Turn your antenna around!',
+            directionBackwards: 'Your Yagi is pointed in the wrong direction! The antenna\'s front-to-back ratio means very little signal goes (or comes from) behind. Rotate your beam 180° toward the target.'
         }
     },
 

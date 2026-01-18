@@ -23,7 +23,7 @@ import {
 import { t, formatDistance } from '../i18n/i18n.js';
 import { SolarConditions, MOGEL_DELLINGER_EVENT, AURORA_EVENT, SPORADIC_E_EVENT } from '../models/solar-activity.js';
 import { getPowerLevel, calculatePowerFactor } from '../models/power.js';
-import { getAntennaType, calculateAntennaFactor, getSkipZoneModifier } from '../models/antenna.js';
+import { getAntennaType, calculateAntennaFactor, getSkipZoneModifier, calculateBearing, calculateDirectionalPenalty, COMPASS_DIRECTIONS } from '../models/antenna.js';
 
 // Global solar conditions instance
 let globalSolarConditions = new SolarConditions();
@@ -104,10 +104,11 @@ export class HopInfo {
  * Main propagation evaluation function
  * Now evaluates both short path and long path, choosing the better one
  */
-export function evaluatePropagation({ source, target, bandId, dateTime, powerId = 'standard', antennaId = 'dipole' }) {
+export function evaluatePropagation({ source, target, bandId, dateTime, powerId = 'standard', antennaId = 'dipole', directionId = 'N' }) {
     const band = HF_BANDS[bandId];
     const power = getPowerLevel(powerId);
     const antenna = getAntennaType(antennaId);
+    const antennaDirection = COMPASS_DIRECTIONS[directionId]?.degrees || 0;
 
     if (!band) {
         const result = new PropagationResult();
@@ -126,7 +127,7 @@ export function evaluatePropagation({ source, target, bandId, dateTime, powerId 
 
     // Always evaluate short path
     const shortPathResult = evaluateSinglePath({
-        source, target, bandId, dateTime, band, power, antenna,
+        source, target, bandId, dateTime, band, power, antenna, antennaDirection,
         distance: shortPathDistance,
         isLongPath: false
     });
@@ -140,7 +141,7 @@ export function evaluatePropagation({ source, target, bandId, dateTime, powerId 
 
     if (shortPathDistance > LONG_PATH_THRESHOLD) {
         longPathResult = evaluateSinglePath({
-            source, target, bandId, dateTime, band, power, antenna,
+            source, target, bandId, dateTime, band, power, antenna, antennaDirection,
             distance: longPathDistance,
             isLongPath: true
         });
@@ -221,11 +222,12 @@ function comparePaths(shortResult, longResult, shortDistance, longDistance) {
 /**
  * Evaluate propagation for a single path (short or long)
  */
-function evaluateSinglePath({ source, target, bandId, dateTime, band, power, antenna, distance, isLongPath }) {
+function evaluateSinglePath({ source, target, bandId, dateTime, band, power, antenna, antennaDirection, distance, isLongPath }) {
     const result = new PropagationResult();
     const bandName = t(`bands.${bandId}.name`);
     result.power = power; // Store power info in result
     result.antenna = antenna; // Store antenna info in result
+    result.antennaDirection = antennaDirection; // Store antenna direction
 
     // Get ionospheric conditions along the path (includes solar activity effects)
     const pathConditions = analyzePathConditions(source, target, dateTime, isLongPath);
@@ -342,6 +344,20 @@ function evaluateSinglePath({ source, target, bandId, dateTime, band, power, ant
     // Add antenna factor (Dipole/Vertical/Yagi)
     const antennaFactor = evaluateAntenna(antenna, distance, pathConditions);
     result.factors.push(antennaFactor);
+
+    // Add directional penalty for Yagi antenna
+    if (antenna.directional) {
+        const targetBearing = calculateBearing(
+            source.latitude, source.longitude,
+            target.latitude, target.longitude
+        );
+        // For long path, the bearing is opposite
+        const effectiveBearing = isLongPath ? (targetBearing + 180) % 360 : targetBearing;
+        const directionPenalty = calculateDirectionalPenalty(antennaDirection, effectiveBearing);
+        const directionFactor = evaluateDirectionPenalty(directionPenalty);
+        result.factors.push(directionFactor);
+        result.directionPenalty = directionPenalty; // Store for display
+    }
 
     // Calculate overall signal strength from factors
     result.signalStrength = calculateSignalStrength(result.factors);
@@ -535,6 +551,52 @@ function evaluateAntenna(antenna, distance, pathConditions) {
     factor.gainDb = antenna.gainDb;
     factor.takeoffAngle = antenna.takeoffAngle;
     factor.directional = antenna.directional;
+
+    return factor;
+}
+
+/**
+ * Evaluate directional penalty for Yagi antenna
+ * When the Yagi is not pointed at the target, signal strength is reduced
+ */
+function evaluateDirectionPenalty(penaltyInfo) {
+    let description, educational;
+
+    switch (penaltyInfo.description) {
+        case 'onTarget':
+            description = t('propagation.direction.onTarget', { bearing: penaltyInfo.targetBearing });
+            educational = t('propagation.educational.directionOnTarget');
+            break;
+        case 'slightlyOff':
+            description = t('propagation.direction.slightlyOff', { diff: Math.round(penaltyInfo.angleDiff), penalty: penaltyInfo.penaltyDb });
+            educational = t('propagation.educational.directionSlightlyOff');
+            break;
+        case 'sideOn':
+            description = t('propagation.direction.sideOn', { diff: Math.round(penaltyInfo.angleDiff), penalty: penaltyInfo.penaltyDb });
+            educational = t('propagation.educational.directionSideOn');
+            break;
+        case 'rearQuarter':
+            description = t('propagation.direction.rearQuarter', { diff: Math.round(penaltyInfo.angleDiff), penalty: penaltyInfo.penaltyDb });
+            educational = t('propagation.educational.directionRearQuarter');
+            break;
+        case 'backwards':
+            description = t('propagation.direction.backwards', { diff: Math.round(penaltyInfo.angleDiff), penalty: penaltyInfo.penaltyDb });
+            educational = t('propagation.educational.directionBackwards');
+            break;
+        default:
+            description = t('propagation.direction.unknown');
+            educational = '';
+    }
+
+    const factor = new PropagationFactor(
+        t('propagation.factors.direction'),
+        penaltyInfo.impact,
+        description,
+        educational
+    );
+    factor.penaltyDb = penaltyInfo.penaltyDb;
+    factor.angleDiff = penaltyInfo.angleDiff;
+    factor.targetBearing = penaltyInfo.targetBearing;
 
     return factor;
 }

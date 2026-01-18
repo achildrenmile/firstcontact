@@ -27,6 +27,7 @@ class FirstContactApp {
             selectedBand: '20m',
             selectedPower: 'standard',
             selectedAntenna: 'dipole',
+            selectedDirection: 'N',
             currentTime: new Date(),
             lastResult: null,
             lastBandResult: {},  // Results by band for comparison
@@ -434,6 +435,7 @@ class FirstContactApp {
             onBandChange: (bandId) => this.handleBandChange(bandId),
             onPowerChange: (powerId) => this.handlePowerChange(powerId),
             onAntennaChange: (antennaId) => this.handleAntennaChange(antennaId),
+            onDirectionChange: (directionId) => this.handleDirectionChange(directionId),
             onTimeChange: (time) => this.handleTimeChange(time),
             onSolarActivityChange: (activityId) => this.handleSolarActivityChange(activityId),
             onMogelDellingerToggle: (active) => this.handleMogelDellingerToggle(active),
@@ -515,6 +517,18 @@ class FirstContactApp {
 
         // If we have a target, re-evaluate
         if (this.state.targetLocation) {
+            this.attemptContact();
+        }
+    }
+
+    /**
+     * Handle direction change (for Yagi antenna)
+     */
+    handleDirectionChange(directionId) {
+        this.state.selectedDirection = directionId;
+
+        // If we have a target and using Yagi, re-evaluate
+        if (this.state.targetLocation && this.state.selectedAntenna === 'yagi') {
             this.attemptContact();
         }
     }
@@ -626,6 +640,7 @@ class FirstContactApp {
                     bandId: this.state.selectedBand,
                     powerId: this.state.selectedPower,
                     antennaId: this.state.selectedAntenna,
+                    directionId: this.state.selectedDirection,
                     dateTime: this.state.currentTime
                 });
 

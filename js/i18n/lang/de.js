@@ -99,6 +99,17 @@ export default {
             title: 'Antennentyp',
             gain: 'Gewinn',
             angle: 'Abstrahlwinkel',
+            direction: 'Strahlrichtung',
+            directions: {
+                N: 'Nord',
+                NE: 'Nordost',
+                E: 'Ost',
+                SE: 'Südost',
+                S: 'Süd',
+                SW: 'Südwest',
+                W: 'West',
+                NW: 'Nordwest'
+            },
             types: {
                 dipole: {
                     name: 'Dipol',
@@ -479,7 +490,8 @@ export default {
             greyLineEffect: 'Grauzoneneffekt',
             pathGeometry: 'Pfadgeometrie',
             power: 'Sendeleistung',
-            antenna: 'Antenne'
+            antenna: 'Antenne',
+            direction: 'Strahlrichtung'
         },
 
         // Antenna effect messages
@@ -503,6 +515,16 @@ export default {
             standardDescription: 'Standardleistung (100W) - Normaler Signalpegel',
             highImpact: '+10 dB',
             highDescription: 'High Power (1kW) - Starkes Signal, bessere Reserve'
+        },
+
+        // Direction effect messages (for Yagi)
+        direction: {
+            onTarget: 'Yagi aufs Ziel ausgerichtet (Peilung {bearing}°) - voller Gewinn',
+            slightlyOff: 'Yagi {diff}° neben dem Ziel - {penalty} dB Verlust',
+            sideOn: 'Yagi fast seitlich zum Ziel ({diff}° daneben) - {penalty} dB Verlust',
+            rearQuarter: 'Yagi Rückseite ({diff}° vom Ziel) - {penalty} dB Verlust',
+            backwards: 'Yagi zeigt weg vom Ziel ({diff}° daneben) - {penalty} dB Verlust',
+            unknown: 'Yagi-Richtung unbekannt'
         },
 
         // Factor impacts
@@ -587,7 +609,13 @@ export default {
             antennaVerticalDx: 'Die Vertikalantenne glänzt bei DX! Ihr flacher Abstrahlwinkel (20°) sendet die meiste Energie zum Horizont – perfekt für Weitstrecken-Skip. Omnidirektional bedeutet, du kannst in alle Richtungen arbeiten.',
             antennaYagiNvis: 'Die Yagi-Antenne ist schlecht für NVIS geeignet. Ihr sehr flacher Abstrahlwinkel (15°) und das Richtdiagramm bedeuten, dass Energie zum Horizont gesendet wird, nicht nach oben für nahegelegene Kontakte.',
             antennaYagiMedium: 'Bei mittleren Entfernungen hilft der hohe Gewinn der Yagi (8 dBi), aber denk daran, sie ist direktional – sie muss auf die Zielstation ausgerichtet sein. Der flache Winkel kann dazu führen, dass dein Signal über nähere Stationen hinwegspringt.',
-            antennaYagiDx: 'Die Yagi ist der König der DX-Antennen! Hoher Gewinn (8 dBi) bündelt Energie in eine Richtung, und der sehr flache Abstrahlwinkel (15°) ist perfekt für Weitstrecken-Ausbreitung. Richte sie auf dein Ziel und genieße das DX!'
+            antennaYagiDx: 'Die Yagi ist der König der DX-Antennen! Hoher Gewinn (8 dBi) bündelt Energie in eine Richtung, und der sehr flache Abstrahlwinkel (15°) ist perfekt für Weitstrecken-Ausbreitung. Richte sie auf dein Ziel und genieße das DX!',
+            // Direction educational
+            directionOnTarget: 'Deine Yagi zeigt aufs Ziel - du erhältst den vollen Antennengewinn! Der schmale Strahl bündelt dein Signal genau dorthin, wo es gebraucht wird.',
+            directionSlightlyOff: 'Deine Yagi ist leicht neben dem Ziel. Du verlierst etwas Gewinn, weil das Ziel nicht in der Hauptkeule liegt. Versuche deine Strahlrichtung anzupassen.',
+            directionSideOn: 'Deine Yagi steht fast seitlich zum Ziel. Der meiste Gewinn geht verloren, weil Richtantennen sehr schwache Seitenkeulen haben. Drehe den Strahl zum Ziel!',
+            directionRearQuarter: 'Deine Yagi zeigt größtenteils weg vom Ziel. Du sendest/empfängst durch die Rück- und Seitenkeulen, die viel schwächer sind. Dreh die Antenne um!',
+            directionBackwards: 'Deine Yagi zeigt in die falsche Richtung! Das Vor-Rück-Verhältnis der Antenne bedeutet, dass sehr wenig Signal nach hinten geht (oder von dort kommt). Drehe den Strahl um 180° zum Ziel.'
         }
     },
 

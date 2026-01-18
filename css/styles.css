@@ -534,6 +534,52 @@ body {
     gap: 0.25rem;
 }
 
+/* Direction Selector (for Yagi) */
+.antenna-direction-container {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.direction-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+    text-align: center;
+}
+
+.direction-selector {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0.25rem;
+}
+
+.direction-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem 0.15rem;
+    background-color: var(--bg-tertiary);
+    border: 2px solid transparent;
+    border-radius: 0.35rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-secondary);
+    font-size: 0.65rem;
+    font-weight: 600;
+}
+
+.direction-button:hover {
+    background-color: rgba(251, 191, 36, 0.1);
+    border-color: var(--accent-warning);
+    color: var(--text-primary);
+}
+
+.direction-button.selected {
+    background-color: rgba(251, 191, 36, 0.2);
+    border-color: var(--accent-warning);
+    color: var(--accent-warning);
+}
+
 /* Time Control */
 .time-control {
     margin-bottom: 0.75rem;

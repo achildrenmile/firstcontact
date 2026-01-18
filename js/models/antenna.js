@@ -128,3 +128,104 @@ export function getSkipZoneModifier(antennaId) {
     // Factor of 0.7-1.0 based on NVIS capability
     return 1.0 - (antenna.nvisCapability * 0.3);
 }
+
+/**
+ * Compass directions in degrees
+ */
+export const COMPASS_DIRECTIONS = {
+    N:   { id: 'N',   degrees: 0,   name: 'North' },
+    NE:  { id: 'NE',  degrees: 45,  name: 'Northeast' },
+    E:   { id: 'E',   degrees: 90,  name: 'East' },
+    SE:  { id: 'SE',  degrees: 135, name: 'Southeast' },
+    S:   { id: 'S',   degrees: 180, name: 'South' },
+    SW:  { id: 'SW',  degrees: 225, name: 'Southwest' },
+    W:   { id: 'W',   degrees: 270, name: 'West' },
+    NW:  { id: 'NW',  degrees: 315, name: 'Northwest' }
+};
+
+/**
+ * Get all compass directions
+ */
+export function getAllDirections() {
+    return Object.values(COMPASS_DIRECTIONS);
+}
+
+/**
+ * Calculate bearing from source to target (in degrees, 0 = North)
+ */
+export function calculateBearing(sourceLat, sourceLon, targetLat, targetLon) {
+    const lat1 = sourceLat * Math.PI / 180;
+    const lat2 = targetLat * Math.PI / 180;
+    const dLon = (targetLon - sourceLon) * Math.PI / 180;
+
+    const y = Math.sin(dLon) * Math.cos(lat2);
+    const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+    let bearing = Math.atan2(y, x) * 180 / Math.PI;
+    bearing = (bearing + 360) % 360; // Normalize to 0-360
+
+    return bearing;
+}
+
+/**
+ * Calculate directional gain penalty for Yagi antenna
+ * Based on typical 3-element Yagi radiation pattern:
+ * - Front (0°): Full gain (0 dB penalty)
+ * - -3dB beamwidth: ~60° (±30° from center)
+ * - Side lobes (90°): -10 to -12 dB
+ * - Back (180°): -15 to -20 dB (front-to-back ratio)
+ *
+ * @param {number} antennaDirection - Direction antenna is pointing (degrees)
+ * @param {number} targetBearing - Bearing to target (degrees)
+ * @returns {object} Direction penalty info
+ */
+export function calculateDirectionalPenalty(antennaDirection, targetBearing) {
+    // Calculate angular difference (0-180)
+    let diff = Math.abs(antennaDirection - targetBearing);
+    if (diff > 180) diff = 360 - diff;
+
+    let penaltyDb = 0;
+    let description = '';
+    let severity = 'none';
+
+    if (diff <= 30) {
+        // Within main beam (-3dB beamwidth)
+        penaltyDb = (diff / 30) * 3; // 0 to -3 dB
+        description = 'onTarget';
+        severity = 'none';
+    } else if (diff <= 60) {
+        // First sidelobe region
+        penaltyDb = 3 + ((diff - 30) / 30) * 5; // -3 to -8 dB
+        description = 'slightlyOff';
+        severity = 'minor';
+    } else if (diff <= 90) {
+        // Side region
+        penaltyDb = 8 + ((diff - 60) / 30) * 4; // -8 to -12 dB
+        description = 'sideOn';
+        severity = 'moderate';
+    } else if (diff <= 135) {
+        // Rear quarter
+        penaltyDb = 12 + ((diff - 90) / 45) * 5; // -12 to -17 dB
+        description = 'rearQuarter';
+        severity = 'severe';
+    } else {
+        // Back lobe
+        penaltyDb = 17 + ((diff - 135) / 45) * 3; // -17 to -20 dB
+        description = 'backwards';
+        severity = 'extreme';
+    }
+
+    // Convert dB penalty to impact factor (for propagation engine)
+    // Roughly -3 dB = -0.1 impact
+    const impact = -penaltyDb / 30;
+
+    return {
+        angleDiff: diff,
+        penaltyDb: Math.round(penaltyDb * 10) / 10,
+        impact,
+        description,
+        severity,
+        antennaDirection,
+        targetBearing: Math.round(targetBearing)
+    };
+}
