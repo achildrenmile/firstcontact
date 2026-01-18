@@ -14,25 +14,34 @@ RUN npm install
 
 # Copy source files
 COPY js/ ./js/
+COPY css/ ./css/
 COPY index.prod.html ./
 
-# Bundle JavaScript with hash filename and update HTML
+# Bundle JavaScript with hash filename
+# Also hash CSS filename for cache busting
 RUN npm run build:prod && \
     BUNDLE_FILE=$(ls dist/ | grep -E '^app\.[a-zA-Z0-9]+\.js$' | head -1) && \
-    echo "Generated bundle: $BUNDLE_FILE" && \
-    sed -i "s|app\.[a-zA-Z0-9_]*\.js|$BUNDLE_FILE|g" index.prod.html
+    echo "Generated JS bundle: $BUNDLE_FILE" && \
+    sed -i "s|app\.[a-zA-Z0-9_]*\.js|$BUNDLE_FILE|g" index.prod.html && \
+    # Generate hash for CSS file
+    CSS_HASH=$(md5sum css/styles.css | cut -c1-8) && \
+    CSS_FILE="styles.${CSS_HASH}.css" && \
+    echo "Generated CSS: $CSS_FILE" && \
+    mkdir -p dist/css && \
+    cp css/styles.css "dist/css/${CSS_FILE}" && \
+    sed -i "s|css/styles\.css|css/${CSS_FILE}|g" index.prod.html
 
 # Stage 2: Production
 FROM nginx:alpine
 
 # Copy static files
-COPY css/ /usr/share/nginx/html/css/
 COPY favicon.svg /usr/share/nginx/html/
 COPY world.json /usr/share/nginx/html/
 COPY countries.json /usr/share/nginx/html/
 
-# Copy bundled JavaScript and updated HTML from builder
+# Copy bundled JavaScript, hashed CSS, and updated HTML from builder
 COPY --from=builder /app/dist/*.js /usr/share/nginx/html/
+COPY --from=builder /app/dist/css/ /usr/share/nginx/html/css/
 COPY --from=builder /app/index.prod.html /usr/share/nginx/html/index.html
 
 # Custom nginx config
