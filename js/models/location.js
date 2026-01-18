@@ -281,19 +281,100 @@ export function calculateMidpoint(lat1, lon1, lat2, lon2) {
 }
 
 /**
+ * Earth's circumference in kilometers
+ */
+const EARTH_CIRCUMFERENCE = 40075;
+
+/**
+ * Calculate long path distance (the other way around the globe)
+ * @returns {number} Long path distance in kilometers
+ */
+export function calculateLongPathDistance(lat1, lon1, lat2, lon2) {
+    const shortPath = calculateDistance(lat1, lon1, lat2, lon2);
+    return EARTH_CIRCUMFERENCE - shortPath;
+}
+
+/**
+ * Calculate both short and long path information
+ * @returns {object} Object with shortPath and longPath distances and which is shorter
+ */
+export function calculateBothPaths(lat1, lon1, lat2, lon2) {
+    const shortPath = calculateDistance(lat1, lon1, lat2, lon2);
+    const longPath = EARTH_CIRCUMFERENCE - shortPath;
+
+    return {
+        shortPath: {
+            distance: shortPath,
+            bearing: calculateBearing(lat1, lon1, lat2, lon2)
+        },
+        longPath: {
+            distance: longPath,
+            bearing: (calculateBearing(lat1, lon1, lat2, lon2) + 180) % 360
+        }
+    };
+}
+
+/**
  * Generate points along a great circle path (for drawing signal paths)
  * @param {number} numPoints - Number of intermediate points
+ * @param {boolean} longPath - If true, generate points for the long path
  */
-export function generatePathPoints(lat1, lon1, lat2, lon2, numPoints = 20) {
+export function generatePathPoints(lat1, lon1, lat2, lon2, numPoints = 20, longPath = false) {
     const points = [];
 
-    for (let i = 0; i <= numPoints; i++) {
-        const fraction = i / numPoints;
-        const point = interpolateGreatCircle(lat1, lon1, lat2, lon2, fraction);
-        points.push(point);
+    if (!longPath) {
+        // Short path - direct interpolation
+        for (let i = 0; i <= numPoints; i++) {
+            const fraction = i / numPoints;
+            const point = interpolateGreatCircle(lat1, lon1, lat2, lon2, fraction);
+            points.push(point);
+        }
+    } else {
+        // Long path - go the other way around the globe
+        // We use the antipodal approach: go from A in the opposite direction to reach B
+        for (let i = 0; i <= numPoints; i++) {
+            const fraction = i / numPoints;
+            const point = interpolateLongPath(lat1, lon1, lat2, lon2, fraction);
+            points.push(point);
+        }
     }
 
     return points;
+}
+
+/**
+ * Interpolate a point along the long path (the other way around the globe)
+ * @param {number} fraction - 0 to 1, where along the long path
+ */
+function interpolateLongPath(lat1, lon1, lat2, lon2, fraction) {
+    // For long path, we go from lat1,lon1 in the opposite direction
+    // This is equivalent to going from lat1,lon1 to the antipodal point of lat2,lon2
+    // and then continuing to lat2,lon2
+
+    // Calculate the antipodal point of the destination
+    const antiLat2 = -lat2;
+    const antiLon2 = lon2 > 0 ? lon2 - 180 : lon2 + 180;
+
+    // The long path goes: start -> antipodal of end -> end
+    // Total angular distance for long path
+    const shortDist = calculateDistance(lat1, lon1, lat2, lon2);
+    const longDist = EARTH_CIRCUMFERENCE - shortDist;
+
+    // Distance to antipodal point
+    const distToAntipodal = calculateDistance(lat1, lon1, antiLat2, antiLon2);
+
+    // Fraction of journey where we pass through antipodal region
+    const antipodalFraction = distToAntipodal / longDist;
+
+    if (fraction <= antipodalFraction && antipodalFraction > 0) {
+        // First part: going towards the antipodal point
+        const subFraction = fraction / antipodalFraction;
+        return interpolateGreatCircle(lat1, lon1, antiLat2, antiLon2, subFraction);
+    } else {
+        // Second part: from antipodal point to destination
+        const remainingFraction = antipodalFraction < 1 ? (fraction - antipodalFraction) / (1 - antipodalFraction) : 1;
+        return interpolateGreatCircle(antiLat2, antiLon2, lat2, lon2, remainingFraction);
+    }
 }
 
 /**

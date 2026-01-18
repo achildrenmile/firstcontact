@@ -49,7 +49,12 @@ export function generateExplanation(result, context) {
         suggestions: generateSuggestions(result, band, dateTime),
 
         // Encouraging message
-        encouragement: generateEncouragement(result, band)
+        encouragement: generateEncouragement(result, band),
+
+        // Path mode information (short/long path)
+        pathMode: result.pathMode || 'short',
+        pathComparison: result.pathComparison,
+        hasLongPathOption: result.longPathResult !== null
     };
 }
 

@@ -935,6 +935,7 @@ export class WorldMap {
 
     /**
      * Draw the signal path
+     * Handles date line crossings for long path visualization
      */
     drawSignalPath() {
         if (!this.signalPath || !this.signalPath.points) return;
@@ -947,6 +948,34 @@ export class WorldMap {
             ? this.colors.signalSuccess
             : this.colors.signalFail;
 
+        // Helper function to draw path segments, handling date line crossings
+        const drawPathWithDateLineCrossing = () => {
+            let prevPoint = null;
+            let prevPixel = null;
+
+            for (const point of points) {
+                const pixel = this.latLonToPixel(point.latitude, point.longitude);
+
+                if (prevPoint === null) {
+                    ctx.moveTo(pixel.x, pixel.y);
+                } else {
+                    // Check for date line crossing (large longitude jump)
+                    const lonDiff = Math.abs(point.longitude - prevPoint.longitude);
+                    if (lonDiff > 180) {
+                        // Date line crossing - start new path segment
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(pixel.x, pixel.y);
+                    } else {
+                        ctx.lineTo(pixel.x, pixel.y);
+                    }
+                }
+
+                prevPoint = point;
+                prevPixel = pixel;
+            }
+        };
+
         // Draw path glow
         ctx.strokeStyle = this.signalPathSuccess
             ? 'rgba(74, 222, 128, 0.3)'
@@ -955,16 +984,7 @@ export class WorldMap {
         ctx.lineCap = 'round';
 
         ctx.beginPath();
-        let first = true;
-        for (const point of points) {
-            const pixel = this.latLonToPixel(point.latitude, point.longitude);
-            if (first) {
-                ctx.moveTo(pixel.x, pixel.y);
-                first = false;
-            } else {
-                ctx.lineTo(pixel.x, pixel.y);
-            }
-        }
+        drawPathWithDateLineCrossing();
         ctx.stroke();
 
         // Draw main path line
@@ -979,16 +999,7 @@ export class WorldMap {
         }
 
         ctx.beginPath();
-        first = true;
-        for (const point of points) {
-            const pixel = this.latLonToPixel(point.latitude, point.longitude);
-            if (first) {
-                ctx.moveTo(pixel.x, pixel.y);
-                first = false;
-            } else {
-                ctx.lineTo(pixel.x, pixel.y);
-            }
-        }
+        drawPathWithDateLineCrossing();
         ctx.stroke();
 
         ctx.setLineDash([]); // Reset dash

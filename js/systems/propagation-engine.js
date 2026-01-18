@@ -14,7 +14,7 @@
 
 import { Ionosphere } from '../models/ionosphere.js';
 import { HF_BANDS } from '../models/bands.js';
-import { calculateDistance, generatePathPoints } from '../models/location.js';
+import { calculateDistance, calculateLongPathDistance, calculateBothPaths, generatePathPoints } from '../models/location.js';
 import {
     calculateSolarElevation,
     checkGreyLine,
@@ -52,6 +52,11 @@ export class PropagationResult {
         this.factors = [];
         this.summary = '';
         this.learningPoints = [];
+        // Long path support
+        this.pathMode = 'short'; // 'short' or 'long'
+        this.shortPathResult = null; // Result for short path (for comparison)
+        this.longPathResult = null;  // Result for long path (for comparison)
+        this.pathComparison = null;  // Why this path was chosen
     }
 }
 
@@ -76,6 +81,7 @@ export class SignalPath {
         this.hops = [];
         this.totalDistance = 0;
         this.pathType = 'unknown';
+        this.pathMode = 'short'; // 'short' or 'long'
     }
 }
 
@@ -94,26 +100,129 @@ export class HopInfo {
 
 /**
  * Main propagation evaluation function
+ * Now evaluates both short path and long path, choosing the better one
  */
 export function evaluatePropagation({ source, target, bandId, dateTime }) {
-    const result = new PropagationResult();
     const band = HF_BANDS[bandId];
 
     if (!band) {
+        const result = new PropagationResult();
         result.summary = t('errors.unknownBand');
         return result;
     }
 
-    const bandName = t(`bands.${bandId}.name`);
-
-    // Calculate basic geometry
-    const distance = calculateDistance(
+    // Calculate both path distances
+    const pathInfo = calculateBothPaths(
         source.latitude, source.longitude,
         target.latitude, target.longitude
     );
 
+    const shortPathDistance = pathInfo.shortPath.distance;
+    const longPathDistance = pathInfo.longPath.distance;
+
+    // Always evaluate short path
+    const shortPathResult = evaluateSinglePath({
+        source, target, bandId, dateTime, band,
+        distance: shortPathDistance,
+        isLongPath: false
+    });
+
+    // For significant distances (> 3000 km), also evaluate long path
+    // Long path only makes sense for DX contacts
+    const LONG_PATH_THRESHOLD = 3000;
+    let longPathResult = null;
+    let useLongPath = false;
+    let pathComparison = null;
+
+    if (shortPathDistance > LONG_PATH_THRESHOLD) {
+        longPathResult = evaluateSinglePath({
+            source, target, bandId, dateTime, band,
+            distance: longPathDistance,
+            isLongPath: true
+        });
+
+        // Compare the two paths and choose the better one
+        const comparison = comparePaths(shortPathResult, longPathResult, shortPathDistance, longPathDistance);
+        useLongPath = comparison.useLongPath;
+        pathComparison = comparison.reason;
+    }
+
+    // Return the better result
+    const result = useLongPath ? longPathResult : shortPathResult;
+    result.pathMode = useLongPath ? 'long' : 'short';
+    result.shortPathResult = shortPathResult;
+    result.longPathResult = longPathResult;
+    result.pathComparison = pathComparison;
+
+    // Add long path learning point if applicable
+    if (longPathResult && useLongPath) {
+        result.learningPoints.push({
+            concept: t('learning.concepts.longPath.name'),
+            insight: t('learning.concepts.longPath.insight'),
+            experiment: t('learning.concepts.longPath.experiment')
+        });
+    } else if (longPathResult && !useLongPath && longPathResult.success) {
+        // Both paths work but short is better
+        result.learningPoints.push({
+            concept: t('learning.concepts.shortVsLong.name'),
+            insight: t('learning.concepts.shortVsLong.insight'),
+            experiment: t('learning.concepts.shortVsLong.experiment')
+        });
+    }
+
+    return result;
+}
+
+/**
+ * Compare short and long path results to determine which is better
+ */
+function comparePaths(shortResult, longResult, shortDistance, longDistance) {
+    // If only one path works, use that one
+    if (shortResult.success && !longResult.success) {
+        return { useLongPath: false, reason: t('propagation.pathComparison.onlyShortWorks') };
+    }
+    if (!shortResult.success && longResult.success) {
+        return { useLongPath: true, reason: t('propagation.pathComparison.onlyLongWorks') };
+    }
+    if (!shortResult.success && !longResult.success) {
+        // Neither works, prefer short path (shorter distance = less loss)
+        return { useLongPath: false, reason: t('propagation.pathComparison.neitherWorks') };
+    }
+
+    // Both paths work - compare signal strength
+    const strengthDiff = longResult.signalStrength - shortResult.signalStrength;
+
+    // Long path needs to be significantly better (at least 15 points) to be preferred
+    // because it's inherently longer and more complex
+    if (strengthDiff > 15) {
+        return {
+            useLongPath: true,
+            reason: t('propagation.pathComparison.longPathBetter', {
+                longStrength: longResult.signalStrength,
+                shortStrength: shortResult.signalStrength
+            })
+        };
+    }
+
+    // Short path is preferred when similar or better
+    return {
+        useLongPath: false,
+        reason: t('propagation.pathComparison.shortPathBetter', {
+            shortStrength: shortResult.signalStrength,
+            longStrength: longResult.signalStrength
+        })
+    };
+}
+
+/**
+ * Evaluate propagation for a single path (short or long)
+ */
+function evaluateSinglePath({ source, target, bandId, dateTime, band, distance, isLongPath }) {
+    const result = new PropagationResult();
+    const bandName = t(`bands.${bandId}.name`);
+
     // Get ionospheric conditions along the path (includes solar activity effects)
-    const pathConditions = analyzePathConditions(source, target, dateTime);
+    const pathConditions = analyzePathConditions(source, target, dateTime, isLongPath);
 
     // Calculate how many hops are needed
     const hopAnalysis = calculateRequiredHops(distance, band);
@@ -129,7 +238,8 @@ export function evaluatePropagation({ source, target, bandId, dateTime }) {
             result.success = false;
             result.qualityDescription = t('propagation.quality.blackout');
             result.summary = t('propagation.mogelDellinger.blackout', { band: bandName });
-            result.path = buildSignalPath(source, target, hopAnalysis, false);
+            result.path = buildSignalPath(source, target, hopAnalysis, false, isLongPath);
+            result.path.pathMode = isLongPath ? 'long' : 'short';
             result.learningPoints = [{
                 concept: t('learning.concepts.mogelDellinger.name'),
                 insight: t('learning.concepts.mogelDellinger.insight'),
@@ -156,7 +266,8 @@ export function evaluatePropagation({ source, target, bandId, dateTime }) {
             result.success = result.signalStrength >= 20;
             result.qualityDescription = t('propagation.quality.auroraFlutter');
             result.summary = t('propagation.aurora.blocked');
-            result.path = buildSignalPath(source, target, hopAnalysis, result.success);
+            result.path = buildSignalPath(source, target, hopAnalysis, result.success, isLongPath);
+            result.path.pathMode = isLongPath ? 'long' : 'short';
             result.learningPoints = [{
                 concept: t('learning.concepts.aurora.name'),
                 insight: t('learning.concepts.aurora.insight'),
@@ -181,7 +292,7 @@ export function evaluatePropagation({ source, target, bandId, dateTime }) {
     result.factors.push(reflectionFactor);
 
     // Check for grey line effects
-    const greyLineFactor = evaluateGreyLine(source, target, dateTime);
+    const greyLineFactor = evaluateGreyLine(source, target, dateTime, isLongPath);
     if (greyLineFactor) {
         result.factors.push(greyLineFactor);
     }
@@ -190,6 +301,12 @@ export function evaluatePropagation({ source, target, bandId, dateTime }) {
     const geometryFactor = evaluateGeometry(hopAnalysis, band, bandId);
     result.factors.push(geometryFactor);
 
+    // Add long path distance penalty (more hops = more loss)
+    if (isLongPath) {
+        const longPathPenalty = evaluateLongPathPenalty(distance);
+        result.factors.push(longPathPenalty);
+    }
+
     // Calculate overall signal strength from factors
     result.signalStrength = calculateSignalStrength(result.factors);
 
@@ -197,22 +314,48 @@ export function evaluatePropagation({ source, target, bandId, dateTime }) {
     result.success = result.signalStrength >= 20;
 
     // Build the signal path for visualization
-    result.path = buildSignalPath(source, target, hopAnalysis, result.success);
+    result.path = buildSignalPath(source, target, hopAnalysis, result.success, isLongPath);
+    result.path.pathMode = isLongPath ? 'long' : 'short';
 
     // Generate quality description
     result.qualityDescription = getQualityDescription(result.signalStrength);
 
     // Generate summary and learning points
-    result.summary = generateSummary(result, band, bandId, distance);
+    result.summary = generateSummary(result, band, bandId, distance, isLongPath);
     result.learningPoints = extractLearningPoints(result, band, bandId, pathConditions);
 
     return result;
 }
 
 /**
+ * Evaluate penalty for long path (additional signal loss due to distance)
+ */
+function evaluateLongPathPenalty(distance) {
+    // Long path has inherent additional loss
+    // The longer the path, the more loss
+    let impact, description, educational;
+
+    if (distance > 30000) {
+        impact = -0.4;
+        description = t('propagation.longPath.veryLongDistance');
+        educational = t('propagation.educational.longPathVeryLong');
+    } else if (distance > 25000) {
+        impact = -0.3;
+        description = t('propagation.longPath.longDistance');
+        educational = t('propagation.educational.longPathLong');
+    } else {
+        impact = -0.2;
+        description = t('propagation.longPath.moderateDistance');
+        educational = t('propagation.educational.longPathModerate');
+    }
+
+    return new PropagationFactor('Long Path', impact, description, educational);
+}
+
+/**
  * Analyze ionospheric conditions along the signal path
  */
-function analyzePathConditions(source, target, dateTime) {
+function analyzePathConditions(source, target, dateTime, isLongPath = false) {
     const ionosphere = new Ionosphere();
 
     // Apply solar activity effects to ionosphere
@@ -222,7 +365,8 @@ function analyzePathConditions(source, target, dateTime) {
     const pathPoints = generatePathPoints(
         source.latitude, source.longitude,
         target.latitude, target.longitude,
-        10
+        10,
+        isLongPath
     );
 
     // Calculate what percent of path is in daylight (for Mögel-Dellinger)
@@ -409,11 +553,13 @@ function evaluateReflection(band, bandId, pathConditions, distance) {
 /**
  * Evaluate grey line enhancement
  */
-function evaluateGreyLine(source, target, dateTime) {
+function evaluateGreyLine(source, target, dateTime, isLongPath = false) {
     const greyLineAnalysis = doesPathCrossGreyLine(
         source.latitude, source.longitude,
         target.latitude, target.longitude,
-        dateTime
+        dateTime,
+        10,
+        isLongPath
     );
 
     if (!greyLineAnalysis.crossesGreyLine) {
@@ -680,16 +826,18 @@ function calculateSignalStrength(factors) {
 /**
  * Build signal path for visualization
  */
-function buildSignalPath(source, target, hopAnalysis, success) {
+function buildSignalPath(source, target, hopAnalysis, success, isLongPath = false) {
     const path = new SignalPath();
     path.totalDistance = hopAnalysis.distance;
+    path.pathMode = isLongPath ? 'long' : 'short';
 
     if (!success) {
         path.pathType = 'failed';
         path.points = generatePathPoints(
             source.latitude, source.longitude,
             target.latitude, target.longitude,
-            20
+            20,
+            isLongPath
         );
         return path;
     }
@@ -700,7 +848,8 @@ function buildSignalPath(source, target, hopAnalysis, success) {
     const groundPoints = generatePathPoints(
         source.latitude, source.longitude,
         target.latitude, target.longitude,
-        numHops
+        numHops,
+        isLongPath
     );
 
     for (let i = 0; i < numHops; i++) {
@@ -757,13 +906,16 @@ function getQualityDescription(strength) {
 /**
  * Generate a human-readable summary
  */
-function generateSummary(result, band, bandId, distance) {
+function generateSummary(result, band, bandId, distance, isLongPath = false) {
     const bandName = t(`bands.${bandId}.name`);
     const distanceStr = formatDistance(distance);
+    const pathType = isLongPath ? t('propagation.pathType.long') : t('propagation.pathType.short');
 
     if (result.success) {
-        return t('propagation.headlines.reached', { target: distanceStr }) +
+        const baseMessage = t('propagation.headlines.reached', { target: distanceStr }) +
                ` (${bandName}, ${result.qualityDescription})`;
+        // Only mention path type for long path (short path is the default)
+        return isLongPath ? `${baseMessage} - ${pathType}` : baseMessage;
     } else {
         const worstFactor = result.factors.reduce(
             (worst, f) => f.impact < worst.impact ? f : worst,

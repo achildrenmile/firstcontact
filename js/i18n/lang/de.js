@@ -404,6 +404,28 @@ export default {
             failed: 'Fehlgeschlagener Pfad'
         },
 
+        // Short path vs long path
+        pathType: {
+            short: 'Short Path',
+            long: 'Long Path'
+        },
+
+        // Path comparison messages
+        pathComparison: {
+            onlyShortWorks: 'Nur der Short Path funktioniert unter aktuellen Bedingungen.',
+            onlyLongWorks: 'Der Long Path funktioniert, während der Short Path blockiert ist!',
+            neitherWorks: 'Weder Short noch Long Path funktionieren unter aktuellen Bedingungen.',
+            longPathBetter: 'Long Path ({longStrength}%) ist deutlich besser als Short Path ({shortStrength}%).',
+            shortPathBetter: 'Short Path ({shortStrength}%) ist besser als Long Path ({longStrength}%).'
+        },
+
+        // Long path descriptions
+        longPath: {
+            veryLongDistance: 'Sehr lange Pfaddistanz - Signalabschwächung über extreme Entfernung',
+            longDistance: 'Lange Pfaddistanz - zusätzliche Signaldämpfung',
+            moderateDistance: 'Long Path fügt Distanz hinzu, kann aber Hindernisse umgehen'
+        },
+
         // Factor names
         factors: {
             dLayerAbsorption: 'D-Schicht-Absorption',
@@ -471,7 +493,11 @@ export default {
             // Sporadic E educational
             sporadicEExcellent: 'Ausgezeichnete Sporadic-E-Bedingungen! Dichte Ionisationsflecken in der E-Schicht erzeugen eine reflektierende Oberfläche für {band}. Dieser {distance} km Pfad ist perfekt für Es – erwarte starke Signale! Es ist am häufigsten im Sommer.',
             sporadicEGood: 'Gute Sporadic-E-Aktivität verstärkt die {band}-Ausbreitung. Die E-Schicht (etwa 110 km Höhe) hat dichte Ionisationsflecken entwickelt, die höhere Frequenzen reflektieren können. Das ist die "Sommermagie", die Funkamateure lieben!',
-            sporadicEModerate: 'Etwas Sporadic-E-Aktivität ist vorhanden und gibt {band} einen Schub. Es erzeugt kürzere Öffnungen (500-2000 km) im Vergleich zur F-Schicht-Ausbreitung, weil die E-Schicht niedriger liegt.'
+            sporadicEModerate: 'Etwas Sporadic-E-Aktivität ist vorhanden und gibt {band} einen Schub. Es erzeugt kürzere Öffnungen (500-2000 km) im Vergleich zur F-Schicht-Ausbreitung, weil die E-Schicht niedriger liegt.',
+            // Long path educational
+            longPathVeryLong: 'Dies ist ein extrem langer Pfad mit über 30.000 km rund um den Globus. Jeder zusätzliche Sprung schwächt das Signal erheblich. Long Path ist einen Versuch wert, wenn die Short Path Bedingungen schlecht sind.',
+            longPathLong: 'Der Long Path legt über 25.000 km zurück – mehr als die halbe Erde in die "falsche" Richtung. Trotz der zusätzlichen Distanz kann dies funktionieren, wenn der Short Path ungünstige Bedingungen kreuzt.',
+            longPathModerate: 'Der Long Path fügt erhebliche Distanz hinzu, umgeht aber die Hindernisse, die den Short Path blockieren. Die andere Route kann bessere ionosphärische Bedingungen kreuzen.'
         }
     },
 
@@ -529,6 +555,16 @@ export default {
                 name: 'Sporadic E (Es)',
                 insight: 'Du erlebst Sporadic E! Dichte Ionisationsflecken bilden sich in der E-Schicht und erzeugen überraschende Öffnungen auf {band}. Es ist am häufigsten im Sommer und ermöglicht Kontakte über 500-2000 km – Entfernungen, die normalerweise in der "Skip-Zone" liegen.',
                 experiment: 'Probiere 10m oder 15m an Sommernachmittagen – du könntest eine Es-Öffnung erwischen und Stationen erreichen, die normalerweise unerreichbar sind!'
+            },
+            longPath: {
+                name: 'Long Path Ausbreitung',
+                insight: 'Du hast Long Path Ausbreitung entdeckt! Wenn der Short Path (direkte Route) durch Tageslicht-Absorption, polare Aurora oder schlechte ionosphärische Bedingungen blockiert ist, können Signale den "langen Weg" um den Globus nehmen. Dieser Pfad ist länger, kann aber günstigere Bedingungen kreuzen.',
+                experiment: 'Versuche Kontakte zu entfernten Stationen (Japan, Australien, Neuseeland von Europa aus) – manchmal funktioniert der Long Path, wenn der Short Path versagt. Vergleiche beide Richtungen!'
+            },
+            shortVsLong: {
+                name: 'Short vs Long Path',
+                insight: 'Sowohl Short als auch Long Path funktionieren für diese Verbindung! Der Short Path ist die direkte Großkreis-Route, während der Long Path den anderen Weg um die Erde nimmt. DXer vergleichen oft beide Pfade – manchmal funktioniert einer viel besser als der andere.',
+                experiment: 'Bei sehr weiten Verbindungen probiere dieselbe Station zu verschiedenen Zeiten – du wirst feststellen, dass sich der bevorzugte Pfad im Laufe des Tages ändert!'
             }
         }
     },

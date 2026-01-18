@@ -404,6 +404,28 @@ export default {
             failed: 'Failed path'
         },
 
+        // Short path vs long path
+        pathType: {
+            short: 'Short Path',
+            long: 'Long Path'
+        },
+
+        // Path comparison messages
+        pathComparison: {
+            onlyShortWorks: 'Only the short path works under current conditions.',
+            onlyLongWorks: 'The long path works while the short path is blocked!',
+            neitherWorks: 'Neither short nor long path works under current conditions.',
+            longPathBetter: 'Long path ({longStrength}%) is significantly better than short path ({shortStrength}%).',
+            shortPathBetter: 'Short path ({shortStrength}%) is preferred over long path ({longStrength}%).'
+        },
+
+        // Long path descriptions
+        longPath: {
+            veryLongDistance: 'Very long path distance - signal weakening over extreme distance',
+            longDistance: 'Long path distance - additional signal loss',
+            moderateDistance: 'Long path adds extra distance but may avoid obstacles'
+        },
+
         // Factor names
         factors: {
             dLayerAbsorption: 'D Layer Absorption',
@@ -471,7 +493,11 @@ export default {
             // Sporadic E educational
             sporadicEExcellent: 'Excellent Sporadic E (Es) conditions! Dense patches of ionization in the E layer are creating a reflective surface for {band}. This {distance} km path is perfect for Es - expect strong signals! Es is most common in summer.',
             sporadicEGood: 'Good Sporadic E activity is enhancing {band} propagation. The E layer (at about 110 km altitude) has developed dense ionization patches that can reflect higher frequencies. This is the "summer magic" that amateur radio operators love!',
-            sporadicEModerate: 'Some Sporadic E activity is present, giving {band} a boost. Es creates shorter-distance openings (500-2000 km) compared to F layer propagation, because the E layer is lower.'
+            sporadicEModerate: 'Some Sporadic E activity is present, giving {band} a boost. Es creates shorter-distance openings (500-2000 km) compared to F layer propagation, because the E layer is lower.',
+            // Long path educational
+            longPathVeryLong: 'This is an extremely long path, traveling over 30,000 km around the globe. Each additional hop weakens the signal considerably. Long path is worth trying when short path conditions are poor.',
+            longPathLong: 'The long path travels over 25,000 km - more than half way around the world in the "wrong" direction. Despite the extra distance, this can work when short path crosses unfavorable conditions.',
+            longPathModerate: 'Taking the long path adds significant distance, but it avoids whatever obstacles are blocking the short path. The different route may cross better ionospheric conditions.'
         }
     },
 
@@ -529,6 +555,16 @@ export default {
                 name: 'Sporadic E (Es)',
                 insight: 'You\'re experiencing Sporadic E! Dense ionization patches form in the E layer, creating surprise openings on {band}. Es is most common in summer and enables contacts at 500-2000 km - distances that are normally in the "skip zone".',
                 experiment: 'Try 10m or 15m during summer afternoons - you might catch an Es opening and work stations that are normally unreachable!'
+            },
+            longPath: {
+                name: 'Long Path Propagation',
+                insight: 'You discovered long path propagation! When the short path (direct route) is blocked by daylight absorption, polar aurora, or poor ionospheric conditions, signals can travel the "long way" around the globe. This path is longer but may cross more favorable conditions.',
+                experiment: 'Try contacts to distant stations (Japan, Australia, New Zealand from Europe) - sometimes the long path works when short path fails. Compare both directions!'
+            },
+            shortVsLong: {
+                name: 'Short vs Long Path',
+                insight: 'Both short and long path work for this contact! The short path is the direct great-circle route, while the long path goes the other way around the Earth. DXers often compare both paths - sometimes one works much better than the other.',
+                experiment: 'For very long contacts, try the same station at different times - you might find the preferred path changes during the day!'
             }
         }
     },

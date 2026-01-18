@@ -67,6 +67,20 @@ export class FeedbackPanel {
                     </div>
                 </div>
 
+                <!-- Path Mode Indicator (for long path) -->
+                ${explanation.pathMode === 'long' ? `
+                    <div class="path-mode-indicator long-path">
+                        <span class="path-icon">🌍</span>
+                        <span class="path-label">${t('propagation.pathType.long')}</span>
+                        ${explanation.pathComparison ? `<span class="path-comparison">${explanation.pathComparison}</span>` : ''}
+                    </div>
+                ` : (explanation.hasLongPathOption ? `
+                    <div class="path-mode-indicator short-path">
+                        <span class="path-icon">➡️</span>
+                        <span class="path-label">${t('propagation.pathType.short')}</span>
+                    </div>
+                ` : '')}
+
                 <!-- Short Explanation -->
                 <p class="result-summary">${explanation.shortExplanation}</p>
 

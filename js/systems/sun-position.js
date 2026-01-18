@@ -343,16 +343,41 @@ export function doesPathCrossGreyLine(
     sourceLat, sourceLon,
     targetLat, targetLon,
     dateTime,
-    numSamples = 10
+    numSamples = 10,
+    isLongPath = false
 ) {
     let greyLinePoints = 0;
 
     for (let i = 0; i <= numSamples; i++) {
         const fraction = i / numSamples;
 
-        // Linear interpolation (close enough for educational purposes)
-        const lat = sourceLat + (targetLat - sourceLat) * fraction;
-        const lon = sourceLon + (targetLon - sourceLon) * fraction;
+        let lat, lon;
+
+        if (!isLongPath) {
+            // Short path: Linear interpolation (close enough for educational purposes)
+            lat = sourceLat + (targetLat - sourceLat) * fraction;
+            lon = sourceLon + (targetLon - sourceLon) * fraction;
+        } else {
+            // Long path: Go via antipodal point of destination
+            const antiLat = -targetLat;
+            const antiLon = targetLon > 0 ? targetLon - 180 : targetLon + 180;
+
+            if (fraction < 0.5) {
+                // First half: source to antipodal
+                const subFraction = fraction * 2;
+                lat = sourceLat + (antiLat - sourceLat) * subFraction;
+                lon = sourceLon + (antiLon - sourceLon) * subFraction;
+            } else {
+                // Second half: antipodal to target
+                const subFraction = (fraction - 0.5) * 2;
+                lat = antiLat + (targetLat - antiLat) * subFraction;
+                lon = antiLon + (targetLon - antiLon) * subFraction;
+            }
+        }
+
+        // Normalize longitude
+        if (lon > 180) lon -= 360;
+        if (lon < -180) lon += 360;
 
         const greyLine = checkGreyLine(lat, lon, dateTime);
         if (greyLine.isGreyLine) {
