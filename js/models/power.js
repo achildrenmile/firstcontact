@@ -16,7 +16,7 @@ export const POWER_LEVELS = {
         watts: 5,
         dBRelative: -13,  // 5W vs 100W = -13 dB
         signalBonus: -15, // Significant penalty
-        icon: '🔋',
+        icon: 'batteryLow',
         challenge: true   // Educational: QRP is a challenge mode
     },
     standard: {
@@ -24,7 +24,7 @@ export const POWER_LEVELS = {
         watts: 100,
         dBRelative: 0,    // Reference level
         signalBonus: 0,   // No bonus/penalty
-        icon: '📻',
+        icon: 'batteryMed',
         challenge: false
     },
     high: {
@@ -32,7 +32,7 @@ export const POWER_LEVELS = {
         watts: 1000,
         dBRelative: 10,   // 1kW vs 100W = +10 dB
         signalBonus: 12,  // Significant boost
-        icon: '📡',
+        icon: 'batteryFull',
         challenge: false
     }
 };

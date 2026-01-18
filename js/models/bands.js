@@ -53,7 +53,7 @@ export const HF_BANDS = {
 
         // Visual representation
         color: '#8e44ad',
-        icon: '🌑'
+        icon: 'band160m'
     },
 
     '80m': {
@@ -93,7 +93,7 @@ export const HF_BANDS = {
 
         // Visual representation
         color: '#e74c3c',
-        icon: '🌙'
+        icon: 'band80m'
     },
 
     '60m': {
@@ -128,7 +128,7 @@ export const HF_BANDS = {
         learningHint: 'This band shows how signals can go nearly straight up - great for nearby contacts!',
 
         color: '#c0392b',
-        icon: '📡'
+        icon: 'band60m'
     },
 
     '40m': {
@@ -163,7 +163,7 @@ export const HF_BANDS = {
         learningHint: 'Compare daytime vs nighttime range - the difference teaches you about the D layer!',
 
         color: '#e67e22',
-        icon: '🔄'
+        icon: 'band40m'
     },
 
     '30m': {
@@ -198,7 +198,7 @@ export const HF_BANDS = {
         learningHint: 'Notice how this band works when 40m is too absorbed and 20m needs more ionization.',
 
         color: '#d35400',
-        icon: '🎯'
+        icon: 'band30m'
     },
 
     '20m': {
@@ -233,7 +233,7 @@ export const HF_BANDS = {
         learningHint: 'This band shows you how signals can follow the daylight around the Earth.',
 
         color: '#f39c12',
-        icon: '🌍'
+        icon: 'band20m'
     },
 
     '17m': {
@@ -268,7 +268,7 @@ export const HF_BANDS = {
         learningHint: 'Check this band when 20m closes - it often stays open longer!',
 
         color: '#16a085',
-        icon: '💎'
+        icon: 'band17m'
     },
 
     '15m': {
@@ -303,7 +303,7 @@ export const HF_BANDS = {
         learningHint: 'Compare to 20m - notice how this band needs stronger conditions.',
 
         color: '#27ae60',
-        icon: '⭐'
+        icon: 'band15m'
     },
 
     '12m': {
@@ -338,7 +338,7 @@ export const HF_BANDS = {
         learningHint: 'When 10m seems dead, try 12m - it needs slightly less ionization.',
 
         color: '#8e44ad',
-        icon: '🔮'
+        icon: 'band12m'
     },
 
     '10m': {
@@ -373,7 +373,7 @@ export const HF_BANDS = {
         learningHint: 'This band teaches you that higher frequencies need stronger ionization to reflect.',
 
         color: '#9b59b6',
-        icon: '✨'
+        icon: 'band10m'
     },
 
     '6m': {
@@ -409,7 +409,7 @@ export const HF_BANDS = {
         learningHint: 'Enable Sporadic E and watch this band come alive! This is THE band for Es propagation.',
 
         color: '#e91e63',
-        icon: '🪄'
+        icon: 'band6m'
     }
 };
 

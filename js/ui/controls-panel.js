@@ -265,7 +265,7 @@ export class ControlsPanel {
                 class="power-button ${power.id === this.selectedPower ? 'selected' : ''}"
                 data-power="${power.id}"
             >
-                <span class="power-icon">${power.icon}</span>
+                <span class="power-icon">${icon(power.icon, '', 18)}</span>
                 <span class="power-watts">${formatPower(power.id)}</span>
                 <span class="power-name">${t(`ui.power.levels.${power.id}.name`)}</span>
             </button>
@@ -284,7 +284,7 @@ export class ControlsPanel {
                 class="antenna-button ${antenna.id === this.selectedAntenna ? 'selected' : ''}"
                 data-antenna="${antenna.id}"
             >
-                <span class="antenna-icon">${antenna.icon}</span>
+                <span class="antenna-icon">${icon(antenna.icon, '', 18)}</span>
                 <span class="antenna-name">${t(`ui.antenna.types.${antenna.id}.name`)}</span>
             </button>
         `).join('');
@@ -321,7 +321,7 @@ export class ControlsPanel {
                 data-activity="${level.id}"
                 style="--activity-color: ${level.color}"
             >
-                <span class="activity-icon">${level.icon}</span>
+                <span class="activity-icon">${icon(level.icon, '', 18)}</span>
                 <span class="activity-name">${t(`solarActivity.${level.id}.name`)}</span>
             </button>
         `).join('');
@@ -482,7 +482,7 @@ export class ControlsPanel {
         infoContainer.innerHTML = `
             <div class="band-details">
                 <div class="band-header">
-                    <span class="band-icon">${band.icon}</span>
+                    <span class="band-icon">${icon(band.icon, '', 18)}</span>
                     <span class="band-tagline">${t(`bands.${band.id}.tagline`)}</span>
                 </div>
                 <p class="band-description">${t(`bands.${band.id}.simpleDescription`)}</p>

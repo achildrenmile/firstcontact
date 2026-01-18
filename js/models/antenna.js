@@ -27,7 +27,7 @@ export const ANTENNA_TYPES = {
         nvisCapability: 0.7,   // Decent for NVIS
         dxCapability: 0.6,     // Moderate DX capability
         directional: false,
-        icon: '📶',
+        icon: 'dipole',
         heightSensitive: true  // Performance varies with height
     },
     vertical: {
@@ -37,7 +37,7 @@ export const ANTENNA_TYPES = {
         nvisCapability: 0.3,   // Poor for NVIS (radiates horizontally)
         dxCapability: 0.9,     // Excellent for DX
         directional: false,    // Omnidirectional
-        icon: '📡',
+        icon: 'vertical',
         heightSensitive: false
     },
     yagi: {
@@ -47,7 +47,7 @@ export const ANTENNA_TYPES = {
         nvisCapability: 0.2,   // Poor for NVIS
         dxCapability: 1.0,     // Best for DX
         directional: true,     // Must point at target
-        icon: '🎯',
+        icon: 'yagi',
         heightSensitive: true
     }
 };

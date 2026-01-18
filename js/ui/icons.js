@@ -153,6 +153,179 @@ export const icons = {
         <circle cx="12" cy="12" r="10"/>
         <path d="M2 12h20"/>
         <path d="M12 2a10 10 0 0 0 0 20" stroke-dasharray="4 2"/>
+    </svg>`,
+
+    // Power Levels
+    batteryLow: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="7" width="18" height="10" rx="2"/>
+        <path d="M22 11v2"/>
+        <path d="M6 11v2"/>
+    </svg>`,
+
+    batteryMed: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="7" width="18" height="10" rx="2"/>
+        <path d="M22 11v2"/>
+        <path d="M6 11v2"/>
+        <path d="M10 11v2"/>
+    </svg>`,
+
+    batteryFull: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="7" width="18" height="10" rx="2"/>
+        <path d="M22 11v2"/>
+        <path d="M6 11v2"/>
+        <path d="M10 11v2"/>
+        <path d="M14 11v2"/>
+    </svg>`,
+
+    // Antenna Types
+    dipole: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 12h8"/>
+        <path d="M14 12h8"/>
+        <circle cx="12" cy="12" r="2"/>
+        <path d="M12 14v8"/>
+    </svg>`,
+
+    vertical: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2v16"/>
+        <path d="M8 18h8"/>
+        <path d="M6 22h12"/>
+        <path d="M8 6l4-4 4 4"/>
+    </svg>`,
+
+    yagi: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 12h16"/>
+        <path d="M8 6v12"/>
+        <path d="M12 8v8"/>
+        <path d="M16 6v12"/>
+        <path d="M20 9v6"/>
+        <circle cx="4" cy="12" r="1" fill="currentColor"/>
+    </svg>`,
+
+    // Solar Activity Levels
+    sunQuiet: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>
+    </svg>`,
+
+    sunNormal: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 4v2"/>
+        <path d="M12 18v2"/>
+        <path d="M6.34 6.34l1.42 1.42"/>
+        <path d="M16.24 16.24l1.42 1.42"/>
+        <path d="M4 12h2"/>
+        <path d="M18 12h2"/>
+        <path d="M6.34 17.66l1.42-1.42"/>
+        <path d="M16.24 7.76l1.42-1.42"/>
+        <path d="M3 16h4"/>
+        <path d="M17 8h4"/>
+    </svg>`,
+
+    sunElevated: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2"/>
+        <path d="M12 20v2"/>
+        <path d="M4.93 4.93l1.41 1.41"/>
+        <path d="M17.66 17.66l1.41 1.41"/>
+        <path d="M2 12h2"/>
+        <path d="M20 12h2"/>
+        <path d="M6.34 17.66l-1.41 1.41"/>
+        <path d="M19.07 4.93l-1.41 1.41"/>
+    </svg>`,
+
+    sunHigh: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v2"/>
+        <path d="M12 21v2"/>
+        <path d="M4.22 4.22l1.42 1.42"/>
+        <path d="M18.36 18.36l1.42 1.42"/>
+        <path d="M1 12h2"/>
+        <path d="M21 12h2"/>
+        <path d="M4.22 19.78l1.42-1.42"/>
+        <path d="M18.36 5.64l1.42-1.42"/>
+        <path d="M16 5l-1 2"/>
+        <path d="M9 17l-1 2"/>
+        <path d="M19 9l-2-1"/>
+        <path d="M7 16l-2-1"/>
+    </svg>`,
+
+    // Geomagnetic Storm
+    sunStorm: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 16.9A5 5 0 0 0 18 7h-1.26a8 8 0 1 0-11.62 9"/>
+        <polyline points="13 11 9 17 15 17 11 23"/>
+    </svg>`,
+
+    // Band Icons
+    band160m: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>
+    </svg>`,
+
+    band80m: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>
+        <circle cx="12" cy="12" r="2"/>
+    </svg>`,
+
+    band60m: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2v6"/>
+        <path d="M12 22v-6"/>
+        <path d="M4.93 10.93l4.24 4.24"/>
+        <path d="M14.83 8.83l4.24-4.24"/>
+        <circle cx="12" cy="12" r="4"/>
+    </svg>`,
+
+    band40m: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/>
+        <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/>
+    </svg>`,
+
+    band30m: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <circle cx="12" cy="12" r="6"/>
+        <circle cx="12" cy="12" r="2"/>
+    </svg>`,
+
+    band20m: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="2" y1="12" x2="22" y2="12"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>`,
+
+    band17m: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>`,
+
+    band15m: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        <circle cx="12" cy="12" r="3"/>
+    </svg>`,
+
+    band12m: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v4"/>
+        <path d="M12 18v4"/>
+        <path d="M4.93 4.93l2.83 2.83"/>
+        <path d="M16.24 16.24l2.83 2.83"/>
+        <path d="M2 12h4"/>
+        <path d="M18 12h4"/>
+        <path d="M4.93 19.07l2.83-2.83"/>
+        <path d="M16.24 7.76l2.83-2.83"/>
+    </svg>`,
+
+    band10m: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
+    </svg>`,
+
+    band6m: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 4V2"/>
+        <path d="M15 16v-2"/>
+        <path d="M8 9h2"/>
+        <path d="M20 9h2"/>
+        <path d="M17.8 11.8L19 13"/>
+        <path d="M15 9h0"/>
+        <path d="M17.8 6.2L19 5"/>
+        <path d="M3 21l9-9"/>
+        <path d="M12.2 6.2L11 5"/>
     </svg>`
 };
 

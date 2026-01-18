@@ -42,7 +42,7 @@ export const SOLAR_ACTIVITY_LEVELS = {
 
         // Visual representation
         color: '#3498db',
-        icon: '☀️'
+        icon: 'sunQuiet'
     },
 
     normal: {
@@ -65,7 +65,7 @@ export const SOLAR_ACTIVITY_LEVELS = {
         learningHint: 'This is the best condition for learning - propagation is predictable.',
 
         color: '#27ae60',
-        icon: '🌤️'
+        icon: 'sunNormal'
     },
 
     active: {
@@ -89,7 +89,7 @@ export const SOLAR_ACTIVITY_LEVELS = {
         learningHint: 'Try 10m and 15m now - they might be wide open for worldwide contacts!',
 
         color: '#e67e22',
-        icon: '🔆'
+        icon: 'sunElevated'
     },
 
     storm: {
@@ -113,7 +113,7 @@ export const SOLAR_ACTIVITY_LEVELS = {
         learningHint: 'During storms, propagation can be completely unpredictable. Try again later!',
 
         color: '#c0392b',
-        icon: '🌩️'
+        icon: 'sunStorm'
     }
 };
 
