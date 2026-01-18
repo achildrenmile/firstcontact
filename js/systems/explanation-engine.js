@@ -307,20 +307,25 @@ export function explainBandChange(oldBandId, newBandId, result1, result2) {
         comparison.explanation = t('comparison.similar');
     }
 
-    // Find the key difference
-    if (oldBand.centerFrequency < newBand.centerFrequency) {
-        if (comparison.strengthChange > 0) {
-            comparison.keyDifference = t('comparison.higherLessAbsorbed', { band: newBandName });
+    // Find the key difference - only if there IS a significant difference
+    if (Math.abs(comparison.strengthChange) > 5) {
+        if (oldBand.centerFrequency < newBand.centerFrequency) {
+            // New band is higher frequency
+            if (comparison.strengthChange > 0) {
+                comparison.keyDifference = t('comparison.higherLessAbsorbed', { band: newBandName });
+            } else {
+                comparison.keyDifference = t('comparison.lowerReflectsBetter', { band: oldBandName });
+            }
         } else {
-            comparison.keyDifference = t('comparison.lowerReflectsBetter', { band: oldBandName });
-        }
-    } else {
-        if (comparison.strengthChange > 0) {
-            comparison.keyDifference = t('comparison.lowerWorksBetter', { band: newBandName });
-        } else {
-            comparison.keyDifference = t('comparison.higherAvoidsAbsorption', { band: oldBandName });
+            // New band is lower frequency
+            if (comparison.strengthChange > 0) {
+                comparison.keyDifference = t('comparison.lowerWorksBetter', { band: newBandName });
+            } else {
+                comparison.keyDifference = t('comparison.higherAvoidsAbsorption', { band: oldBandName });
+            }
         }
     }
+    // If similar (-5 to +5), keyDifference stays empty - no misleading explanation
 
     return comparison;
 }
