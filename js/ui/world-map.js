@@ -195,11 +195,13 @@ export class WorldMap {
 
     /**
      * Set zoom level with constraints
+     * Zooms towards the center of the visible area
      */
     setZoom(newZoom) {
         newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, newZoom));
         if (newZoom !== this.zoom) {
-            // Zoom towards center
+            // Keep the center of the view fixed
+            // panX/panY represent offset from center, so scale them proportionally
             const scaleChange = newZoom / this.zoom;
             this.panX *= scaleChange;
             this.panY *= scaleChange;
@@ -451,8 +453,9 @@ export class WorldMap {
                 // Pan
                 e.preventDefault();
                 const touch = e.touches[0];
-                const dx = touch.clientX - this.lastPanPoint.x;
-                const dy = touch.clientY - this.lastPanPoint.y;
+                const screenDx = touch.clientX - this.lastPanPoint.x;
+                const screenDy = touch.clientY - this.lastPanPoint.y;
+                const { dx, dy } = this.screenToLogicalDelta(screenDx, screenDy);
                 this.panX += dx;
                 this.panY += dy;
                 this.lastPanPoint = { x: touch.clientX, y: touch.clientY };
@@ -471,17 +474,22 @@ export class WorldMap {
         this.canvas.addEventListener('wheel', (e) => {
             e.preventDefault();
             const rect = this.canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
+            // Convert screen mouse position to logical coordinates
+            const mouseX = (e.clientX - rect.left) * (this.width / rect.width);
+            const mouseY = (e.clientY - rect.top) * (this.height / rect.height);
 
             const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
             const newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.zoom * zoomFactor));
 
             if (newZoom !== this.zoom) {
-                // Zoom towards mouse position
+                // Zoom towards mouse position (in logical coordinates)
                 const scaleChange = newZoom / this.zoom;
-                this.panX = mouseX - (mouseX - this.panX) * scaleChange;
-                this.panY = mouseY - (mouseY - this.panY) * scaleChange;
+                // Calculate the point on the map under the mouse
+                const mapX = (mouseX - this.width / 2 - this.panX) / this.zoom + this.width / 2;
+                const mapY = (mouseY - this.height / 2 - this.panY) / this.zoom + this.height / 2;
+                // After zoom, this point should still be under the mouse
+                this.panX = mouseX - this.width / 2 - (mapX - this.width / 2) * newZoom;
+                this.panY = mouseY - this.height / 2 - (mapY - this.height / 2) * newZoom;
                 this.zoom = newZoom;
                 this.constrainPan();
                 this.render();
@@ -506,8 +514,9 @@ export class WorldMap {
 
         window.addEventListener('mousemove', (e) => {
             if (this.isPanning && this.lastPanPoint) {
-                const dx = e.clientX - this.lastPanPoint.x;
-                const dy = e.clientY - this.lastPanPoint.y;
+                const screenDx = e.clientX - this.lastPanPoint.x;
+                const screenDy = e.clientY - this.lastPanPoint.y;
+                const { dx, dy } = this.screenToLogicalDelta(screenDx, screenDy);
                 this.panX += dx;
                 this.panY += dy;
                 this.lastPanPoint = { x: e.clientX, y: e.clientY };
@@ -537,17 +546,26 @@ export class WorldMap {
 
     /**
      * Constrain pan to keep map visible
+     * Uses logical coordinates (this.width/height) not display coordinates
      */
     constrainPan() {
-        const rect = this.canvas.getBoundingClientRect();
-        const scaledWidth = rect.width * this.zoom;
-        const scaledHeight = rect.height * this.zoom;
-
-        const maxPanX = (scaledWidth - rect.width) / 2;
-        const maxPanY = (scaledHeight - rect.height) / 2;
+        // Calculate max pan in logical coordinates
+        const maxPanX = (this.width * (this.zoom - 1)) / 2;
+        const maxPanY = (this.height * (this.zoom - 1)) / 2;
 
         this.panX = Math.max(-maxPanX, Math.min(maxPanX, this.panX));
         this.panY = Math.max(-maxPanY, Math.min(maxPanY, this.panY));
+    }
+
+    /**
+     * Convert screen delta to logical delta (accounts for display scaling)
+     */
+    screenToLogicalDelta(dx, dy) {
+        const rect = this.canvas.getBoundingClientRect();
+        return {
+            dx: dx * (this.width / rect.width),
+            dy: dy * (this.height / rect.height)
+        };
     }
 
     /**
