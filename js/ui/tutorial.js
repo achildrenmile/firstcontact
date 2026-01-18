@@ -101,7 +101,15 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 7: Band selection intro
+            // Step 7: Maidenhead grid overlay
+            new TutorialStep({
+                id: 'maidenhead_grid',
+                targetSelector: '.map-overlay-controls',
+                position: 'right',
+                waitForAction: 'click'
+            }),
+
+            // Step 8: Band selection intro
             new TutorialStep({
                 id: 'bands_intro',
                 targetSelector: '.band-selector',

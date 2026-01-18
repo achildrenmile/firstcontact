@@ -907,7 +907,7 @@ export default {
             },
             map_intro: {
                 title: 'Die Weltkarte',
-                content: 'Dies ist deine Übersicht über die Welt. Du siehst die Tag-Nacht-Grenze, Skip-Zonen und kannst Ziele für Funkverbindungen auswählen. Zoome mit dem Mausrad, verschiebe durch Ziehen. Nutze den Grid-Schalter oben links, um das Maidenhead-Gitter anzuzeigen!'
+                content: 'Dies ist deine Übersicht über die Welt. Du siehst die Tag-Nacht-Grenze, Skip-Zonen und kannst Ziele für Funkverbindungen auswählen. Zoome mit dem Mausrad, verschiebe durch Ziehen.'
             },
             your_location: {
                 title: 'Dein Standort',
@@ -928,6 +928,10 @@ export default {
             skip_zone: {
                 title: 'Die Skip-Zone',
                 content: 'Siehst du den Kreis um deinen Standort? Das ist die Skip-Zone - Signale "springen" über diesen Bereich hinweg! Höhere Bänder haben größere Skip-Zonen. Das 60m-Band nutzt NVIS (steil nach oben), um diese Lücke zu füllen.'
+            },
+            maidenhead_grid: {
+                title: 'Maidenhead-Gitter',
+                content: 'Mit dem Grid-Schalter kannst du das Maidenhead-Locator-System einblenden - ein weltweites Gittersystem, das Funkamateure zur Standortbeschreibung verwenden. Jedes Feld (AA-RR) steht für einen bestimmten Bereich auf der Erde.'
             },
             bands_intro: {
                 title: 'Frequenzbänder',

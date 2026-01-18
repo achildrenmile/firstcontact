@@ -907,7 +907,7 @@ export default {
             },
             map_intro: {
                 title: 'The World Map',
-                content: 'This is your overview of the world. You can see the day-night boundary, skip zones, and select targets for radio contacts. Zoom with mouse wheel, pan by dragging. Use the Grid toggle in the top-left to show the Maidenhead locator grid!'
+                content: 'This is your overview of the world. You can see the day-night boundary, skip zones, and select targets for radio contacts. Zoom with mouse wheel, pan by dragging.'
             },
             your_location: {
                 title: 'Your Location',
@@ -928,6 +928,10 @@ export default {
             skip_zone: {
                 title: 'The Skip Zone',
                 content: 'Notice the circle around your location? That\'s the skip zone - signals "jump over" this area! Higher bands have larger skip zones. The 60m band uses NVIS (straight up) to cover this gap.'
+            },
+            maidenhead_grid: {
+                title: 'Maidenhead Grid',
+                content: 'Use the Grid toggle to display the Maidenhead Locator System - a worldwide grid used by radio amateurs to describe locations. Each square (AA-RR) represents a specific area on Earth.'
             },
             bands_intro: {
                 title: 'Frequency Bands',
