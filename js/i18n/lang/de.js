@@ -55,6 +55,14 @@ export default {
         },
         language: 'Sprache',
         you: 'DU',
+        location: {
+            title: 'Mein Standort',
+            selectPreset: '-- Stadt wählen --',
+            latitude: 'Breite',
+            longitude: 'Länge',
+            set: 'Setzen',
+            custom: 'Eigener Standort'
+        },
         solarActivity: 'Sonnenaktivität',
         mogelDellinger: {
             trigger: 'Sonneneruption simulieren',

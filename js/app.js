@@ -432,10 +432,12 @@ class FirstContactApp {
 
         // Controls Panel
         this.controlsPanel = new ControlsPanel('controls-panel', {
+            initialLocation: this.state.playerLocation,
             onBandChange: (bandId) => this.handleBandChange(bandId),
             onPowerChange: (powerId) => this.handlePowerChange(powerId),
             onAntennaChange: (antennaId) => this.handleAntennaChange(antennaId),
             onDirectionChange: (directionId) => this.handleDirectionChange(directionId),
+            onLocationChange: (location) => this.handlePlayerLocationChange(location),
             onTimeChange: (time) => this.handleTimeChange(time),
             onSolarActivityChange: (activityId) => this.handleSolarActivityChange(activityId),
             onMogelDellingerToggle: (active) => this.handleMogelDellingerToggle(active),
@@ -529,6 +531,24 @@ class FirstContactApp {
 
         // If we have a target and using Yagi, re-evaluate
         if (this.state.targetLocation && this.state.selectedAntenna === 'yagi') {
+            this.attemptContact();
+        }
+    }
+
+    /**
+     * Handle player location change
+     */
+    handlePlayerLocationChange(location) {
+        this.state.playerLocation = location;
+
+        // Update the map
+        this.worldMap.setPlayerLocation(location);
+
+        // Clear any existing path since source changed
+        this.worldMap.clearSignalPath();
+
+        // If we have a target, re-evaluate
+        if (this.state.targetLocation) {
             this.attemptContact();
         }
     }

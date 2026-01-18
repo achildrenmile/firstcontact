@@ -15,6 +15,7 @@ import { t, LANGUAGES, getCurrentLanguage, setLanguage } from '../i18n/i18n.js';
 import { SOLAR_ACTIVITY_LEVELS, getAllActivityLevels } from '../models/solar-activity.js';
 import { POWER_LEVELS, getAllPowerLevels, formatPower } from '../models/power.js';
 import { ANTENNA_TYPES, getAllAntennaTypes, COMPASS_DIRECTIONS, getAllDirections } from '../models/antenna.js';
+import { PRESET_LOCATIONS } from '../models/location.js';
 
 export class ControlsPanel {
     constructor(containerId, options = {}) {
@@ -25,6 +26,7 @@ export class ControlsPanel {
         this.selectedPower = 'standard';
         this.selectedAntenna = 'dipole';
         this.selectedDirection = 'N';
+        this.playerLocation = options.initialLocation || PRESET_LOCATIONS.vienna;
         this.currentTime = new Date();
         this.solarActivity = 'normal';
         this.mogelDellingerActive = false;
@@ -36,6 +38,7 @@ export class ControlsPanel {
         this.onPowerChange = options.onPowerChange || (() => {});
         this.onAntennaChange = options.onAntennaChange || (() => {});
         this.onDirectionChange = options.onDirectionChange || (() => {});
+        this.onLocationChange = options.onLocationChange || (() => {});
         this.onTimeChange = options.onTimeChange || (() => {});
         this.onSolarActivityChange = options.onSolarActivityChange || (() => {});
         this.onMogelDellingerToggle = options.onMogelDellingerToggle || (() => {});
@@ -59,6 +62,32 @@ export class ControlsPanel {
                     <h3>${t('ui.language')}</h3>
                     <div class="language-selector" id="language-selector">
                         ${this.renderLanguageButtons()}
+                    </div>
+                </section>
+
+                <section class="control-section location-section">
+                    <h3>${t('ui.location.title')}</h3>
+                    <div class="location-selector">
+                        <select id="location-preset" class="location-dropdown">
+                            <option value="">${t('ui.location.selectPreset')}</option>
+                            ${this.renderLocationOptions()}
+                        </select>
+                    </div>
+                    <div class="location-coords">
+                        <div class="coord-input-group">
+                            <label for="location-lat">${t('ui.location.latitude')}</label>
+                            <input type="number" id="location-lat" step="0.001" min="-90" max="90"
+                                   value="${this.playerLocation?.latitude?.toFixed(3) || 0}" />
+                        </div>
+                        <div class="coord-input-group">
+                            <label for="location-lon">${t('ui.location.longitude')}</label>
+                            <input type="number" id="location-lon" step="0.001" min="-180" max="180"
+                                   value="${this.playerLocation?.longitude?.toFixed(3) || 0}" />
+                        </div>
+                        <button id="location-set-btn" class="location-set-btn">${t('ui.location.set')}</button>
+                    </div>
+                    <div class="location-current" id="location-current">
+                        ${this.playerLocation?.name || 'Unknown'}
                     </div>
                 </section>
 
@@ -159,6 +188,18 @@ export class ControlsPanel {
                 <span class="lang-name">${lang.name}</span>
             </button>
         `).join('');
+    }
+
+    /**
+     * Render location preset options for dropdown
+     */
+    renderLocationOptions() {
+        // Group locations by region for better organization
+        const locations = Object.values(PRESET_LOCATIONS);
+        return locations
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map(loc => `<option value="${loc.name}">${loc.name}</option>`)
+            .join('');
     }
 
     /**
@@ -264,6 +305,44 @@ export class ControlsPanel {
             if (button) {
                 const lang = button.dataset.lang;
                 await setLanguage(lang);
+            }
+        });
+
+        // Location preset dropdown
+        document.getElementById('location-preset')?.addEventListener('change', (e) => {
+            const locationName = e.target.value;
+            if (locationName) {
+                const location = Object.values(PRESET_LOCATIONS).find(loc => loc.name === locationName);
+                if (location) {
+                    this.setPlayerLocation(location);
+                }
+            }
+        });
+
+        // Location coordinate inputs - set button
+        document.getElementById('location-set-btn')?.addEventListener('click', () => {
+            const lat = parseFloat(document.getElementById('location-lat').value);
+            const lon = parseFloat(document.getElementById('location-lon').value);
+            if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                const customLocation = {
+                    name: `${lat.toFixed(3)}°, ${lon.toFixed(3)}°`,
+                    latitude: lat,
+                    longitude: lon,
+                    code: 'CUSTOM'
+                };
+                this.setPlayerLocation(customLocation);
+            }
+        });
+
+        // Allow Enter key in coordinate inputs
+        document.getElementById('location-lat')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('location-set-btn')?.click();
+            }
+        });
+        document.getElementById('location-lon')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('location-set-btn')?.click();
             }
         });
 
@@ -483,6 +562,37 @@ export class ControlsPanel {
     }
 
     /**
+     * Set player location
+     */
+    setPlayerLocation(location) {
+        this.playerLocation = location;
+
+        // Update coordinate inputs
+        const latInput = document.getElementById('location-lat');
+        const lonInput = document.getElementById('location-lon');
+        if (latInput) latInput.value = location.latitude.toFixed(3);
+        if (lonInput) lonInput.value = location.longitude.toFixed(3);
+
+        // Update current location display
+        const currentDisplay = document.getElementById('location-current');
+        if (currentDisplay) {
+            currentDisplay.textContent = location.name;
+        }
+
+        // Reset dropdown if custom location
+        const dropdown = document.getElementById('location-preset');
+        if (dropdown) {
+            const matchingOption = Object.values(PRESET_LOCATIONS).find(
+                loc => loc.latitude === location.latitude && loc.longitude === location.longitude
+            );
+            dropdown.value = matchingOption ? matchingOption.name : '';
+        }
+
+        // Notify callback
+        this.onLocationChange(location);
+    }
+
+    /**
      * Select solar activity level
      */
     selectSolarActivity(activityId) {
@@ -645,6 +755,7 @@ export class ControlsPanel {
             power: this.selectedPower,
             antenna: this.selectedAntenna,
             direction: this.selectedDirection,
+            playerLocation: this.playerLocation,
             time: this.currentTime,
             solarActivity: this.solarActivity,
             mogelDellingerActive: this.mogelDellingerActive,

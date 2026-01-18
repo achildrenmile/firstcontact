@@ -55,6 +55,14 @@ export default {
         },
         language: 'Language',
         you: 'YOU',
+        location: {
+            title: 'My Location',
+            selectPreset: '-- Select a city --',
+            latitude: 'Lat',
+            longitude: 'Lon',
+            set: 'Set',
+            custom: 'Custom Location'
+        },
         solarActivity: 'Solar Activity',
         mogelDellinger: {
             trigger: 'Simulate Solar Flare',
