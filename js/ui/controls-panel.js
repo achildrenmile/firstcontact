@@ -671,7 +671,6 @@ export class ControlsPanel {
             0, 0
         ));
 
-        console.log('Month changed to:', this.selectedMonth, 'New date:', this.currentTime.toISOString());
         this.onTimeChange(this.currentTime);
     }
 

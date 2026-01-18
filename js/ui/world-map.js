@@ -633,7 +633,6 @@ export class WorldMap {
      * Set the current simulation time
      */
     setTime(dateTime) {
-        console.log('WorldMap.setTime called with:', dateTime.toISOString());
         this.currentTime = dateTime;
         this.render();
     }
@@ -1089,7 +1088,6 @@ export class WorldMap {
     drawSunIndicator() {
         const ctx = this.ctx;
         const sunPos = calculateSunPosition(this.currentTime);
-        console.log('Sun position - date:', this.currentTime.toISOString(), 'lat:', sunPos.latitude.toFixed(2), 'lon:', sunPos.longitude.toFixed(2));
         const pixel = this.latLonToPixel(sunPos.latitude, sunPos.longitude);
 
         // Sun glow
