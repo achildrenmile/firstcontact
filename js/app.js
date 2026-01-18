@@ -172,6 +172,17 @@ class FirstContactApp {
                             <li><strong style="color: #fff">●</strong> ${t('help.map.cities')}</li>
                             <li><strong style="color: #fbbf24">☀</strong> ${t('help.map.sun')}</li>
                             <li><strong style="color: #f97316">―</strong> ${t('help.map.greyline')}</li>
+                            <li><strong style="color: rgba(100,150,255,0.3)">◯</strong> ${t('help.map.skipzone')}</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>📍 ${t('help.location.title')}</h3>
+                        <p>${t('help.location.text')}</p>
+                        <ul>
+                            <li>${t('help.location.preset')}</li>
+                            <li>${t('help.location.custom')}</li>
+                            <li>${t('help.location.qth')}</li>
                         </ul>
                     </div>
 
@@ -191,6 +202,47 @@ class FirstContactApp {
                             <li><strong>10m</strong> - ${t('help.bands.10m')}</li>
                             <li><strong>6m</strong> - ${t('help.bands.6m')}</li>
                         </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>⚡ ${t('help.power.title')}</h3>
+                        <p>${t('help.power.text')}</p>
+                        <ul>
+                            <li><strong>🔋 QRP</strong> - ${t('help.power.qrp')}</li>
+                            <li><strong>📻 Standard</strong> - ${t('help.power.standard')}</li>
+                            <li><strong>🔥 High</strong> - ${t('help.power.high')}</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>📡 ${t('help.antenna.title')}</h3>
+                        <p>${t('help.antenna.text')}</p>
+                        <ul>
+                            <li><strong>🎚️ Dipole</strong> - ${t('help.antenna.dipole')}</li>
+                            <li><strong>📶 Vertical</strong> - ${t('help.antenna.vertical')}</li>
+                            <li><strong>📻 Yagi</strong> - ${t('help.antenna.yagi')}</li>
+                        </ul>
+                        <p><em>${t('help.antenna.angle')}</em></p>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>⭕ ${t('help.skipZone.title')}</h3>
+                        <p>${t('help.skipZone.text')}</p>
+                        <ul>
+                            <li>${t('help.skipZone.small')}</li>
+                            <li>${t('help.skipZone.large')}</li>
+                            <li>${t('help.skipZone.nvis')}</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>🌍 ${t('help.longPath.title')}</h3>
+                        <p>${t('help.longPath.text')}</p>
+                        <ul>
+                            <li><strong>→</strong> ${t('help.longPath.short')}</li>
+                            <li><strong>↻</strong> ${t('help.longPath.long')}</li>
+                        </ul>
+                        <p><em>${t('help.longPath.when')}</em></p>
                     </div>
 
                     <div class="help-section">
@@ -247,6 +299,18 @@ class FirstContactApp {
                         <div class="help-tip">
                             <strong>${t('help.tips.tip5.title')}</strong><br>
                             ${t('help.tips.tip5.text')}
+                        </div>
+                        <div class="help-tip">
+                            <strong>${t('help.tips.tip6.title')}</strong><br>
+                            ${t('help.tips.tip6.text')}
+                        </div>
+                        <div class="help-tip">
+                            <strong>${t('help.tips.tip7.title')}</strong><br>
+                            ${t('help.tips.tip7.text')}
+                        </div>
+                        <div class="help-tip">
+                            <strong>${t('help.tips.tip8.title')}</strong><br>
+                            ${t('help.tips.tip8.text')}
                         </div>
                     </div>
                 </div>

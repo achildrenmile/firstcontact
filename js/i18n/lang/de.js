@@ -884,11 +884,15 @@ export default {
             },
             map_intro: {
                 title: 'Die Weltkarte',
-                content: 'Dies ist deine Übersicht über die Welt. Du siehst die Tag-Nacht-Grenze und kannst Ziele für Funkverbindungen auswählen.'
+                content: 'Dies ist deine Übersicht über die Welt. Du siehst die Tag-Nacht-Grenze, Skip-Zonen und kannst Ziele für Funkverbindungen auswählen. Zoome mit dem Mausrad, verschiebe durch Ziehen.'
             },
             your_location: {
                 title: 'Dein Standort',
-                content: 'Das blaue Symbol markiert deinen Standort. Von hier aus sendest du deine Funksignale in die Welt.'
+                content: 'Das blaue Symbol markiert deinen Standort. Du kannst ihn über die Standortauswahl links ändern - wähle aus Presets oder gib eigene Koordinaten ein!'
+            },
+            location_selector: {
+                title: 'Standort ändern',
+                content: 'Hier kannst du deinen Sendestandort wählen. Wähle aus vordefinierten Städten oder gib eigene Koordinaten mit einem Namen für dein QTH ein.'
             },
             day_night: {
                 title: 'Tag und Nacht',
@@ -898,13 +902,29 @@ export default {
                 title: 'Die Grauzone',
                 content: 'Der schmale Streifen zwischen Tag und Nacht ist die "Grauzone" (Grey Line). Hier herrschen besondere Bedingungen, die überraschende Weitverbindungen ermöglichen können!'
             },
+            skip_zone: {
+                title: 'Die Skip-Zone',
+                content: 'Siehst du den Kreis um deinen Standort? Das ist die Skip-Zone - Signale "springen" über diesen Bereich hinweg! Höhere Bänder haben größere Skip-Zonen. Das 60m-Band nutzt NVIS (steil nach oben), um diese Lücke zu füllen.'
+            },
             bands_intro: {
                 title: 'Frequenzbänder',
-                content: 'Hier wählst du das Frequenzband. Jedes Band hat seinen eigenen Charakter – manche funktionieren besser tagsüber, andere nachts.'
+                content: 'Hier wählst du das Frequenzband. Jedes Band hat seinen eigenen Charakter – manche funktionieren besser tagsüber, andere nachts. Beobachte wie sich die Skip-Zone ändert!'
             },
             select_band: {
                 title: 'Wähle ein Band',
                 content: 'Klicke auf das 20-Meter-Band. Es ist ein guter Allrounder für Weitstreckenverbindungen.'
+            },
+            power_intro: {
+                title: 'Sendeleistung',
+                content: 'Wähle deine Sendeleistung: QRP (5W) für die Herausforderung, Standard (100W) für Normalbetrieb, oder High (1000W) für schwierige Pfade. Mehr Leistung = mehr Reichweite!'
+            },
+            antenna_intro: {
+                title: 'Antennenauswahl',
+                content: 'Deine Antenne beeinflusst Gewinn und Abstrahlwinkel. Dipol ist vielseitig, Vertikal hat flachen Winkel für DX, und Yagi bietet hohen Gewinn in eine Richtung!'
+            },
+            antenna_yagi: {
+                title: 'Yagi-Richtung',
+                content: 'Bei einer Yagi-Antenne musst du sie auf dein Ziel ausrichten! Wähle die Strahlrichtung mit den Kompass-Buttons. Falsche Richtung = großer Signalverlust!'
             },
             time_intro: {
                 title: 'Zeitsteuerung',
@@ -928,23 +948,23 @@ export default {
             },
             first_contact: {
                 title: 'Dein erster Kontakt',
-                content: 'Klicke jetzt auf einen Ort auf der Karte, um eine Funkverbindung zu versuchen. Probiere einen Ort auf der Tagseite!'
+                content: 'Klicke jetzt auf einen Ort auf der Karte, um eine Funkverbindung zu versuchen. Probiere einen Ort auf der Tagseite! Bei sehr entfernten Zielen kann das Signal den Langweg um die Erde nehmen.'
             },
             results_intro: {
                 title: 'Ergebnisse',
-                content: 'Hier siehst du das Ergebnis deines Verbindungsversuchs. Grün bedeutet Erfolg, Rot bedeutet, dass das Signal nicht durchgekommen ist.'
+                content: 'Hier siehst du das Ergebnis deines Verbindungsversuchs. Grün bedeutet Erfolg, Rot bedeutet, dass das Signal nicht durchgekommen ist. Achte auf Kurzweg vs. Langweg!'
             },
             factors_explained: {
                 title: 'Einflussfaktoren',
-                content: 'Diese Faktoren zeigen dir, was die Ausbreitung beeinflusst hat. Lerne aus ihnen, um bessere Verbindungen zu finden!'
+                content: 'Diese Faktoren zeigen dir, was die Ausbreitung beeinflusst hat: Tageslicht, Entfernung, Leistung, Antenne, Skip-Zone und mehr. Lerne daraus!'
             },
             experiment: {
                 title: 'Experimentiere!',
-                content: 'Der beste Weg zu lernen ist Ausprobieren! Ändere die Zeit, wechsle das Band, und versuche verschiedene Ziele. Beobachte die Muster!'
+                content: 'Der beste Weg zu lernen ist Ausprobieren! Ändere die Leistung, wechsle die Antenne, probiere verschiedene Bänder und Zeiten. Schaffst du es mit QRP auf die andere Seite der Welt?'
             },
             complete: {
                 title: 'Tutorial abgeschlossen!',
-                content: 'Du kennst jetzt die Grundlagen. Entdecke selbst, wie verschiedene Bänder zu verschiedenen Zeiten funktionieren. Viel Spaß beim Experimentieren!'
+                content: 'Du kennst jetzt die Grundlagen. Probiere die QRP-Herausforderung (5W), experimentiere mit Yagi-Antennen und entdecke die Magie der Grey Line Ausbreitung. Viel Spaß!'
             }
         }
     },
@@ -958,11 +978,19 @@ export default {
         },
         map: {
             title: 'Die Weltkarte',
-            text: 'Die Karte zeigt Tag und Nacht in Echtzeit. Die Ionosphäre verhält sich je nach Sonneneinstrahlung unterschiedlich.',
-            you: 'Dein Standort (Wien, Österreich)',
+            text: 'Die Karte zeigt Tag und Nacht in Echtzeit. Die Ionosphäre verhält sich je nach Sonneneinstrahlung unterschiedlich. Mausrad zum Zoomen, Ziehen zum Verschieben.',
+            you: 'Dein Standort (konfigurierbar)',
             cities: 'Andere Städte - klicke zum Verbinden',
             sun: 'Aktuelle Sonnenposition',
-            greyline: 'Grey Line - Dämmerungszone mit spezieller Ausbreitung'
+            greyline: 'Grey Line - Dämmerungszone mit spezieller Ausbreitung',
+            skipzone: 'Skip-Zone - der Kreis um dich herum, den Signale nicht erreichen können'
+        },
+        location: {
+            title: 'Dein Standort',
+            text: 'Du kannst deinen Sendestandort ändern:',
+            preset: 'Wähle aus über 100 vordefinierten Städten weltweit',
+            custom: 'Gib eigene Koordinaten (Breite/Länge) mit eigenem Namen ein',
+            qth: 'Richte dein echtes QTH (Amateurfunk-Standort) ein, um von zuhause zu simulieren!'
         },
         bands: {
             title: 'Frequenzbänder (11 Bänder)',
@@ -978,6 +1006,35 @@ export default {
             '12m': 'WARC-Band - wie 10m aber braucht etwas weniger Ionisation',
             '10m': 'Nur bei starker Ionosphäre offen',
             '6m': 'Das "Magic Band" - erwacht mit Sporadic E zum Leben!'
+        },
+        power: {
+            title: 'Sendeleistung',
+            text: 'Leistung beeinflusst Signalstärke und Reichweite:',
+            qrp: 'QRP (5W) - Die ultimative Herausforderung! Erfordert gute Bedingungen und Geduld. Echte Erfolgserlebnisse wenn es klappt!',
+            standard: 'Standard (100W) - Typische Amateurfunk-Leistung. Zuverlässig für die meisten Verbindungen.',
+            high: 'High (1000W) - Maximale legale Leistung. Hilft auf schwierigen Pfaden, überwindet aber keine geschlossenen Bänder.'
+        },
+        antenna: {
+            title: 'Antennenauswahl',
+            text: 'Deine Antenne beeinflusst die Performance dramatisch:',
+            dipole: 'Dipol - Ausgeglichene, vielseitige Antenne. Guter Allrounder mit moderatem Gewinn. Funktioniert gut in den meisten Situationen.',
+            vertical: 'Vertikal - Flacher Abstrahlwinkel, exzellent für DX (Weitverbindungen). Weniger Gewinn aber größere Reichweite.',
+            yagi: 'Yagi - Hochgewinn-Richtantenne. Muss aufs Ziel ausgerichtet werden! Wähle Strahlrichtung mit Kompass-Buttons. Falsche Richtung = großer Signalverlust.',
+            angle: 'Abstrahlwinkel - Flachere Winkel erreichen weiter (DX), steilere Winkel für regionale Kontakte (NVIS).'
+        },
+        skipZone: {
+            title: 'Skip-Zone',
+            text: 'Funkwellen werden in einem Winkel an der Ionosphäre reflektiert. Das erzeugt eine "Skip-Zone" - einen Bereich um deinen Standort, den Signale nicht erreichen können, weil sie buchstäblich darüber springen!',
+            small: 'Niedrigere Bänder (40m-160m) haben kleine Skip-Zonen - gut für regionale Kontakte',
+            large: 'Höhere Bänder (10m-20m) haben größere Skip-Zonen - besser für entfernte Kontakte',
+            nvis: '60m-Band nutzt NVIS (Near Vertical Incidence Skywave) - Signale gehen steil hoch und zurück, füllen die Skip-Zone!'
+        },
+        longPath: {
+            title: 'Langweg-Ausbreitung',
+            text: 'Signale können in zwei Richtungen um die Erde reisen:',
+            short: 'Kurzweg - Die direkte, kürzere Route. Normalerweise bevorzugt.',
+            long: 'Langweg - Der längere Weg um den Globus. Funktioniert manchmal wenn der Kurzweg blockiert ist!',
+            when: 'Probiere Langweg wenn: Kurzweg über die Nachtseite führt, oder du Polarpfade bei Aurora vermeiden willst.'
         },
         solarActivity: {
             title: 'Sonnenaktivität',
@@ -1019,6 +1076,18 @@ export default {
             tip5: {
                 title: 'Nacht-Bänder:',
                 text: 'Niedrigere Bänder (40m-160m) erwachen nach Sonnenuntergang zum Leben. Die D-Schicht verschwindet und Signale können viel weiter mit weniger Absorption reisen.'
+            },
+            tip6: {
+                title: 'QRP-Herausforderung:',
+                text: 'Versuche Verbindungen mit nur 5 Watt! Es erfordert Geduld und gute Bedingungen, aber die Befriedigung ist immens. Starte mit 20m bei guter Sonnenaktivität.'
+            },
+            tip7: {
+                title: 'Yagi-Vorteil:',
+                text: 'Eine Yagi-Antenne auf dein Ziel ausgerichtet kann den Unterschied zwischen Erfolg und Misserfolg auf schwierigen Pfaden machen. Aber vergiss nicht sie zu drehen!'
+            },
+            tip8: {
+                title: 'Langweg-DX:',
+                text: 'Wenn der Kurzweg nicht funktioniert, probiere den Langweg! Besonders nützlich um Stationen auf der anderen Seite der Erde zu erreichen.'
             }
         }
     },

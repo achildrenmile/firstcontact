@@ -884,11 +884,15 @@ export default {
             },
             map_intro: {
                 title: 'The World Map',
-                content: 'This is your overview of the world. You can see the day-night boundary and select targets for radio contacts.'
+                content: 'This is your overview of the world. You can see the day-night boundary, skip zones, and select targets for radio contacts. Zoom with mouse wheel, pan by dragging.'
             },
             your_location: {
                 title: 'Your Location',
-                content: 'The blue marker shows your location. This is where you\'ll transmit your radio signals from.'
+                content: 'The blue marker shows your location. You can change it using the location selector on the left - choose from presets or enter your own coordinates!'
+            },
+            location_selector: {
+                title: 'Change Your Location',
+                content: 'Here you can select your transmitting location. Choose from preset cities or enter custom coordinates with a name for your own QTH.'
             },
             day_night: {
                 title: 'Day and Night',
@@ -898,13 +902,29 @@ export default {
                 title: 'The Grey Line',
                 content: 'The narrow band between day and night is called the "grey line". Special conditions here can enable surprising long-distance contacts!'
             },
+            skip_zone: {
+                title: 'The Skip Zone',
+                content: 'Notice the circle around your location? That\'s the skip zone - signals "jump over" this area! Higher bands have larger skip zones. The 60m band uses NVIS (straight up) to cover this gap.'
+            },
             bands_intro: {
                 title: 'Frequency Bands',
-                content: 'Here you select the frequency band. Each band has its own character – some work better during the day, others at night.'
+                content: 'Here you select the frequency band. Each band has its own character – some work better during the day, others at night. Watch the skip zone change!'
             },
             select_band: {
                 title: 'Select a Band',
                 content: 'Click on the 20 meter band. It\'s a good all-rounder for long-distance contacts.'
+            },
+            power_intro: {
+                title: 'Transmit Power',
+                content: 'Select your power level: QRP (5W) for a challenge, Standard (100W) for normal operation, or High (1000W) for difficult paths. More power = longer range!'
+            },
+            antenna_intro: {
+                title: 'Antenna Selection',
+                content: 'Your antenna affects both gain and radiation angle. Dipole is versatile, Vertical has a low angle for DX, and Yagi offers high gain in one direction!'
+            },
+            antenna_yagi: {
+                title: 'Yagi Direction',
+                content: 'When using a Yagi antenna, you must point it toward your target! Select the beam direction using the compass buttons. Wrong direction = big signal loss!'
             },
             time_intro: {
                 title: 'Time Control',
@@ -928,23 +948,23 @@ export default {
             },
             first_contact: {
                 title: 'Your First Contact',
-                content: 'Now click on a location on the map to attempt a radio contact. Try somewhere on the day side!'
+                content: 'Now click on a location on the map to attempt a radio contact. Try somewhere on the day side! For very distant targets, the signal might take the long path around the Earth.'
             },
             results_intro: {
                 title: 'Results',
-                content: 'Here you can see the result of your contact attempt. Green means success, red means the signal didn\'t get through.'
+                content: 'Here you can see the result of your contact attempt. Green means success, red means the signal didn\'t get through. Watch for short path vs long path!'
             },
             factors_explained: {
                 title: 'Influencing Factors',
-                content: 'These factors show you what affected the propagation. Learn from them to find better connections!'
+                content: 'These factors show you what affected the propagation: daylight, distance, power, antenna, skip zone, and more. Learn from them!'
             },
             experiment: {
                 title: 'Experiment!',
-                content: 'The best way to learn is by trying! Change the time, switch bands, and try different targets. Watch for patterns!'
+                content: 'The best way to learn is by trying! Change power, switch antennas, try different bands and times. Can you reach the other side of the world with QRP?'
             },
             complete: {
                 title: 'Tutorial Complete!',
-                content: 'You now know the basics. Discover for yourself how different bands work at different times. Have fun experimenting!'
+                content: 'You now know the basics. Try the QRP challenge (5W), experiment with Yagi antennas, and discover the magic of grey line propagation. Have fun!'
             }
         }
     },
@@ -958,11 +978,19 @@ export default {
         },
         map: {
             title: 'The World Map',
-            text: 'The map shows day and night in real-time. The ionosphere behaves differently depending on solar radiation.',
-            you: 'Your location (Vienna, Austria)',
+            text: 'The map shows day and night in real-time. The ionosphere behaves differently depending on solar radiation. Use mouse wheel to zoom, drag to pan.',
+            you: 'Your location (configurable)',
             cities: 'Other cities - click to connect',
             sun: 'Current sun position',
-            greyline: 'Grey Line - twilight zone with special propagation'
+            greyline: 'Grey Line - twilight zone with special propagation',
+            skipzone: 'Skip Zone - the circle around you where signals cannot reach'
+        },
+        location: {
+            title: 'Your Location',
+            text: 'You can change your transmitting location:',
+            preset: 'Choose from 100+ preset cities worldwide',
+            custom: 'Enter custom coordinates (latitude/longitude) with your own name',
+            qth: 'Set up your real QTH (ham radio location) to simulate from home!'
         },
         bands: {
             title: 'Frequency Bands (11 Bands)',
@@ -978,6 +1006,35 @@ export default {
             '12m': 'WARC band - like 10m but needs slightly less ionization',
             '10m': 'Only open with strong ionosphere',
             '6m': 'The "Magic Band" - comes alive with Sporadic E!'
+        },
+        power: {
+            title: 'Transmit Power',
+            text: 'Power affects your signal strength and range:',
+            qrp: 'QRP (5W) - The ultimate challenge! Requires good conditions and patience. Real achievement when it works!',
+            standard: 'Standard (100W) - Typical amateur radio power. Reliable for most contacts.',
+            high: 'High (1000W) - Maximum legal power. Helps on difficult paths but won\'t overcome closed bands.'
+        },
+        antenna: {
+            title: 'Antenna Selection',
+            text: 'Your antenna dramatically affects performance:',
+            dipole: 'Dipole - Balanced, versatile antenna. Good all-rounder with moderate gain. Works well for most situations.',
+            vertical: 'Vertical - Low takeoff angle, excellent for DX (long distance). Less gain but reaches farther.',
+            yagi: 'Yagi - High gain directional antenna. Must be pointed at target! Select beam direction with compass buttons. Wrong direction = major signal loss.',
+            angle: 'Takeoff Angle - Lower angles reach farther (DX), higher angles for regional contacts (NVIS).'
+        },
+        skipZone: {
+            title: 'Skip Zone',
+            text: 'Radio waves bounce off the ionosphere at an angle. This creates a "skip zone" - an area around your location where signals cannot reach because they literally jump over it!',
+            small: 'Lower bands (40m-160m) have small skip zones - good for regional contacts',
+            large: 'Higher bands (10m-20m) have larger skip zones - better for distant contacts',
+            nvis: '60m band uses NVIS (Near Vertical Incidence Skywave) - signals go straight up and back down, filling the skip zone!'
+        },
+        longPath: {
+            title: 'Long Path Propagation',
+            text: 'Signals can travel around the Earth in two directions:',
+            short: 'Short Path - The direct, shorter route. Usually preferred.',
+            long: 'Long Path - The longer way around the globe. Sometimes works when short path is blocked!',
+            when: 'Try long path when: short path crosses the night side, or you want to avoid polar paths during aurora.'
         },
         solarActivity: {
             title: 'Solar Activity',
@@ -1019,6 +1076,18 @@ export default {
             tip5: {
                 title: 'Night Bands:',
                 text: 'Lower bands (40m-160m) come alive after sunset. The D-layer disappears and signals can travel much farther with less absorption.'
+            },
+            tip6: {
+                title: 'QRP Challenge:',
+                text: 'Try making contacts with just 5 Watts! It requires patience and good conditions, but the satisfaction is immense. Start with 20m during good solar activity.'
+            },
+            tip7: {
+                title: 'Yagi Advantage:',
+                text: 'A Yagi antenna pointed at your target can make the difference between success and failure on difficult paths. But remember to turn it!'
+            },
+            tip8: {
+                title: 'Long Path DX:',
+                text: 'When the short path doesn\'t work, try the long path! It\'s especially useful for reaching stations on the opposite side of the Earth.'
             }
         }
     },

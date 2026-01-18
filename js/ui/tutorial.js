@@ -69,7 +69,15 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 3: Day/Night explanation
+            // Step 3: Location selector
+            new TutorialStep({
+                id: 'location_selector',
+                targetSelector: '.location-section',
+                position: 'right',
+                waitForAction: 'click'
+            }),
+
+            // Step 4: Day/Night explanation
             new TutorialStep({
                 id: 'day_night',
                 targetSelector: '#world-map',
@@ -77,7 +85,7 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 4: Grey line explanation
+            // Step 5: Grey line explanation
             new TutorialStep({
                 id: 'grey_line',
                 targetSelector: '#world-map',
@@ -85,7 +93,15 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 5: Band selection intro
+            // Step 6: Skip zone explanation
+            new TutorialStep({
+                id: 'skip_zone',
+                targetSelector: '#world-map',
+                position: 'left',
+                waitForAction: 'click'
+            }),
+
+            // Step 7: Band selection intro
             new TutorialStep({
                 id: 'bands_intro',
                 targetSelector: '.band-selector',
@@ -93,7 +109,7 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 6: Select 20m band
+            // Step 8: Select 20m band
             new TutorialStep({
                 id: 'select_band',
                 targetSelector: '[data-band="20m"]',
@@ -102,7 +118,31 @@ export class Tutorial {
                 allowClick: true
             }),
 
-            // Step 7: Time control intro
+            // Step 9: Power level intro
+            new TutorialStep({
+                id: 'power_intro',
+                targetSelector: '.power-selector',
+                position: 'right',
+                waitForAction: 'click'
+            }),
+
+            // Step 10: Antenna selection intro
+            new TutorialStep({
+                id: 'antenna_intro',
+                targetSelector: '.antenna-selector',
+                position: 'right',
+                waitForAction: 'click'
+            }),
+
+            // Step 11: Yagi direction (show if they want to know about directional antennas)
+            new TutorialStep({
+                id: 'antenna_yagi',
+                targetSelector: '#antenna-direction-container',
+                position: 'right',
+                waitForAction: 'click'
+            }),
+
+            // Step 12: Time control intro
             new TutorialStep({
                 id: 'time_intro',
                 targetSelector: '.time-control',
@@ -110,7 +150,7 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 8: Try changing time
+            // Step 13: Try changing time
             new TutorialStep({
                 id: 'try_time',
                 targetSelector: '#time-slider',
@@ -119,7 +159,7 @@ export class Tutorial {
                 allowClick: true
             }),
 
-            // Step 9: Solar activity explanation
+            // Step 14: Solar activity explanation
             new TutorialStep({
                 id: 'solar_activity',
                 targetSelector: '.solar-activity-selector',
@@ -127,7 +167,7 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 10: Special events intro
+            // Step 15: Special events intro
             new TutorialStep({
                 id: 'special_events',
                 targetSelector: '.special-events-control',
@@ -135,7 +175,7 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 11: Sporadic E explanation (most exciting for new users)
+            // Step 16: Sporadic E explanation (most exciting for new users)
             new TutorialStep({
                 id: 'sporadic_e',
                 targetSelector: '#sporadic-e-btn',
@@ -143,7 +183,7 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 12: Make first contact
+            // Step 17: Make first contact
             new TutorialStep({
                 id: 'first_contact',
                 targetSelector: '#world-map',
@@ -152,7 +192,7 @@ export class Tutorial {
                 allowClick: true
             }),
 
-            // Step 10: Explain results
+            // Step 18: Explain results
             new TutorialStep({
                 id: 'results_intro',
                 targetSelector: '#feedback-panel',
@@ -160,7 +200,7 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 11: Factors explanation
+            // Step 19: Factors explanation
             new TutorialStep({
                 id: 'factors_explained',
                 targetSelector: '.factors-section',
@@ -168,7 +208,7 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 12: Experiment prompt
+            // Step 20: Experiment prompt
             new TutorialStep({
                 id: 'experiment',
                 targetSelector: null,
@@ -176,7 +216,7 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 13: Completion
+            // Step 21: Completion
             new TutorialStep({
                 id: 'complete',
                 targetSelector: null,
