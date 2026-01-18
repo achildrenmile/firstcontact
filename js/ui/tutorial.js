@@ -134,12 +134,20 @@ export class Tutorial {
                 waitForAction: 'click'
             }),
 
-            // Step 11: Yagi direction (show if they want to know about directional antennas)
+            // Step 11: Yagi direction (temporarily select Yagi to show direction controls)
             new TutorialStep({
                 id: 'antenna_yagi',
                 targetSelector: '#antenna-direction-container',
                 position: 'right',
-                waitForAction: 'click'
+                waitForAction: 'click',
+                onEnter: (app) => {
+                    // Select Yagi to show direction selector
+                    app.controlsPanel.selectAntenna('yagi');
+                },
+                onExit: (app) => {
+                    // Reset to default dipole
+                    app.controlsPanel.selectAntenna('dipole');
+                }
             }),
 
             // Step 12: Time control intro
