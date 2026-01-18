@@ -55,6 +55,12 @@ export default {
         },
         language: 'Language',
         you: 'YOU',
+        solarActivity: 'Solar Activity',
+        mogelDellinger: {
+            trigger: 'Simulate Solar Flare',
+            active: 'Solar Flare Active!',
+            hint: 'Triggers a Mögel-Dellinger radio blackout'
+        },
         buttons: {
             tutorial: 'Tutorial',
             tutorialTitle: 'Start tutorial',
@@ -149,6 +155,49 @@ export default {
         }
     },
 
+    // Solar Activity
+    solarActivity: {
+        quiet: {
+            name: 'Quiet',
+            simpleDescription: 'Low solar activity. Lower bands work better, higher bands may be closed.',
+            learningHint: 'Notice how 10m and 15m are often "dead" during quiet sun conditions.'
+        },
+        normal: {
+            name: 'Normal',
+            simpleDescription: 'Average solar activity. Good conditions for most bands.',
+            learningHint: 'This is the best condition for learning - propagation is predictable.'
+        },
+        active: {
+            name: 'Active',
+            simpleDescription: 'High solar activity. Higher bands come alive! But watch for disturbances.',
+            learningHint: 'Try 10m and 15m now - they might be wide open for worldwide contacts!'
+        },
+        storm: {
+            name: 'Storm',
+            simpleDescription: 'Disturbed conditions. Propagation is unreliable or blocked.',
+            learningHint: 'During storms, propagation can be completely unpredictable. Try again later!'
+        }
+    },
+
+    // Mögel-Dellinger Effect
+    mogelDellinger: {
+        name: 'Mögel-Dellinger Effect',
+        alternateNames: 'Also known as: Sudden Ionospheric Disturbance (SID), Radio Blackout',
+        simpleDescription: 'A solar flare causes sudden radio blackout on the day side of Earth.',
+        detailedDescription: 'When a solar flare erupts, X-rays reach Earth in 8 minutes and super-ionize the D layer. This turns the D layer into a complete radio absorber, blocking all HF signals on the sunlit side of Earth. Named after German scientists Hans Mögel and Josef Dellinger who discovered this in the 1930s.',
+        symptoms: {
+            title: 'How to recognize it:',
+            list: [
+                'Sudden complete fadeout of signals',
+                'Only affects the day side of the path',
+                'Lower frequencies affected more',
+                'Gradual recovery over 15-120 minutes',
+                'Night side paths still work'
+            ]
+        },
+        learningHint: 'If HF suddenly goes dead during the day but works at night - it might be a Mögel-Dellinger event!'
+    },
+
     // Layer States
     layerStates: {
         dLayerAbsent: '{layer} is mostly absent (nighttime conditions)',
@@ -209,7 +258,25 @@ export default {
             good: 'Good',
             fair: 'Fair',
             weak: 'Weak but readable',
-            notReadable: 'Not readable'
+            notReadable: 'Not readable',
+            blackout: 'Radio Blackout!'
+        },
+
+        // Mögel-Dellinger messages
+        mogelDellinger: {
+            blackout: 'Radio Blackout! A solar flare has caused a Mögel-Dellinger effect. {band} signals are being absorbed on the day side.',
+            severeBlackout: 'Complete HF radio blackout due to solar flare!',
+            moderateBlackout: 'Strong D-layer absorption from solar flare affecting {band}',
+            minorBlackout: 'Solar flare causing increased absorption on {band}',
+            minorEffect: 'Minor solar flare effect on {band}'
+        },
+
+        // Solar Activity messages
+        solarActivity: {
+            quietHighBand: 'Quiet sun - {band} needs more ionization',
+            activeHighBand: 'Active sun boosting {band} propagation!',
+            activeLowBand: 'Active sun increasing D-layer absorption on {band}',
+            storm: 'Geomagnetic storm disrupting ionosphere'
         },
 
         // Signal meter
@@ -273,7 +340,16 @@ export default {
             distanceTooFar: 'This {distance} km path would require {idealHops} hops, but {band} signals typically can only sustain {maxHops} hops before becoming too weak. Higher frequency bands can travel farther per hop because they reflect at steeper angles.',
             singleHopPath: 'This is a single-hop path - the signal bounces once off the ionosphere. Single-hop paths are generally the most reliable.',
             multiHopPath: 'This path requires {count} hops off the ionosphere. Each hop loses some signal strength, but this is a reasonable path.',
-            longMultiHopPath: 'This path requires {count} hops, which is getting long. Each ionospheric reflection loses signal strength, so multi-hop paths can be weak or unreliable.'
+            longMultiHopPath: 'This path requires {count} hops, which is getting long. Each ionospheric reflection loses signal strength, so multi-hop paths can be weak or unreliable.',
+            // Mögel-Dellinger educational
+            mogelDellingerSevere: 'This is a Mögel-Dellinger effect! A solar flare has sent X-rays to Earth, super-ionizing the D layer. All HF signals on the sunlit side are being completely absorbed. This effect typically lasts 15-120 minutes. Try a path that goes through the night side!',
+            mogelDellingerModerate: 'A solar flare is causing enhanced D-layer absorption. Lower frequency bands are most affected. The effect will gradually fade over the next hour or so.',
+            mogelDellingerMinor: '{band} is experiencing some extra absorption from solar flare activity, but higher frequencies are less affected.',
+            // Solar activity educational
+            solarQuietHighBand: '{band} needs strong F-layer ionization to reflect signals. During quiet solar conditions, the ionosphere is weaker and higher frequencies often pass through into space instead of reflecting back.',
+            solarActiveHighBand: 'Active solar conditions create strong F-layer ionization - perfect for {band}! The higher frequencies that normally struggle can now reflect efficiently for worldwide contacts.',
+            solarActiveLowBand: 'With active solar conditions, the D-layer is also more ionized, which means more absorption of lower frequencies like {band} during the day.',
+            solarStorm: 'Geomagnetic storms disrupt the orderly structure of the ionosphere. Propagation becomes unpredictable - signals may fade in and out, or the ionosphere may become completely unreliable. Wait for conditions to settle.'
         }
     },
 
@@ -301,6 +377,26 @@ export default {
                 name: 'Daytime Propagation',
                 insight: '{band} works well during the day because it\'s not strongly absorbed by the D layer.',
                 experiment: 'Compare to 80m or 40m on the same path to see how lower frequencies are absorbed.'
+            },
+            mogelDellinger: {
+                name: 'Mögel-Dellinger Effect',
+                insight: 'A solar flare has caused a sudden radio blackout! X-rays from the flare super-ionize the D layer, which then absorbs all HF signals on the sunlit side of Earth.',
+                experiment: 'Try a path that goes through the night side - the Mögel-Dellinger effect only affects the day side!'
+            },
+            solarActivityQuiet: {
+                name: 'Quiet Sun Conditions',
+                insight: 'During quiet solar conditions, the ionosphere is less ionized. Higher frequency bands like {band} struggle because they need strong ionization to reflect.',
+                experiment: 'Switch to a lower frequency band like 20m or 40m, which can reflect with weaker ionization.'
+            },
+            solarActivityActive: {
+                name: 'Active Sun Conditions',
+                insight: 'Active solar conditions supercharge the ionosphere! Higher frequency bands like {band} can now reach around the world.',
+                experiment: 'Try even higher bands like 10m - they might be wide open during active conditions!'
+            },
+            solarStorm: {
+                name: 'Geomagnetic Storm',
+                insight: 'A geomagnetic storm is disrupting the ionosphere. Solar material hitting Earth\'s magnetic field creates chaotic conditions.',
+                experiment: 'Wait for conditions to settle, or try very low bands at night which may still work.'
             }
         }
     },

@@ -11,6 +11,10 @@
  * EDUCATIONAL NOTE: In reality, the ionosphere is far more complex with F1/F2 sublayers,
  * sporadic E, and gradual transitions. We simplify to three distinct layers with clear
  * behaviors so learners can form mental models before encountering real-world complexity.
+ *
+ * SOLAR ACTIVITY EFFECTS:
+ * - Solar activity level affects how strongly the layers are ionized
+ * - Mögel-Dellinger events cause sudden intense D-layer absorption (radio blackout)
  */
 
 /**
@@ -90,6 +94,27 @@ export class LayerState {
 export class Ionosphere {
     constructor() {
         this.layers = {};
+        this.solarEffects = null;
+        this.mogelDellingerActive = false;
+        this.mogelDellingerMultiplier = 1;
+    }
+
+    /**
+     * Set solar activity effects
+     * @param {Object} effects - Effects from SolarConditions.getIonosphereEffects()
+     */
+    setSolarEffects(effects) {
+        this.solarEffects = effects;
+    }
+
+    /**
+     * Set Mögel-Dellinger event state
+     * @param {boolean} active - Whether event is active
+     * @param {number} multiplier - Absorption multiplier (1 = no effect)
+     */
+    setMogelDellinger(active, multiplier = 1) {
+        this.mogelDellingerActive = active;
+        this.mogelDellingerMultiplier = multiplier;
     }
 
     /**
@@ -103,20 +128,29 @@ export class Ionosphere {
      * - We use solar elevation as the primary driver (real ionosphere has more factors)
      * - Transitions are smoothed to avoid confusing sudden changes
      * - Grey line effects are modeled as a special "enhanced" state
+     * - Solar activity level modifies ionization strength
+     * - Mögel-Dellinger events dramatically increase D-layer absorption
      */
     calculateLayerStates(solarElevation, isGreyLine = false) {
         // Normalize solar elevation to useful ranges
         // Sun below -18° = full night, above +45° = full day
         const dayFactor = this.solarElevationToDayFactor(solarElevation);
 
+        // Get solar activity modifiers (default to normal if not set)
+        const solarMods = this.solarEffects || {
+            fLayerBoost: 1.0,
+            mufMultiplier: 1.0,
+            absorptionFactor: 1.0
+        };
+
         // D Layer: Only present during day, major absorber
-        const dLayerState = this.calculateDLayerState(dayFactor, isGreyLine);
+        const dLayerState = this.calculateDLayerState(dayFactor, isGreyLine, solarMods);
 
         // E Layer: Daytime layer, moderate reflector
-        const eLayerState = this.calculateELayerState(dayFactor, isGreyLine);
+        const eLayerState = this.calculateELayerState(dayFactor, isGreyLine, solarMods);
 
         // F Layer: Always somewhat present, best reflector
-        const fLayerState = this.calculateFLayerState(dayFactor, isGreyLine);
+        const fLayerState = this.calculateFLayerState(dayFactor, isGreyLine, solarMods);
 
         this.layers = {
             D: dLayerState,
@@ -145,18 +179,31 @@ export class Ionosphere {
      * - Present only during daylight
      * - Absorbs low frequencies strongly
      * - Disappears quickly after sunset (key learning point!)
+     * - Mögel-Dellinger events cause extreme absorption (radio blackout)
      */
-    calculateDLayerState(dayFactor, isGreyLine) {
+    calculateDLayerState(dayFactor, isGreyLine, solarMods) {
         // D layer forms quickly with sunlight, disappears quickly without
-        const ionization = Math.pow(dayFactor, 0.7);
+        let ionization = Math.pow(dayFactor, 0.7);
 
         // Grey line: D layer is transitioning, creating a "window"
         const greyLineReduction = isGreyLine ? 0.4 : 1;
 
+        // Apply solar activity absorption factor
+        const solarAbsorption = solarMods.absorptionFactor || 1.0;
+
+        // Mögel-Dellinger effect: massive D-layer ionization during day
+        const mogelDellingerEffect = this.mogelDellingerActive && dayFactor > 0.1
+            ? this.mogelDellingerMultiplier
+            : 1;
+
+        // Calculate final absorption (capped at 1.0)
+        const baseAbsorption = ionization * greyLineReduction * 0.9 * solarAbsorption;
+        const finalAbsorption = Math.min(1.0, baseAbsorption * mogelDellingerEffect);
+
         return new LayerState(
             'D',
             ionization * greyLineReduction,
-            ionization * greyLineReduction * 0.9,  // High absorption when present
+            finalAbsorption,
             0.1  // D layer doesn't reflect usefully
         );
     }
@@ -166,9 +213,15 @@ export class Ionosphere {
      * - Strongest during day
      * - Can reflect higher frequencies than F layer at times
      * - Enables medium-distance contacts
+     * - Solar activity affects ionization level
      */
-    calculateELayerState(dayFactor, isGreyLine) {
-        const ionization = Math.pow(dayFactor, 0.8);
+    calculateELayerState(dayFactor, isGreyLine, solarMods) {
+        // Base ionization from sun
+        let ionization = Math.pow(dayFactor, 0.8);
+
+        // Solar activity affects E layer ionization
+        const solarBoost = solarMods.fLayerBoost || 1.0;
+        ionization = Math.min(1.0, ionization * solarBoost);
 
         // E layer reflection is good during day
         const reflection = ionization * 0.7;
@@ -186,15 +239,20 @@ export class Ionosphere {
      * - Present day and night (key learning point!)
      * - Higher during night, enabling longer hops
      * - Best for worldwide communication
+     * - Solar activity strongly affects F layer ionization (key for higher bands!)
      */
-    calculateFLayerState(dayFactor, isGreyLine) {
+    calculateFLayerState(dayFactor, isGreyLine, solarMods) {
         // F layer is always partially present - minimum 30% at night
-        const ionization = 0.3 + (dayFactor * 0.7);
+        let baseIonization = 0.3 + (dayFactor * 0.7);
+
+        // Solar activity strongly affects F layer - this is crucial for higher bands!
+        const solarBoost = solarMods.fLayerBoost || 1.0;
+        const ionization = Math.min(1.0, baseIonization * solarBoost);
 
         // Grey line: F layer becomes more efficient (famous grey line enhancement)
         const greyLineBoost = isGreyLine ? 1.3 : 1;
 
-        // Reflection quality is excellent
+        // Reflection quality is excellent, modified by solar activity
         const reflection = Math.min(1, ionization * 0.95 * greyLineBoost);
 
         return new LayerState(

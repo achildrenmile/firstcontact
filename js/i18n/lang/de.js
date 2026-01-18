@@ -55,6 +55,12 @@ export default {
         },
         language: 'Sprache',
         you: 'DU',
+        solarActivity: 'Sonnenaktivität',
+        mogelDellinger: {
+            trigger: 'Sonneneruption simulieren',
+            active: 'Sonneneruption aktiv!',
+            hint: 'Löst einen Mögel-Dellinger Funkausfall aus'
+        },
         buttons: {
             tutorial: 'Tutorial',
             tutorialTitle: 'Tutorial starten',
@@ -149,6 +155,49 @@ export default {
         }
     },
 
+    // Solar Activity
+    solarActivity: {
+        quiet: {
+            name: 'Ruhig',
+            simpleDescription: 'Niedrige Sonnenaktivität. Niedrigere Bänder funktionieren besser, höhere Bänder können geschlossen sein.',
+            learningHint: 'Beachte, wie 10m und 15m bei ruhiger Sonne oft "tot" sind.'
+        },
+        normal: {
+            name: 'Normal',
+            simpleDescription: 'Durchschnittliche Sonnenaktivität. Gute Bedingungen für die meisten Bänder.',
+            learningHint: 'Dies ist die beste Kondition zum Lernen – die Ausbreitung ist vorhersagbar.'
+        },
+        active: {
+            name: 'Aktiv',
+            simpleDescription: 'Hohe Sonnenaktivität. Höhere Bänder erwachen zum Leben! Aber achte auf Störungen.',
+            learningHint: 'Probiere jetzt 10m und 15m – sie könnten für weltweite Verbindungen weit offen sein!'
+        },
+        storm: {
+            name: 'Sturm',
+            simpleDescription: 'Gestörte Bedingungen. Ausbreitung ist unzuverlässig oder blockiert.',
+            learningHint: 'Bei Stürmen kann die Ausbreitung komplett unvorhersagbar sein. Versuche es später noch einmal!'
+        }
+    },
+
+    // Mögel-Dellinger Effect
+    mogelDellinger: {
+        name: 'Mögel-Dellinger-Effekt',
+        alternateNames: 'Auch bekannt als: Plötzliche ionosphärische Störung (SID), Funkausfall',
+        simpleDescription: 'Eine Sonneneruption verursacht plötzlichen Funkausfall auf der Tagseite der Erde.',
+        detailedDescription: 'Wenn eine Sonneneruption ausbricht, erreichen Röntgenstrahlen die Erde in 8 Minuten und überionisieren die D-Schicht. Dies verwandelt die D-Schicht in einen vollständigen Funkabsorber und blockiert alle KW-Signale auf der sonnenbeschienenen Seite der Erde. Benannt nach den deutschen Wissenschaftlern Hans Mögel und Josef Dellinger, die dies in den 1930er Jahren entdeckten.',
+        symptoms: {
+            title: 'Woran erkennst du ihn:',
+            list: [
+                'Plötzliches komplettes Ausbleiben von Signalen',
+                'Betrifft nur die Tagseite des Pfades',
+                'Niedrigere Frequenzen stärker betroffen',
+                'Allmähliche Erholung über 15-120 Minuten',
+                'Nachtseiten-Pfade funktionieren weiterhin'
+            ]
+        },
+        learningHint: 'Wenn KW tagsüber plötzlich ausfällt, aber nachts funktioniert – könnte es ein Mögel-Dellinger-Ereignis sein!'
+    },
+
     // Layer States
     layerStates: {
         dLayerAbsent: '{layer} ist größtenteils abwesend (Nachtbedingungen)',
@@ -209,7 +258,25 @@ export default {
             good: 'Gut',
             fair: 'Ausreichend',
             weak: 'Schwach aber lesbar',
-            notReadable: 'Nicht lesbar'
+            notReadable: 'Nicht lesbar',
+            blackout: 'Funkausfall!'
+        },
+
+        // Mögel-Dellinger messages
+        mogelDellinger: {
+            blackout: 'Funkausfall! Eine Sonneneruption hat einen Mögel-Dellinger-Effekt verursacht. {band}-Signale werden auf der Tagseite absorbiert.',
+            severeBlackout: 'Kompletter KW-Funkausfall durch Sonneneruption!',
+            moderateBlackout: 'Starke D-Schicht-Absorption durch Sonneneruption betrifft {band}',
+            minorBlackout: 'Sonneneruption verursacht erhöhte Absorption auf {band}',
+            minorEffect: 'Geringer Sonneneruptionseffekt auf {band}'
+        },
+
+        // Solar Activity messages
+        solarActivity: {
+            quietHighBand: 'Ruhige Sonne – {band} braucht mehr Ionisation',
+            activeHighBand: 'Aktive Sonne verstärkt {band}-Ausbreitung!',
+            activeLowBand: 'Aktive Sonne erhöht D-Schicht-Absorption auf {band}',
+            storm: 'Geomagnetischer Sturm stört Ionosphäre'
         },
 
         // Signal meter
@@ -273,7 +340,16 @@ export default {
             distanceTooFar: 'Dieser {distance} km Pfad würde {idealHops} Sprünge erfordern, aber {band}-Signale können typischerweise nur {maxHops} Sprünge aufrechterhalten, bevor sie zu schwach werden. Höhere Frequenzbänder können weiter pro Sprung reisen, weil sie in steileren Winkeln reflektieren.',
             singleHopPath: 'Dies ist ein Einfach-Sprung-Pfad – das Signal springt einmal von der Ionosphäre ab. Einfach-Sprung-Pfade sind im Allgemeinen die zuverlässigsten.',
             multiHopPath: 'Dieser Pfad erfordert {count} Sprünge von der Ionosphäre. Jeder Sprung verliert etwas Signalstärke, aber dies ist ein vernünftiger Pfad.',
-            longMultiHopPath: 'Dieser Pfad erfordert {count} Sprünge, was ziemlich lang ist. Jede ionosphärische Reflexion verliert Signalstärke, so dass Mehr-Sprung-Pfade schwach oder unzuverlässig sein können.'
+            longMultiHopPath: 'Dieser Pfad erfordert {count} Sprünge, was ziemlich lang ist. Jede ionosphärische Reflexion verliert Signalstärke, so dass Mehr-Sprung-Pfade schwach oder unzuverlässig sein können.',
+            // Mögel-Dellinger educational
+            mogelDellingerSevere: 'Dies ist ein Mögel-Dellinger-Effekt! Eine Sonneneruption hat Röntgenstrahlen zur Erde gesendet, die die D-Schicht überionisieren. Alle KW-Signale auf der sonnenbeschienenen Seite werden vollständig absorbiert. Dieser Effekt dauert typischerweise 15-120 Minuten. Probiere einen Pfad durch die Nachtseite!',
+            mogelDellingerModerate: 'Eine Sonneneruption verursacht verstärkte D-Schicht-Absorption. Niedrigere Frequenzbänder sind am stärksten betroffen. Der Effekt wird in der nächsten Stunde allmählich nachlassen.',
+            mogelDellingerMinor: '{band} erfährt etwas zusätzliche Absorption durch Sonneneruptionsaktivität, aber höhere Frequenzen sind weniger betroffen.',
+            // Solar activity educational
+            solarQuietHighBand: '{band} braucht starke F-Schicht-Ionisation, um Signale zu reflektieren. Bei ruhigen Sonnenbedingungen ist die Ionosphäre schwächer und höhere Frequenzen durchdringen oft ins All, anstatt zurückreflektiert zu werden.',
+            solarActiveHighBand: 'Aktive Sonnenbedingungen erzeugen starke F-Schicht-Ionisation – perfekt für {band}! Die höheren Frequenzen, die normalerweise kämpfen, können jetzt effizient für weltweite Verbindungen reflektieren.',
+            solarActiveLowBand: 'Bei aktiven Sonnenbedingungen ist auch die D-Schicht stärker ionisiert, was mehr Absorption von niedrigeren Frequenzen wie {band} tagsüber bedeutet.',
+            solarStorm: 'Geomagnetische Stürme stören die geordnete Struktur der Ionosphäre. Die Ausbreitung wird unvorhersagbar – Signale können ein- und ausfaden, oder die Ionosphäre kann völlig unzuverlässig werden. Warte, bis sich die Bedingungen beruhigen.'
         }
     },
 
@@ -301,6 +377,26 @@ export default {
                 name: 'Tageslichtausbreitung',
                 insight: '{band} funktioniert tagsüber gut, weil es nicht stark von der D-Schicht absorbiert wird.',
                 experiment: 'Vergleiche mit 80m oder 40m auf demselben Pfad, um zu sehen, wie niedrigere Frequenzen absorbiert werden.'
+            },
+            mogelDellinger: {
+                name: 'Mögel-Dellinger-Effekt',
+                insight: 'Eine Sonneneruption hat einen plötzlichen Funkausfall verursacht! Röntgenstrahlen von der Eruption überionisieren die D-Schicht, die dann alle KW-Signale auf der sonnenbeschienenen Seite der Erde absorbiert.',
+                experiment: 'Probiere einen Pfad durch die Nachtseite – der Mögel-Dellinger-Effekt betrifft nur die Tagseite!'
+            },
+            solarActivityQuiet: {
+                name: 'Ruhige Sonnenbedingungen',
+                insight: 'Bei ruhigen Sonnenbedingungen ist die Ionosphäre weniger ionisiert. Höhere Frequenzbänder wie {band} kämpfen, weil sie starke Ionisation zum Reflektieren brauchen.',
+                experiment: 'Wechsle zu einem niedrigeren Frequenzband wie 20m oder 40m, das mit schwächerer Ionisation reflektieren kann.'
+            },
+            solarActivityActive: {
+                name: 'Aktive Sonnenbedingungen',
+                insight: 'Aktive Sonnenbedingungen laden die Ionosphäre auf! Höhere Frequenzbänder wie {band} können jetzt um die Welt reichen.',
+                experiment: 'Probiere noch höhere Bänder wie 10m – sie könnten bei aktiven Bedingungen weit offen sein!'
+            },
+            solarStorm: {
+                name: 'Geomagnetischer Sturm',
+                insight: 'Ein geomagnetischer Sturm stört die Ionosphäre. Sonnenmaterial, das auf das Erdmagnetfeld trifft, erzeugt chaotische Bedingungen.',
+                experiment: 'Warte, bis sich die Bedingungen beruhigen, oder probiere sehr niedrige Bänder nachts, die noch funktionieren könnten.'
             }
         }
     },

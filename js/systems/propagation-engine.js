@@ -4,6 +4,11 @@
  * The core system that evaluates whether a radio signal can travel from
  * source to target given the selected band, time, and resulting ionospheric conditions.
  *
+ * Includes:
+ * - Basic ionospheric propagation modeling
+ * - Solar activity effects (quiet sun to geomagnetic storm)
+ * - Mögel-Dellinger effect (sudden ionospheric disturbance / radio blackout)
+ *
  * Uses i18n for all user-facing text.
  */
 
@@ -16,6 +21,24 @@ import {
     doesPathCrossGreyLine
 } from './sun-position.js';
 import { t, formatDistance } from '../i18n/i18n.js';
+import { SolarConditions, MOGEL_DELLINGER_EVENT } from '../models/solar-activity.js';
+
+// Global solar conditions instance
+let globalSolarConditions = new SolarConditions();
+
+/**
+ * Set the global solar conditions
+ */
+export function setSolarConditions(conditions) {
+    globalSolarConditions = conditions;
+}
+
+/**
+ * Get the global solar conditions
+ */
+export function getSolarConditions() {
+    return globalSolarConditions;
+}
 
 /**
  * Propagation result contains everything needed for visualization and explanation
@@ -89,11 +112,38 @@ export function evaluatePropagation({ source, target, bandId, dateTime }) {
         target.latitude, target.longitude
     );
 
-    // Get ionospheric conditions along the path
+    // Get ionospheric conditions along the path (includes solar activity effects)
     const pathConditions = analyzePathConditions(source, target, dateTime);
 
     // Calculate how many hops are needed
     const hopAnalysis = calculateRequiredHops(distance, band);
+
+    // Check for Mögel-Dellinger effect FIRST (it can override everything)
+    const mogelDellingerFactor = evaluateMogelDellinger(bandId, pathConditions);
+    if (mogelDellingerFactor) {
+        result.factors.push(mogelDellingerFactor);
+
+        // If severe Mögel-Dellinger, it dominates the result
+        if (mogelDellingerFactor.impact < -0.8) {
+            result.signalStrength = 0;
+            result.success = false;
+            result.qualityDescription = t('propagation.quality.blackout');
+            result.summary = t('propagation.mogelDellinger.blackout', { band: bandName });
+            result.path = buildSignalPath(source, target, hopAnalysis, false);
+            result.learningPoints = [{
+                concept: t('learning.concepts.mogelDellinger.name'),
+                insight: t('learning.concepts.mogelDellinger.insight'),
+                experiment: t('learning.concepts.mogelDellinger.experiment')
+            }];
+            return result;
+        }
+    }
+
+    // Evaluate solar activity effect on this band
+    const solarActivityFactor = evaluateSolarActivity(bandId, pathConditions);
+    if (solarActivityFactor) {
+        result.factors.push(solarActivityFactor);
+    }
 
     // Evaluate D layer absorption
     const absorptionFactor = evaluateAbsorption(band, bandId, pathConditions);
@@ -137,15 +187,27 @@ export function evaluatePropagation({ source, target, bandId, dateTime }) {
  */
 function analyzePathConditions(source, target, dateTime) {
     const ionosphere = new Ionosphere();
+
+    // Apply solar activity effects to ionosphere
+    const solarEffects = globalSolarConditions.getIonosphereEffects();
+    ionosphere.setSolarEffects(solarEffects);
+
     const pathPoints = generatePathPoints(
         source.latitude, source.longitude,
         target.latitude, target.longitude,
         10
     );
 
+    // Calculate what percent of path is in daylight (for Mögel-Dellinger)
+    let dayCount = 0;
+
     const samples = pathPoints.map(point => {
         const elevation = calculateSolarElevation(point.latitude, point.longitude, dateTime);
         const greyLine = checkGreyLine(point.latitude, point.longitude, dateTime);
+
+        // Check if this point is in daylight (sun above horizon)
+        if (elevation > 0) dayCount++;
+
         const layers = ionosphere.calculateLayerStates(elevation, greyLine.isGreyLine);
 
         return {
@@ -155,6 +217,24 @@ function analyzePathConditions(source, target, dateTime) {
             layers
         };
     });
+
+    const pathDayPercent = dayCount / samples.length;
+
+    // Check Mögel-Dellinger effect
+    const mogelDellingerEffect = globalSolarConditions.getMogelDellingerEffect(pathDayPercent);
+
+    // If Mögel-Dellinger is active, recalculate with massive D-layer absorption
+    if (mogelDellingerEffect.affected) {
+        ionosphere.setMogelDellinger(true, mogelDellingerEffect.absorptionMultiplier);
+
+        // Recalculate with Mögel-Dellinger effect
+        samples.forEach(sample => {
+            sample.layers = ionosphere.calculateLayerStates(
+                sample.elevation,
+                sample.greyLine.isGreyLine
+            );
+        });
+    }
 
     const avgDLayerIonization = average(samples.map(s => s.layers.D.ionization));
     const avgFLayerIonization = average(samples.map(s => s.layers.F.ionization));
@@ -171,7 +251,13 @@ function analyzePathConditions(source, target, dateTime) {
         percentInGreyLine: greyLineCount / samples.length,
         hasGreyLine: greyLineCount > 0,
         mostlyDay: avgDLayerIonization > 0.5,
-        mostlyNight: avgDLayerIonization < 0.2
+        mostlyNight: avgDLayerIonization < 0.2,
+        // Solar activity info
+        solarActivity: globalSolarConditions.activityLevel,
+        solarEffects,
+        // Mögel-Dellinger info
+        mogelDellingerEffect,
+        pathDayPercent
     };
 }
 
@@ -335,6 +421,113 @@ function evaluateGeometry(hopAnalysis, band, bandId) {
 }
 
 /**
+ * Evaluate Mögel-Dellinger effect (Sudden Ionospheric Disturbance)
+ * This is a dramatic solar flare effect that causes HF radio blackout on the sunlit side
+ */
+function evaluateMogelDellinger(bandId, pathConditions) {
+    const effect = pathConditions.mogelDellingerEffect;
+
+    if (!effect || !effect.affected) {
+        return null;
+    }
+
+    const bandName = t(`bands.${bandId}.name`);
+
+    // Check if this band is in the affected list
+    const isAffected = effect.affectedBands.includes(bandId);
+
+    if (!isAffected) {
+        // Higher bands less affected
+        return new PropagationFactor(
+            'Mögel-Dellinger Effect',
+            -0.2,
+            t('propagation.mogelDellinger.minorEffect', { band: bandName }),
+            t('propagation.educational.mogelDellingerMinor', { band: bandName })
+        );
+    }
+
+    // Severity determines impact
+    let impact, description, educational;
+
+    if (effect.severity === 'severe') {
+        impact = -1.0;  // Complete blackout
+        description = t('propagation.mogelDellinger.severeBlackout');
+        educational = t('propagation.educational.mogelDellingerSevere');
+    } else if (effect.severity === 'moderate') {
+        impact = -0.8;
+        description = t('propagation.mogelDellinger.moderateBlackout', { band: bandName });
+        educational = t('propagation.educational.mogelDellingerModerate');
+    } else {
+        impact = -0.5;
+        description = t('propagation.mogelDellinger.minorBlackout', { band: bandName });
+        educational = t('propagation.educational.mogelDellingerMinor', { band: bandName });
+    }
+
+    // Scale by how much path is in daylight
+    impact = impact * pathConditions.pathDayPercent;
+
+    return new PropagationFactor('Mögel-Dellinger Effect', impact, description, educational);
+}
+
+/**
+ * Evaluate solar activity effect on the band
+ * Different bands respond differently to solar activity levels
+ */
+function evaluateSolarActivity(bandId, pathConditions) {
+    const activityLevel = pathConditions.solarActivity;
+    const bandName = t(`bands.${bandId}.name`);
+
+    // Get band frequency to determine sensitivity
+    const bandFreqs = {
+        '160m': 1.9, '80m': 3.75, '40m': 7.15,
+        '20m': 14.175, '15m': 21.225, '10m': 28.85
+    };
+    const freq = bandFreqs[bandId] || 14;
+    const isHighBand = freq > 15;
+    const isLowBand = freq < 8;
+
+    let impact = 0;
+    let description = '';
+    let educational = '';
+
+    if (activityLevel === 'quiet') {
+        if (isHighBand) {
+            // High bands suffer in quiet conditions
+            impact = -0.4;
+            description = t('propagation.solarActivity.quietHighBand', { band: bandName });
+            educational = t('propagation.educational.solarQuietHighBand', { band: bandName });
+        } else {
+            // Low/mid bands are fine
+            return null;
+        }
+    } else if (activityLevel === 'active') {
+        if (isHighBand) {
+            // High bands thrive!
+            impact = 0.3;
+            description = t('propagation.solarActivity.activeHighBand', { band: bandName });
+            educational = t('propagation.educational.solarActiveHighBand', { band: bandName });
+        } else if (isLowBand) {
+            // Low bands get more absorption
+            impact = -0.2;
+            description = t('propagation.solarActivity.activeLowBand', { band: bandName });
+            educational = t('propagation.educational.solarActiveLowBand', { band: bandName });
+        } else {
+            return null;
+        }
+    } else if (activityLevel === 'storm') {
+        // Storms are bad for everyone
+        impact = -0.5;
+        description = t('propagation.solarActivity.storm');
+        educational = t('propagation.educational.solarStorm');
+    } else {
+        // Normal conditions - no special factor
+        return null;
+    }
+
+    return new PropagationFactor('Solar Activity', impact, description, educational);
+}
+
+/**
  * Calculate overall signal strength from factors
  */
 function calculateSignalStrength(factors) {
@@ -492,6 +685,30 @@ function extractLearningPoints(result, band, bandId, pathConditions) {
             insight: t('learning.concepts.daytimePropagation.insight', { band: bandName }),
             experiment: t('learning.concepts.daytimePropagation.experiment')
         });
+    }
+
+    // Check for solar activity lesson
+    const solarActivityFactor = result.factors.find(f => f.name === 'Solar Activity');
+    if (solarActivityFactor) {
+        if (pathConditions.solarActivity === 'quiet' && solarActivityFactor.impact < -0.2) {
+            points.push({
+                concept: t('learning.concepts.solarActivityQuiet.name'),
+                insight: t('learning.concepts.solarActivityQuiet.insight', { band: bandName }),
+                experiment: t('learning.concepts.solarActivityQuiet.experiment')
+            });
+        } else if (pathConditions.solarActivity === 'active' && solarActivityFactor.impact > 0.2) {
+            points.push({
+                concept: t('learning.concepts.solarActivityActive.name'),
+                insight: t('learning.concepts.solarActivityActive.insight', { band: bandName }),
+                experiment: t('learning.concepts.solarActivityActive.experiment')
+            });
+        } else if (pathConditions.solarActivity === 'storm') {
+            points.push({
+                concept: t('learning.concepts.solarStorm.name'),
+                insight: t('learning.concepts.solarStorm.insight'),
+                experiment: t('learning.concepts.solarStorm.experiment')
+            });
+        }
     }
 
     return points;

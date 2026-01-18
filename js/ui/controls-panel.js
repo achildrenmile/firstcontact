@@ -4,12 +4,15 @@
  * Provides the user interface for:
  * - Selecting HF bands
  * - Controlling simulation time
+ * - Solar activity selection
+ * - Mögel-Dellinger event trigger
  * - Viewing current conditions
  * - Language selection
  */
 
 import { HF_BANDS, getAllBands } from '../models/bands.js';
 import { t, LANGUAGES, getCurrentLanguage, setLanguage } from '../i18n/i18n.js';
+import { SOLAR_ACTIVITY_LEVELS, getAllActivityLevels } from '../models/solar-activity.js';
 
 export class ControlsPanel {
     constructor(containerId, options = {}) {
@@ -18,10 +21,14 @@ export class ControlsPanel {
         // State
         this.selectedBand = '20m';
         this.currentTime = new Date();
+        this.solarActivity = 'normal';
+        this.mogelDellingerActive = false;
 
         // Callbacks
         this.onBandChange = options.onBandChange || (() => {});
         this.onTimeChange = options.onTimeChange || (() => {});
+        this.onSolarActivityChange = options.onSolarActivityChange || (() => {});
+        this.onMogelDellingerToggle = options.onMogelDellingerToggle || (() => {});
 
         // Build the UI
         this.render();
@@ -64,6 +71,19 @@ export class ControlsPanel {
                 </section>
 
                 <section class="control-section">
+                    <h3>${t('ui.solarActivity')}</h3>
+                    <div class="solar-activity-selector" id="solar-activity-buttons"></div>
+                    <div class="solar-activity-info" id="solar-activity-info"></div>
+                    <div class="mogel-dellinger-control">
+                        <button class="mogel-dellinger-button ${this.mogelDellingerActive ? 'active' : ''}" id="mogel-dellinger-btn">
+                            <span class="md-icon">⚡</span>
+                            <span class="md-label">${t('ui.mogelDellinger.trigger')}</span>
+                        </button>
+                        <div class="mogel-dellinger-hint">${t('ui.mogelDellinger.hint')}</div>
+                    </div>
+                </section>
+
+                <section class="control-section">
                     <h3>${t('ui.currentConditions')}</h3>
                     <div class="conditions-display" id="conditions-display">
                         ${t('ui.welcome.subtitle')}
@@ -73,8 +93,10 @@ export class ControlsPanel {
         `;
 
         this.renderBandButtons();
+        this.renderSolarActivityButtons();
         this.setupEventListeners();
         this.updateBandInfo();
+        this.updateSolarActivityInfo();
     }
 
     /**
@@ -106,6 +128,25 @@ export class ControlsPanel {
             >
                 <span class="band-name">${band.id}</span>
                 <span class="band-personality">${t(`bands.${band.id}.personality`)}</span>
+            </button>
+        `).join('');
+    }
+
+    /**
+     * Render solar activity selection buttons
+     */
+    renderSolarActivityButtons() {
+        const container = document.getElementById('solar-activity-buttons');
+        const levels = getAllActivityLevels();
+
+        container.innerHTML = levels.map(level => `
+            <button
+                class="solar-activity-button ${level.id === this.solarActivity ? 'selected' : ''}"
+                data-activity="${level.id}"
+                style="--activity-color: ${level.color}"
+            >
+                <span class="activity-icon">${level.icon}</span>
+                <span class="activity-name">${t(`solarActivity.${level.id}.name`)}</span>
             </button>
         `).join('');
     }
@@ -144,6 +185,19 @@ export class ControlsPanel {
                 this.setHour(hour);
             });
         });
+
+        // Solar activity buttons
+        document.getElementById('solar-activity-buttons')?.addEventListener('click', (e) => {
+            const button = e.target.closest('.solar-activity-button');
+            if (button) {
+                this.selectSolarActivity(button.dataset.activity);
+            }
+        });
+
+        // Mögel-Dellinger button
+        document.getElementById('mogel-dellinger-btn')?.addEventListener('click', () => {
+            this.toggleMogelDellinger();
+        });
     }
 
     /**
@@ -180,6 +234,63 @@ export class ControlsPanel {
                 <p class="band-description">${t(`bands.${band.id}.simpleDescription`)}</p>
                 <div class="band-hint">
                     <strong>Tip:</strong> ${t(`bands.${band.id}.learningHint`)}
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Select solar activity level
+     */
+    selectSolarActivity(activityId) {
+        this.solarActivity = activityId;
+
+        // Update button states
+        document.querySelectorAll('.solar-activity-button').forEach(btn => {
+            btn.classList.toggle('selected', btn.dataset.activity === activityId);
+        });
+
+        // Update info display
+        this.updateSolarActivityInfo();
+
+        // Notify callback
+        this.onSolarActivityChange(activityId);
+    }
+
+    /**
+     * Toggle Mögel-Dellinger event
+     */
+    toggleMogelDellinger() {
+        this.mogelDellingerActive = !this.mogelDellingerActive;
+
+        // Update button state
+        const btn = document.getElementById('mogel-dellinger-btn');
+        btn.classList.toggle('active', this.mogelDellingerActive);
+
+        // Update label
+        const label = btn.querySelector('.md-label');
+        label.textContent = this.mogelDellingerActive
+            ? t('ui.mogelDellinger.active')
+            : t('ui.mogelDellinger.trigger');
+
+        // Notify callback
+        this.onMogelDellingerToggle(this.mogelDellingerActive);
+    }
+
+    /**
+     * Update solar activity info display
+     */
+    updateSolarActivityInfo() {
+        const level = SOLAR_ACTIVITY_LEVELS[this.solarActivity];
+        const infoContainer = document.getElementById('solar-activity-info');
+
+        if (!infoContainer) return;
+
+        infoContainer.innerHTML = `
+            <div class="solar-activity-details">
+                <p class="solar-description">${t(`solarActivity.${level.id}.simpleDescription`)}</p>
+                <div class="solar-hint">
+                    <strong>Tip:</strong> ${t(`solarActivity.${level.id}.learningHint`)}
                 </div>
             </div>
         `;
@@ -248,7 +359,9 @@ export class ControlsPanel {
     getState() {
         return {
             band: this.selectedBand,
-            time: this.currentTime
+            time: this.currentTime,
+            solarActivity: this.solarActivity,
+            mogelDellingerActive: this.mogelDellingerActive
         };
     }
 }
