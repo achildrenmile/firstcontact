@@ -42,7 +42,7 @@ body {
 /* Layout */
 .app-container {
     display: grid;
-    grid-template-columns: 240px 1fr 280px;
+    grid-template-columns: 280px 1fr 320px;
     grid-template-rows: auto 1fr;
     height: 100vh;
     gap: 1px;
@@ -225,7 +225,7 @@ body {
     grid-column: 2;
     display: flex;
     flex-direction: column;
-    padding: 0.5rem;
+    padding: 0.25rem;
     overflow: hidden;
     min-height: 0;
 }
@@ -659,9 +659,9 @@ body {
     justify-content: center;
     align-items: center;
     background: linear-gradient(135deg, #0a1628 0%, #0f1f3a 50%, #0a1628 100%);
-    border-radius: 0.5rem;
+    border-radius: 0.25rem;
     overflow: hidden;
-    padding: 0.5rem;
+    padding: 0;
     position: relative;
     min-height: 0;
 }
@@ -1146,7 +1146,7 @@ body {
 /* Responsive */
 @media (max-width: 1200px) {
     .app-container {
-        grid-template-columns: 220px 1fr 260px;
+        grid-template-columns: 250px 1fr 280px;
     }
 }
 
