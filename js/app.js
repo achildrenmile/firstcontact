@@ -168,6 +168,7 @@ class FirstContactApp {
                             <li><strong style="color: #22c55e">●</strong> ${t('help.map.you')}</li>
                             <li><strong style="color: #fff">●</strong> ${t('help.map.cities')}</li>
                             <li><strong style="color: #fbbf24">☀</strong> ${t('help.map.sun')}</li>
+                            <li><strong style="color: #f97316">―</strong> ${t('help.map.greyline')}</li>
                         </ul>
                     </div>
 
@@ -187,6 +188,34 @@ class FirstContactApp {
                             <li><strong>10m</strong> - ${t('help.bands.10m')}</li>
                             <li><strong>6m</strong> - ${t('help.bands.6m')}</li>
                         </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>☀️ ${t('help.solarActivity.title')}</h3>
+                        <p>${t('help.solarActivity.text')}</p>
+                        <ul>
+                            <li><strong>🌑</strong> ${t('help.solarActivity.quiet')}</li>
+                            <li><strong>🌤️</strong> ${t('help.solarActivity.normal')}</li>
+                            <li><strong>☀️</strong> ${t('help.solarActivity.elevated')}</li>
+                            <li><strong>🔥</strong> ${t('help.solarActivity.high')}</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <h3>⚡ ${t('help.specialEvents.title')}</h3>
+                        <p>${t('help.specialEvents.text')}</p>
+                        <div class="help-tip">
+                            <strong>⚡ Solar Flare:</strong><br>
+                            ${t('help.specialEvents.solarFlare')}
+                        </div>
+                        <div class="help-tip">
+                            <strong>🌌 Aurora:</strong><br>
+                            ${t('help.specialEvents.aurora')}
+                        </div>
+                        <div class="help-tip">
+                            <strong>✨ Sporadic E:</strong><br>
+                            ${t('help.specialEvents.sporadicE')}
+                        </div>
                     </div>
 
                     <div class="help-section">
@@ -211,6 +240,10 @@ class FirstContactApp {
                         <div class="help-tip">
                             <strong>${t('help.tips.tip4.title')}</strong><br>
                             ${t('help.tips.tip4.text')}
+                        </div>
+                        <div class="help-tip">
+                            <strong>${t('help.tips.tip5.title')}</strong><br>
+                            ${t('help.tips.tip5.text')}
                         </div>
                     </div>
                 </div>

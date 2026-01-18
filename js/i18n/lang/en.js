@@ -784,18 +784,19 @@ export default {
     help: {
         title: 'Help - Shortwave Propagation',
         goal: {
-            title: 'Game Objective',
-            text: 'Learn how shortwave radio works! Click on cities on the map to simulate radio contacts. Discover which bands work best at different times of day.'
+            title: 'What is First Contact?',
+            text: 'An interactive simulator showing how shortwave radio signals travel around the world. Learn by experimenting - click on cities to simulate radio contacts and discover what affects propagation!'
         },
         map: {
             title: 'The World Map',
             text: 'The map shows day and night in real-time. The ionosphere behaves differently depending on solar radiation.',
             you: 'Your location (Vienna, Austria)',
             cities: 'Other cities - click to connect',
-            sun: 'Current sun position'
+            sun: 'Current sun position',
+            greyline: 'Grey Line - twilight zone with special propagation'
         },
         bands: {
-            title: 'Frequency Bands',
+            title: 'Frequency Bands (11 Bands)',
             text: 'Each band has its own "personality":',
             '160m': 'Night only, completely absorbed during day - "Top Band"',
             '80m': 'Good at night, heavily absorbed during day',
@@ -809,27 +810,46 @@ export default {
             '10m': 'Only open with strong ionosphere',
             '6m': 'The "Magic Band" - comes alive with Sporadic E!'
         },
+        solarActivity: {
+            title: 'Solar Activity',
+            text: 'The sun\'s activity dramatically affects radio propagation:',
+            quiet: 'Quiet Sun - Lower bands work well, higher bands may be closed',
+            normal: 'Normal - Typical conditions, good for learning',
+            elevated: 'Elevated - Higher bands start opening more reliably',
+            high: 'High - Excellent for 10m, 15m, even 6m via F-layer'
+        },
+        specialEvents: {
+            title: 'Special Events',
+            text: 'Simulate dramatic propagation events:',
+            solarFlare: 'Solar Flare (Mögel-Dellinger) - X-rays cause sudden radio blackout on the sunlit side. Lower bands are affected first, severe flares black out all HF!',
+            aurora: 'Aurora - Geomagnetic storms create the northern lights and disrupt radio paths crossing polar regions. Signals may flutter or disappear completely.',
+            sporadicE: 'Sporadic E - Mysterious ionized clouds at ~100km altitude. Creates surprise openings on 6m (Magic Band!), 10m, and 15m over 1000-2000 km. Most common in summer!'
+        },
         time: {
             title: 'Time Control',
-            text: 'Use the time slider to simulate different times of day. Watch how propagation conditions change!'
+            text: 'Use the time slider to simulate different times of day. Watch how propagation conditions change as day and night move across the Earth!'
         },
         tips: {
-            title: 'Tips',
+            title: 'Pro Tips',
             tip1: {
-                title: 'Grey Line:',
-                text: 'The twilight zone (boundary between day and night) often provides excellent propagation conditions!'
+                title: 'Grey Line Magic:',
+                text: 'The twilight zone (boundary between day and night) often provides excellent propagation - signals can travel along this line with reduced absorption!'
             },
             tip2: {
                 title: 'Sporadic E:',
-                text: 'Enable Sporadic E and try the 6m "Magic Band" - it can suddenly open to 1000-2000 km distances, especially in summer!'
+                text: 'Enable Sporadic E and try the 6m "Magic Band" - it can suddenly open to 1000-2000 km distances. Real ham operators wait all year for these openings!'
             },
             tip3: {
                 title: 'WARC Bands:',
-                text: '30m, 17m and 12m are quieter bands without contests - often open when neighboring bands are marginal.'
+                text: '30m, 17m and 12m are quieter bands without contests - often open when neighboring bands are marginal. Great for finding a path when main bands fail.'
             },
             tip4: {
-                title: 'Experiment:',
-                text: 'Try different band/time combinations. There are no mistakes - only learning opportunities!'
+                title: 'Follow the Sun:',
+                text: 'Higher bands (10m-20m) follow the daylight. For DX to the other side of the world, there needs to be sunlight along the entire path!'
+            },
+            tip5: {
+                title: 'Night Bands:',
+                text: 'Lower bands (40m-160m) come alive after sunset. The D-layer disappears and signals can travel much farther with less absorption.'
             }
         }
     },

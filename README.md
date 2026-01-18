@@ -2,8 +2,12 @@
 
 > Learn how shortwave radio propagation works through experimentation and visual feedback.
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![Version](https://img.shields.io/badge/version-0.2.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+
+**Live Demo:** [https://firstcontact.oeradio.at](https://firstcontact.oeradio.at)
+
+---
 
 ## Deutsch
 
@@ -13,22 +17,23 @@
 
 - **Interaktive Weltkarte** mit echten geografischen Daten (TopoJSON)
 - **Tag/Nacht-Visualisierung** in Echtzeit
-- **5 Amateurfunk-Bänder** (80m, 40m, 20m, 15m, 10m) mit realistischem Verhalten
+- **11 Amateurfunk-Bänder** - von 160m bis 6m (inkl. WARC-Bänder)
 - **Grey-Line-Darstellung** - die magische Dämmerungszone
+- **Sonnenaktivität** - simuliere ruhige bis hohe Sonnenaktivität
+- **Spezielle Ereignisse:**
+  - ⚡ **Sonneneruption** (Mögel-Dellinger) - Funkausfall auf der Tagseite
+  - 🌌 **Aurora** - Störungen auf Polarpfaden
+  - ✨ **Sporadic E** - Magische Öffnungen auf 6m/10m/15m
 - **Zeitsteuerung** - simuliere verschiedene Tageszeiten
 - **Zweisprachig** - Deutsch und Englisch
-- **Tutorial** - Schritt-für-Schritt Einführung
-- **Hilfe-System** - jederzeit verfügbar
+- **Interaktives Tutorial** - 17-Schritte Einführung
+- **Hilfe-System** - umfassende Dokumentation
+- **Mobile-Support** - Touch-Zoom und responsive Design
 
 ### Schnellstart
 
-1. Starte einen lokalen Webserver:
-   ```bash
-   python3 -m http.server 8000
-   ```
-
-2. Öffne im Browser: `http://localhost:8000`
-
+1. Öffne [https://firstcontact.oeradio.at](https://firstcontact.oeradio.at)
+2. Starte das Tutorial oder erkunde selbst
 3. Klicke auf eine Stadt auf der Karte um eine Funkverbindung zu simulieren!
 
 ### Bedienung
@@ -36,7 +41,9 @@
 | Element | Beschreibung |
 |---------|--------------|
 | 🗺️ Karte | Klicke auf Städte um Verbindungen zu versuchen |
-| 📻 Band-Auswahl | Wähle zwischen 80m, 40m, 20m, 15m, 10m |
+| 📻 Band-Auswahl | Wähle zwischen 11 Bändern (160m-6m) |
+| ☀️ Sonnenaktivität | Ruhig, Normal, Erhöht, Hoch |
+| ⚡ Spezial-Events | Sonneneruption, Aurora, Sporadic E |
 | ⏰ Zeit-Regler | Ändere die Tageszeit (UTC) |
 | 📚 Tutorial | Starte das interaktive Tutorial |
 | ❓ Hilfe | Zeige die Hilfe-Seite |
@@ -44,13 +51,19 @@
 
 ### Band-Charakteristiken
 
-| Band | Charakter |
-|------|-----------|
-| **80m** | Nachts gut, tagsüber stark gedämpft |
-| **40m** | Vielseitig, funktioniert oft Tag und Nacht |
-| **20m** | Das "Arbeitspferd" - gut für weite Entfernungen tagsüber |
-| **15m** | Braucht gute Sonneneinstrahlung |
-| **10m** | Nur bei starker Ionosphäre offen |
+| Band | Charakter | Beste Zeit |
+|------|-----------|------------|
+| **160m** | Top Band - nur nachts | Nacht |
+| **80m** | Die Nachteule | Nacht |
+| **60m** | NVIS-Spezialist (regional) | Tag/Nacht |
+| **40m** | Das Arbeitspferd | Jederzeit |
+| **30m** | Der stille Erfolgsbringer (WARC) | Jederzeit |
+| **20m** | Der Weltreisende | Tag |
+| **17m** | Das versteckte Juwel (WARC) | Tag |
+| **15m** | Der Schönwetter-Freund | Mittag |
+| **12m** | Der zuverlässige Cousin (WARC) | Mittag |
+| **10m** | Der spektakuläre Performer | Mittag + hohe Aktivität |
+| **6m** | Das Magic Band! | Sporadic E (Sommer) |
 
 ---
 
@@ -62,22 +75,23 @@
 
 - **Interactive World Map** with real geographic data (TopoJSON)
 - **Day/Night Visualization** in real-time
-- **5 Amateur Radio Bands** (80m, 40m, 20m, 15m, 10m) with realistic behavior
+- **11 Amateur Radio Bands** - from 160m to 6m (including WARC bands)
 - **Grey Line Display** - the magic twilight zone
+- **Solar Activity** - simulate quiet to high solar activity
+- **Special Events:**
+  - ⚡ **Solar Flare** (Mögel-Dellinger) - radio blackout on the sunlit side
+  - 🌌 **Aurora** - disruption on polar paths
+  - ✨ **Sporadic E** - magical openings on 6m/10m/15m
 - **Time Control** - simulate different times of day
 - **Bilingual** - German and English
-- **Tutorial** - step-by-step introduction
-- **Help System** - available anytime
+- **Interactive Tutorial** - 17-step introduction
+- **Help System** - comprehensive documentation
+- **Mobile Support** - touch zoom and responsive design
 
 ### Quick Start
 
-1. Start a local web server:
-   ```bash
-   python3 -m http.server 8000
-   ```
-
-2. Open in browser: `http://localhost:8000`
-
+1. Open [https://firstcontact.oeradio.at](https://firstcontact.oeradio.at)
+2. Start the tutorial or explore on your own
 3. Click on a city on the map to simulate a radio contact!
 
 ### Controls
@@ -85,7 +99,9 @@
 | Element | Description |
 |---------|-------------|
 | 🗺️ Map | Click on cities to attempt contacts |
-| 📻 Band Selection | Choose between 80m, 40m, 20m, 15m, 10m |
+| 📻 Band Selection | Choose between 11 bands (160m-6m) |
+| ☀️ Solar Activity | Quiet, Normal, Elevated, High |
+| ⚡ Special Events | Solar Flare, Aurora, Sporadic E |
 | ⏰ Time Slider | Change time of day (UTC) |
 | 📚 Tutorial | Start the interactive tutorial |
 | ❓ Help | Show the help page |
@@ -93,13 +109,19 @@
 
 ### Band Characteristics
 
-| Band | Character |
-|------|-----------|
-| **80m** | Good at night, heavily absorbed during day |
-| **40m** | Versatile, often works day and night |
-| **20m** | The "workhorse" - good for long distances during day |
-| **15m** | Needs good solar illumination |
-| **10m** | Only open with strong ionosphere |
+| Band | Character | Best Time |
+|------|-----------|-----------|
+| **160m** | Top Band - night only | Night |
+| **80m** | The Night Owl | Night |
+| **60m** | NVIS Specialist (regional) | Day/Night |
+| **40m** | The Reliable Worker | Anytime |
+| **30m** | The Quiet Achiever (WARC) | Anytime |
+| **20m** | The World Traveler | Day |
+| **17m** | The Hidden Gem (WARC) | Day |
+| **15m** | The Fair Weather Friend | Midday |
+| **12m** | The Reliable Cousin (WARC) | Midday |
+| **10m** | The Spectacular Performer | Midday + high activity |
+| **6m** | The Magic Band! | Sporadic E (summer) |
 
 ---
 
@@ -114,8 +136,9 @@ firstcontact/
 │   ├── app.js              # Main application
 │   ├── models/
 │   │   ├── location.js     # Location model & presets
-│   │   ├── bands.js        # HF band definitions
-│   │   └── ionosphere.js   # Ionosphere model
+│   │   ├── bands.js        # 11 HF band definitions
+│   │   ├── ionosphere.js   # Ionosphere model
+│   │   └── solar-activity.js # Solar activity & special events
 │   ├── systems/
 │   │   ├── propagation-engine.js  # Signal propagation logic
 │   │   ├── explanation-engine.js  # Human-readable explanations
@@ -124,7 +147,7 @@ firstcontact/
 │   │   ├── world-map.js    # Interactive map (Canvas)
 │   │   ├── controls-panel.js
 │   │   ├── feedback-panel.js
-│   │   └── tutorial.js     # Tutorial system
+│   │   └── tutorial.js     # 17-step tutorial system
 │   └── i18n/
 │       ├── i18n.js         # Translation system
 │       └── lang/
@@ -136,11 +159,12 @@ firstcontact/
 
 ## Technical Details
 
-- **Pure JavaScript** - no frameworks, no build step
+- **Pure JavaScript** - no frameworks, no build step for development
 - **ES Modules** - modern JavaScript imports
-- **Canvas API** - smooth map rendering
+- **Canvas API** - smooth map rendering with touch support
 - **TopoJSON** - efficient geographic data
 - **LocalStorage** - saves language preference
+- **esbuild** - fast production bundling
 
 ## Browser Support
 
@@ -148,6 +172,7 @@ firstcontact/
 - Firefox 75+
 - Safari 13+
 - Edge 80+
+- Mobile browsers (iOS Safari, Chrome Android)
 
 ## Docker (Production)
 
@@ -163,9 +188,10 @@ docker-compose up -d
 Open `http://localhost:8080` in your browser.
 
 The Docker build:
-- Bundles all JavaScript into a single minified file (~50KB)
+- Bundles all JavaScript into a single minified file (~180KB)
 - Uses nginx:alpine for minimal image size (~25MB)
 - Enables gzip compression and caching
+- Cache-busting with content hashes
 
 ## Development
 
@@ -201,10 +227,17 @@ npm run watch
 
 Output: `dist/app.bundle.js`
 
+## Deployment
+
+```bash
+# Deploy to production (Synology NAS)
+./deploy-production.sh
+```
+
 ## License
 
 MIT License - feel free to use and modify!
 
 ---
 
-Made with ❤️ for amateur radio enthusiasts and anyone curious about how radio waves travel around the world.
+Made with ❤️ by OE8YML for amateur radio enthusiasts and anyone curious about how radio waves travel around the world.

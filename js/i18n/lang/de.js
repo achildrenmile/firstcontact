@@ -784,18 +784,19 @@ export default {
     help: {
         title: 'Hilfe - Kurzwellen-Ausbreitung',
         goal: {
-            title: 'Ziel des Spiels',
-            text: 'Lerne, wie Kurzwellenfunk funktioniert! Klicke auf Städte auf der Karte, um Funkverbindungen zu simulieren. Finde heraus, welche Bänder zu welchen Tageszeiten am besten funktionieren.'
+            title: 'Was ist First Contact?',
+            text: 'Ein interaktiver Simulator, der zeigt wie Kurzwellensignale um die Welt reisen. Lerne durch Experimentieren - klicke auf Städte um Funkverbindungen zu simulieren und entdecke was die Ausbreitung beeinflusst!'
         },
         map: {
             title: 'Die Weltkarte',
             text: 'Die Karte zeigt Tag und Nacht in Echtzeit. Die Ionosphäre verhält sich je nach Sonneneinstrahlung unterschiedlich.',
             you: 'Dein Standort (Wien, Österreich)',
             cities: 'Andere Städte - klicke zum Verbinden',
-            sun: 'Aktuelle Sonnenposition'
+            sun: 'Aktuelle Sonnenposition',
+            greyline: 'Grey Line - Dämmerungszone mit spezieller Ausbreitung'
         },
         bands: {
-            title: 'Frequenzbänder',
+            title: 'Frequenzbänder (11 Bänder)',
             text: 'Jedes Band hat seinen eigenen "Charakter":',
             '160m': 'Nur nachts, tagsüber komplett absorbiert - "Top Band"',
             '80m': 'Nachts gut, tagsüber stark gedämpft',
@@ -809,27 +810,46 @@ export default {
             '10m': 'Nur bei starker Ionosphäre offen',
             '6m': 'Das "Magic Band" - erwacht mit Sporadic E zum Leben!'
         },
+        solarActivity: {
+            title: 'Sonnenaktivität',
+            text: 'Die Sonnenaktivität beeinflusst die Funkausbreitung dramatisch:',
+            quiet: 'Ruhige Sonne - Niedrige Bänder funktionieren gut, höhere können geschlossen sein',
+            normal: 'Normal - Typische Bedingungen, gut zum Lernen',
+            elevated: 'Erhöht - Höhere Bänder öffnen zuverlässiger',
+            high: 'Hoch - Exzellent für 10m, 15m, sogar 6m via F-Schicht'
+        },
+        specialEvents: {
+            title: 'Spezielle Ereignisse',
+            text: 'Simuliere dramatische Ausbreitungsereignisse:',
+            solarFlare: 'Sonneneruption (Mögel-Dellinger) - Röntgenstrahlen verursachen plötzlichen Funkausfall auf der Tagseite. Niedrige Bänder sind zuerst betroffen, schwere Eruptionen legen alle KW lahm!',
+            aurora: 'Aurora - Geomagnetische Stürme erzeugen Polarlichter und stören Funkpfade über Polargebiete. Signale können flattern oder komplett verschwinden.',
+            sporadicE: 'Sporadic E - Mysteriöse ionisierte Wolken in ~100km Höhe. Erzeugt überraschende Öffnungen auf 6m (Magic Band!), 10m und 15m über 1000-2000 km. Besonders häufig im Sommer!'
+        },
         time: {
             title: 'Zeit-Steuerung',
-            text: 'Nutze den Zeitregler, um verschiedene Tageszeiten zu simulieren. Beobachte, wie sich die Ausbreitungsbedingungen ändern!'
+            text: 'Nutze den Zeitregler, um verschiedene Tageszeiten zu simulieren. Beobachte, wie sich die Ausbreitungsbedingungen ändern wenn Tag und Nacht über die Erde wandern!'
         },
         tips: {
-            title: 'Tipps',
+            title: 'Profi-Tipps',
             tip1: {
-                title: 'Grey Line:',
-                text: 'Die Dämmerungszone (Grenzlinie zwischen Tag und Nacht) bietet oft besonders gute Ausbreitungsbedingungen!'
+                title: 'Grey Line Magie:',
+                text: 'Die Dämmerungszone (Grenzlinie zwischen Tag und Nacht) bietet oft exzellente Ausbreitung - Signale können dieser Linie mit reduzierter Absorption folgen!'
             },
             tip2: {
                 title: 'Sporadic E:',
-                text: 'Aktiviere Sporadic E und probiere das 6m "Magic Band" - es kann plötzlich über 1000-2000 km öffnen, besonders im Sommer!'
+                text: 'Aktiviere Sporadic E und probiere das 6m "Magic Band" - es kann plötzlich über 1000-2000 km öffnen. Echte Funkamateure warten das ganze Jahr auf diese Öffnungen!'
             },
             tip3: {
                 title: 'WARC-Bänder:',
-                text: '30m, 17m und 12m sind ruhigere Bänder ohne Conteste - oft offen wenn Nachbarbänder marginal sind.'
+                text: '30m, 17m und 12m sind ruhigere Bänder ohne Conteste - oft offen wenn Nachbarbänder marginal sind. Ideal um einen Pfad zu finden wenn Hauptbänder versagen.'
             },
             tip4: {
-                title: 'Experimentiere:',
-                text: 'Probiere verschiedene Band/Zeit-Kombinationen aus. Es gibt keine Fehler - nur Lerngelegenheiten!'
+                title: 'Folge der Sonne:',
+                text: 'Höhere Bänder (10m-20m) folgen dem Tageslicht. Für DX zur anderen Seite der Welt muss Sonnenlicht entlang des gesamten Pfades sein!'
+            },
+            tip5: {
+                title: 'Nacht-Bänder:',
+                text: 'Niedrigere Bänder (40m-160m) erwachen nach Sonnenuntergang zum Leben. Die D-Schicht verschwindet und Signale können viel weiter mit weniger Absorption reisen.'
             }
         }
     },
