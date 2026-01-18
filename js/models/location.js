@@ -172,7 +172,6 @@ export const PRESET_LOCATIONS = {
     seychelles: new Location(-4.6796, 55.4920, 'Seychelles', 'S7'),
     maldives: new Location(4.1755, 73.5093, 'Maldives', '8Q'),
     rodrigues: new Location(-19.7245, 63.4169, 'Rodrigues Island', '3B9'),
-    amsterdamIsland: new Location(-37.8333, 77.5500, 'Amsterdam Island', 'FT5Z'),
     kerguelen: new Location(-49.3500, 70.2167, 'Kerguelen Islands', 'FT5X'),
 
     // Rare DX Islands - Pacific
