@@ -949,30 +949,50 @@ export class WorldMap {
             : this.colors.signalFail;
 
         // Helper function to draw path segments, handling date line crossings
+        // When path crosses ±180° longitude, draw to edge and continue from opposite edge
         const drawPathWithDateLineCrossing = () => {
             let prevPoint = null;
-            let prevPixel = null;
 
             for (const point of points) {
-                const pixel = this.latLonToPixel(point.latitude, point.longitude);
-
                 if (prevPoint === null) {
+                    const pixel = this.latLonToPixel(point.latitude, point.longitude);
                     ctx.moveTo(pixel.x, pixel.y);
                 } else {
-                    // Check for date line crossing (large longitude jump)
-                    const lonDiff = Math.abs(point.longitude - prevPoint.longitude);
-                    if (lonDiff > 180) {
-                        // Date line crossing - start new path segment
+                    const lonDiff = point.longitude - prevPoint.longitude;
+
+                    // Date line crossing: jump > 180° means we crossed the edge
+                    if (Math.abs(lonDiff) > 180) {
+                        // Interpolate where we cross the edge
+                        const goingEast = lonDiff < 0; // e.g., 170 to -170 = going east
+                        const edgeLon = goingEast ? 180 : -180;
+
+                        // Normalize for interpolation
+                        const prevLon = prevPoint.longitude;
+                        const currLon = goingEast ? point.longitude + 360 : point.longitude - 360;
+
+                        // Find fraction where we hit the edge
+                        const t = (edgeLon - prevLon) / (currLon - prevLon);
+                        const edgeLat = prevPoint.latitude + t * (point.latitude - prevPoint.latitude);
+
+                        // Draw to edge
+                        const edgePixel = this.latLonToPixel(edgeLat, edgeLon);
+                        ctx.lineTo(edgePixel.x, edgePixel.y);
+
+                        // Start new segment from opposite edge
                         ctx.stroke();
                         ctx.beginPath();
-                        ctx.moveTo(pixel.x, pixel.y);
+                        const oppositePixel = this.latLonToPixel(edgeLat, -edgeLon);
+                        ctx.moveTo(oppositePixel.x, oppositePixel.y);
+
+                        // Draw to current point
+                        const pixel = this.latLonToPixel(point.latitude, point.longitude);
+                        ctx.lineTo(pixel.x, pixel.y);
                     } else {
+                        const pixel = this.latLonToPixel(point.latitude, point.longitude);
                         ctx.lineTo(pixel.x, pixel.y);
                     }
                 }
-
                 prevPoint = point;
-                prevPixel = pixel;
             }
         };
 
