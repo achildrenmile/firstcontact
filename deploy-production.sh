@@ -1,9 +1,16 @@
 #!/bin/bash
 
 # Deploy firstcontact to Synology NAS
-# Usage: ./deploy-production.sh
+# Usage: ./deploy-production.sh [--rebuild]
 
 set -e
+
+# Parse arguments
+DOCKER_BUILD_FLAGS=""
+if [ "$1" = "--rebuild" ]; then
+  DOCKER_BUILD_FLAGS="--no-cache"
+  echo "Rebuild mode: Docker cache will be ignored"
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -33,7 +40,7 @@ fi
 # Step 2: Build Docker image on Synology (bundling happens inside Docker)
 echo ""
 echo "[2/3] Building Docker image (bundling JS with hash filename)..."
-ssh $SYNOLOGY_HOST "/usr/local/bin/docker build -t $IMAGE_NAME $REMOTE_DIR"
+ssh $SYNOLOGY_HOST "/usr/local/bin/docker build $DOCKER_BUILD_FLAGS -t $IMAGE_NAME $REMOTE_DIR"
 
 # Step 3: Restart container
 echo ""
