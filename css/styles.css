@@ -690,10 +690,50 @@ body {
     position: relative;
     z-index: 0;
     /* Mobile touch optimization */
-    touch-action: manipulation;
+    touch-action: none;
     -webkit-tap-highlight-color: transparent;
     max-width: 100%;
     height: auto;
+}
+
+/* Map Zoom Controls */
+.map-zoom-controls {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    z-index: 10;
+}
+
+.zoom-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(30, 41, 59, 0.9);
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.zoom-btn:hover {
+    background: rgba(59, 130, 246, 0.8);
+}
+
+.zoom-btn:active {
+    transform: scale(0.95);
+}
+
+.zoom-reset {
+    font-size: 1rem;
 }
 
 /* Feedback Panel */

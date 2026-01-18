@@ -72,8 +72,14 @@ export class WorldMap {
         // TopoJSON data for land
         this.landPolygons = null;
 
+        // Pinch zoom state
+        this.lastPinchDistance = null;
+
         // Setup event listeners
         this.setupEventListeners();
+
+        // Create zoom controls
+        this.createZoomControls();
 
         // Initial render (with basic background while TopoJSON loads)
         this.render();
@@ -150,6 +156,58 @@ export class WorldMap {
                 this.render();
             }, 200);
         });
+    }
+
+    /**
+     * Create zoom control buttons
+     */
+    createZoomControls() {
+        const container = this.canvas.parentElement;
+        if (!container) return;
+
+        // Create zoom controls container
+        const controls = document.createElement('div');
+        controls.className = 'map-zoom-controls';
+        controls.innerHTML = `
+            <button class="zoom-btn zoom-in" title="Zoom in">+</button>
+            <button class="zoom-btn zoom-out" title="Zoom out">−</button>
+            <button class="zoom-btn zoom-reset" title="Reset">⟲</button>
+        `;
+
+        container.style.position = 'relative';
+        container.appendChild(controls);
+
+        // Event listeners
+        controls.querySelector('.zoom-in').addEventListener('click', () => {
+            this.setZoom(this.zoom * 1.3);
+        });
+
+        controls.querySelector('.zoom-out').addEventListener('click', () => {
+            this.setZoom(this.zoom / 1.3);
+        });
+
+        controls.querySelector('.zoom-reset').addEventListener('click', () => {
+            this.zoom = 1;
+            this.panX = 0;
+            this.panY = 0;
+            this.render();
+        });
+    }
+
+    /**
+     * Set zoom level with constraints
+     */
+    setZoom(newZoom) {
+        newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, newZoom));
+        if (newZoom !== this.zoom) {
+            // Zoom towards center
+            const scaleChange = newZoom / this.zoom;
+            this.panX *= scaleChange;
+            this.panY *= scaleChange;
+            this.zoom = newZoom;
+            this.constrainPan();
+            this.render();
+        }
     }
 
     /**
@@ -355,22 +413,60 @@ export class WorldMap {
             this.canvas.style.cursor = nearest ? 'pointer' : 'default';
         });
 
-        // Prevent default touch behaviors on canvas (scrolling, zooming)
+        // Touch handling for pinch zoom and pan
         this.canvas.addEventListener('touchstart', (e) => {
-            // Only prevent if touching a location
-            const touch = e.touches[0];
-            const rect = this.canvas.getBoundingClientRect();
-            const scaleX = this.width / rect.width;
-            const scaleY = this.height / rect.height;
-            const x = (touch.clientX - rect.left) * scaleX;
-            const y = (touch.clientY - rect.top) * scaleY;
-            const { lat, lon } = this.pixelToLatLon(x, y);
-            const nearest = this.findNearestLocation(lat, lon, 60);
-
-            if (nearest) {
+            if (e.touches.length === 2) {
+                // Pinch start
                 e.preventDefault();
+                this.lastPinchDistance = this.getPinchDistance(e.touches);
+            } else if (e.touches.length === 1) {
+                const touch = e.touches[0];
+                const rect = this.canvas.getBoundingClientRect();
+                const scaleX = this.width / rect.width;
+                const scaleY = this.height / rect.height;
+                const x = (touch.clientX - rect.left) * scaleX;
+                const y = (touch.clientY - rect.top) * scaleY;
+                const { lat, lon } = this.pixelToLatLon(x, y);
+                const nearest = this.findNearestLocation(lat, lon, 60);
+
+                if (nearest) {
+                    e.preventDefault();
+                } else if (this.zoom > 1) {
+                    // Pan when zoomed
+                    e.preventDefault();
+                    this.isPanning = true;
+                    this.lastPanPoint = { x: touch.clientX, y: touch.clientY };
+                }
             }
         }, { passive: false });
+
+        this.canvas.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2 && this.lastPinchDistance !== null) {
+                // Pinch zoom
+                e.preventDefault();
+                const newDistance = this.getPinchDistance(e.touches);
+                const scale = newDistance / this.lastPinchDistance;
+                this.setZoom(this.zoom * scale);
+                this.lastPinchDistance = newDistance;
+            } else if (e.touches.length === 1 && this.isPanning) {
+                // Pan
+                e.preventDefault();
+                const touch = e.touches[0];
+                const dx = touch.clientX - this.lastPanPoint.x;
+                const dy = touch.clientY - this.lastPanPoint.y;
+                this.panX += dx;
+                this.panY += dy;
+                this.lastPanPoint = { x: touch.clientX, y: touch.clientY };
+                this.constrainPan();
+                this.render();
+            }
+        }, { passive: false });
+
+        this.canvas.addEventListener('touchend', (e) => {
+            this.lastPinchDistance = null;
+            this.isPanning = false;
+            this.lastPanPoint = null;
+        });
 
         // Wheel zoom
         this.canvas.addEventListener('wheel', (e) => {
@@ -453,6 +549,15 @@ export class WorldMap {
 
         this.panX = Math.max(-maxPanX, Math.min(maxPanX, this.panX));
         this.panY = Math.max(-maxPanY, Math.min(maxPanY, this.panY));
+    }
+
+    /**
+     * Get distance between two touch points
+     */
+    getPinchDistance(touches) {
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     /**
