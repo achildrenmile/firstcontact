@@ -6,6 +6,7 @@
 
 import { Location, PRESET_LOCATIONS, calculateDistance } from './models/location.js';
 import { HF_BANDS } from './models/bands.js';
+import { calculateBearing, COMPASS_DIRECTIONS } from './models/antenna.js';
 import { evaluatePropagation, getSolarConditions } from './systems/propagation-engine.js';
 import { generateExplanation, explainBandChange, detectDiscovery } from './systems/explanation-engine.js';
 import { getLightingCondition } from './systems/sun-position.js';
@@ -528,8 +529,41 @@ class FirstContactApp {
         this.state.targetLocation = location;
         this.worldMap.setTargetLocation(location);
 
+        // Auto-set Yagi direction to point at target
+        this.autoSetYagiDirection(location);
+
         // Attempt propagation
         this.attemptContact();
+    }
+
+    /**
+     * Automatically set Yagi direction to point at target
+     */
+    autoSetYagiDirection(targetLocation) {
+        // Calculate bearing from player to target
+        const bearing = calculateBearing(
+            this.state.playerLocation.latitude,
+            this.state.playerLocation.longitude,
+            targetLocation.latitude,
+            targetLocation.longitude
+        );
+
+        // Find nearest compass direction
+        const directions = Object.values(COMPASS_DIRECTIONS);
+        let nearestDir = directions[0];
+        let smallestDiff = 360;
+
+        for (const dir of directions) {
+            let diff = Math.abs(dir.degrees - bearing);
+            if (diff > 180) diff = 360 - diff;
+            if (diff < smallestDiff) {
+                smallestDiff = diff;
+                nearestDir = dir;
+            }
+        }
+
+        // Update direction selector (this will also update state and re-render if Yagi is selected)
+        this.controlsPanel.selectDirection(nearestDir.id);
     }
 
     /**
