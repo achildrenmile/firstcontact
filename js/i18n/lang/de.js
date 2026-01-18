@@ -58,6 +58,8 @@ export default {
         location: {
             title: 'Mein Standort',
             selectPreset: '-- Stadt wählen --',
+            name: 'Name',
+            namePlaceholder: 'z.B. Mein QTH',
             latitude: 'Breite',
             longitude: 'Länge',
             set: 'Setzen',

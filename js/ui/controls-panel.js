@@ -73,18 +73,25 @@ export class ControlsPanel {
                             ${this.renderLocationOptions()}
                         </select>
                     </div>
-                    <div class="location-coords">
-                        <div class="coord-input-group">
-                            <label for="location-lat">${t('ui.location.latitude')}</label>
-                            <input type="number" id="location-lat" step="0.001" min="-90" max="90"
-                                   value="${this.playerLocation?.latitude?.toFixed(3) || 0}" />
+                    <div class="location-custom">
+                        <div class="coord-input-group name-input-group">
+                            <label for="location-name">${t('ui.location.name')}</label>
+                            <input type="text" id="location-name" placeholder="${t('ui.location.namePlaceholder')}"
+                                   value="" />
                         </div>
-                        <div class="coord-input-group">
-                            <label for="location-lon">${t('ui.location.longitude')}</label>
-                            <input type="number" id="location-lon" step="0.001" min="-180" max="180"
-                                   value="${this.playerLocation?.longitude?.toFixed(3) || 0}" />
+                        <div class="location-coords">
+                            <div class="coord-input-group">
+                                <label for="location-lat">${t('ui.location.latitude')}</label>
+                                <input type="number" id="location-lat" step="0.001" min="-90" max="90"
+                                       value="${this.playerLocation?.latitude?.toFixed(3) || 0}" />
+                            </div>
+                            <div class="coord-input-group">
+                                <label for="location-lon">${t('ui.location.longitude')}</label>
+                                <input type="number" id="location-lon" step="0.001" min="-180" max="180"
+                                       value="${this.playerLocation?.longitude?.toFixed(3) || 0}" />
+                            </div>
+                            <button id="location-set-btn" class="location-set-btn">${t('ui.location.set')}</button>
                         </div>
-                        <button id="location-set-btn" class="location-set-btn">${t('ui.location.set')}</button>
                     </div>
                     <div class="location-current" id="location-current">
                         ${this.playerLocation?.name || 'Unknown'}
@@ -321,11 +328,12 @@ export class ControlsPanel {
 
         // Location coordinate inputs - set button
         document.getElementById('location-set-btn')?.addEventListener('click', () => {
+            const name = document.getElementById('location-name').value.trim();
             const lat = parseFloat(document.getElementById('location-lat').value);
             const lon = parseFloat(document.getElementById('location-lon').value);
             if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
                 const customLocation = {
-                    name: `${lat.toFixed(3)}°, ${lon.toFixed(3)}°`,
+                    name: name || `${lat.toFixed(3)}°, ${lon.toFixed(3)}°`,
                     latitude: lat,
                     longitude: lon,
                     code: 'CUSTOM'
@@ -334,16 +342,13 @@ export class ControlsPanel {
             }
         });
 
-        // Allow Enter key in coordinate inputs
-        document.getElementById('location-lat')?.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                document.getElementById('location-set-btn')?.click();
-            }
-        });
-        document.getElementById('location-lon')?.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                document.getElementById('location-set-btn')?.click();
-            }
+        // Allow Enter key in location inputs
+        ['location-name', 'location-lat', 'location-lon'].forEach(id => {
+            document.getElementById(id)?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('location-set-btn')?.click();
+                }
+            });
         });
 
         // Band buttons

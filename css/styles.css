@@ -329,11 +329,22 @@ body {
     border-color: var(--accent-primary);
 }
 
+.location-custom {
+    margin-bottom: 0.5rem;
+}
+
+.name-input-group {
+    margin-bottom: 0.5rem;
+}
+
+.name-input-group input {
+    font-family: inherit;
+}
+
 .location-coords {
     display: flex;
     gap: 0.5rem;
     align-items: flex-end;
-    margin-bottom: 0.5rem;
 }
 
 .coord-input-group {
