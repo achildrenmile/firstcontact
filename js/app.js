@@ -26,6 +26,7 @@ class FirstContactApp {
             targetLocation: null,
             selectedBand: '20m',
             selectedPower: 'standard',
+            selectedAntenna: 'dipole',
             currentTime: new Date(),
             lastResult: null,
             lastBandResult: {},  // Results by band for comparison
@@ -432,6 +433,7 @@ class FirstContactApp {
         this.controlsPanel = new ControlsPanel('controls-panel', {
             onBandChange: (bandId) => this.handleBandChange(bandId),
             onPowerChange: (powerId) => this.handlePowerChange(powerId),
+            onAntennaChange: (antennaId) => this.handleAntennaChange(antennaId),
             onTimeChange: (time) => this.handleTimeChange(time),
             onSolarActivityChange: (activityId) => this.handleSolarActivityChange(activityId),
             onMogelDellingerToggle: (active) => this.handleMogelDellingerToggle(active),
@@ -498,6 +500,18 @@ class FirstContactApp {
      */
     handlePowerChange(powerId) {
         this.state.selectedPower = powerId;
+
+        // If we have a target, re-evaluate
+        if (this.state.targetLocation) {
+            this.attemptContact();
+        }
+    }
+
+    /**
+     * Handle antenna change
+     */
+    handleAntennaChange(antennaId) {
+        this.state.selectedAntenna = antennaId;
 
         // If we have a target, re-evaluate
         if (this.state.targetLocation) {
@@ -611,6 +625,7 @@ class FirstContactApp {
                     target: this.state.targetLocation,
                     bandId: this.state.selectedBand,
                     powerId: this.state.selectedPower,
+                    antennaId: this.state.selectedAntenna,
                     dateTime: this.state.currentTime
                 });
 

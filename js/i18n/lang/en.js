@@ -94,6 +94,23 @@ export default {
                     description: '1000 Watts - Maximum legal power for tough conditions.'
                 }
             }
+        },
+        antenna: {
+            title: 'Antenna Type',
+            types: {
+                dipole: {
+                    name: 'Dipole',
+                    description: 'All-rounder with moderate gain (2.15 dBi). Good for NVIS and medium distances.'
+                },
+                vertical: {
+                    name: 'Vertical',
+                    description: 'Low angle radiation for DX. Omnidirectional - works in all directions.'
+                },
+                yagi: {
+                    name: 'Yagi',
+                    description: 'High gain (8 dBi) directional beam. Best for DX, must point at target.'
+                }
+            }
         }
     },
 
@@ -459,7 +476,21 @@ export default {
             fLayerReflection: 'F Layer Reflection',
             greyLineEffect: 'Grey Line Effect',
             pathGeometry: 'Path Geometry',
-            power: 'Transmit Power'
+            power: 'Transmit Power',
+            antenna: 'Antenna'
+        },
+
+        // Antenna effect messages
+        antenna: {
+            dipoleNvis: 'Dipole antenna - good compromise for NVIS',
+            dipoleMedium: 'Dipole antenna - balanced performance',
+            dipoleDx: 'Dipole antenna - moderate DX capability',
+            verticalNvis: 'Vertical antenna - poor for NVIS (low angle radiation)',
+            verticalMedium: 'Vertical antenna - low angle radiation helps medium distances',
+            verticalDx: 'Vertical antenna - excellent low angle for DX',
+            yagiNvis: 'Yagi antenna - poor for NVIS (very low takeoff angle)',
+            yagiMedium: 'Yagi antenna - high gain helps medium distances',
+            yagiDx: 'Yagi antenna - best choice for DX (high gain, low angle)'
         },
 
         // Power effect messages
@@ -544,7 +575,17 @@ export default {
             // Power educational
             powerQrp: 'QRP (5 Watts) is the ultimate challenge in amateur radio! With 13 dB less signal than standard power, marginal paths become impossible. But QRP successes are incredibly rewarding - you\'re doing more with less!',
             powerStandard: 'Standard power (100 Watts) provides a good balance between signal strength and equipment requirements. This is the typical power level for most amateur radio contacts.',
-            powerHigh: 'High power (1000 Watts) gives you a 10 dB advantage over standard power. This extra margin can make the difference on marginal paths or when fighting absorption. But remember: good antennas are often more effective than raw power!'
+            powerHigh: 'High power (1000 Watts) gives you a 10 dB advantage over standard power. This extra margin can make the difference on marginal paths or when fighting absorption. But remember: good antennas are often more effective than raw power!',
+            // Antenna educational
+            antennaDipoleNvis: 'The dipole antenna radiates at moderate angles (about 35°), making it a good all-rounder. For short distances under 500 km, its higher angle radiation works well for NVIS (signals bouncing nearly straight up and back down).',
+            antennaDipoleMedium: 'At medium distances, the dipole antenna performs well as a compromise. Its moderate takeoff angle works for both regional and some DX contacts.',
+            antennaDipoleDx: 'For DX (long distance), the dipole has moderate capability. While it has some gain (2.15 dBi), its higher takeoff angle means some energy goes at steeper angles than ideal for maximum distance.',
+            antennaVerticalNvis: 'The vertical antenna radiates at very low angles (about 20°), which is poor for NVIS contacts. Signals go toward the horizon rather than straight up, making it hard to reach nearby stations.',
+            antennaVerticalMedium: 'At medium distances, the vertical antenna\'s low angle radiation starts to become useful. It\'s omnidirectional, so you don\'t need to point it at your target.',
+            antennaVerticalDx: 'The vertical antenna excels at DX! Its low takeoff angle (20°) sends most energy toward the horizon - perfect for long-distance skip. Omnidirectional means you can work all directions.',
+            antennaYagiNvis: 'The Yagi antenna is poorly suited for NVIS. Its very low takeoff angle (15°) and directional pattern mean it sends energy toward the horizon, not straight up for nearby contacts.',
+            antennaYagiMedium: 'At medium distances, the Yagi\'s high gain (8 dBi) helps, but remember it\'s directional - it must be pointed at the target station. The low angle may cause your signal to skip over closer stations.',
+            antennaYagiDx: 'The Yagi is the king of DX antennas! High gain (8 dBi) focuses energy in one direction, and the very low takeoff angle (15°) is perfect for long-distance propagation. Point it at your target and enjoy the DX!'
         }
     },
 

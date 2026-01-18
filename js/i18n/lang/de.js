@@ -94,6 +94,23 @@ export default {
                     description: '1000 Watt - Maximale legale Leistung für schwierige Bedingungen.'
                 }
             }
+        },
+        antenna: {
+            title: 'Antennentyp',
+            types: {
+                dipole: {
+                    name: 'Dipol',
+                    description: 'Allrounder mit mittlerem Gewinn (2,15 dBi). Gut für NVIS und mittlere Entfernungen.'
+                },
+                vertical: {
+                    name: 'Vertikal',
+                    description: 'Flacher Abstrahlwinkel für DX. Omnidirektional - funktioniert in alle Richtungen.'
+                },
+                yagi: {
+                    name: 'Yagi',
+                    description: 'Hoher Gewinn (8 dBi), gerichtete Antenne. Ideal für DX, muss aufs Ziel ausgerichtet sein.'
+                }
+            }
         }
     },
 
@@ -459,7 +476,21 @@ export default {
             fLayerReflection: 'F-Schicht-Reflexion',
             greyLineEffect: 'Grauzoneneffekt',
             pathGeometry: 'Pfadgeometrie',
-            power: 'Sendeleistung'
+            power: 'Sendeleistung',
+            antenna: 'Antenne'
+        },
+
+        // Antenna effect messages
+        antenna: {
+            dipoleNvis: 'Dipolantenne - guter Kompromiss für NVIS',
+            dipoleMedium: 'Dipolantenne - ausgewogene Leistung',
+            dipoleDx: 'Dipolantenne - moderate DX-Fähigkeit',
+            verticalNvis: 'Vertikalantenne - schlecht für NVIS (flacher Abstrahlwinkel)',
+            verticalMedium: 'Vertikalantenne - flacher Winkel hilft bei mittleren Entfernungen',
+            verticalDx: 'Vertikalantenne - exzellenter flacher Winkel für DX',
+            yagiNvis: 'Yagi-Antenne - schlecht für NVIS (sehr flacher Abstrahlwinkel)',
+            yagiMedium: 'Yagi-Antenne - hoher Gewinn hilft bei mittleren Entfernungen',
+            yagiDx: 'Yagi-Antenne - beste Wahl für DX (hoher Gewinn, flacher Winkel)'
         },
 
         // Power effect messages
@@ -544,7 +575,17 @@ export default {
             // Power educational
             powerQrp: 'QRP (5 Watt) ist die ultimative Herausforderung im Amateurfunk! Mit 13 dB weniger Signal als Standardleistung werden marginale Pfade unmöglich. Aber QRP-Erfolge sind unglaublich lohnend – du erreichst mehr mit weniger!',
             powerStandard: 'Standardleistung (100 Watt) bietet eine gute Balance zwischen Signalstärke und Geräteanforderungen. Dies ist der typische Leistungspegel für die meisten Amateurfunkverbindungen.',
-            powerHigh: 'High Power (1000 Watt) gibt dir einen 10 dB Vorteil gegenüber Standardleistung. Diese zusätzliche Reserve kann den Unterschied auf marginalen Pfaden oder beim Kampf gegen Absorption ausmachen. Aber denk daran: Gute Antennen sind oft effektiver als rohe Leistung!'
+            powerHigh: 'High Power (1000 Watt) gibt dir einen 10 dB Vorteil gegenüber Standardleistung. Diese zusätzliche Reserve kann den Unterschied auf marginalen Pfaden oder beim Kampf gegen Absorption ausmachen. Aber denk daran: Gute Antennen sind oft effektiver als rohe Leistung!',
+            // Antenna educational
+            antennaDipoleNvis: 'Die Dipolantenne strahlt in moderaten Winkeln ab (ca. 35°), was sie zu einem guten Allrounder macht. Bei kurzen Entfernungen unter 500 km funktioniert ihr höherer Abstrahlwinkel gut für NVIS (Signale, die fast senkrecht nach oben und zurück reflektieren).',
+            antennaDipoleMedium: 'Bei mittleren Entfernungen leistet die Dipolantenne als Kompromiss gute Arbeit. Ihr moderater Abstrahlwinkel funktioniert sowohl für regionale als auch für einige DX-Verbindungen.',
+            antennaDipoleDx: 'Für DX (Weitstrecke) hat der Dipol moderate Fähigkeiten. Obwohl er etwas Gewinn hat (2,15 dBi), bedeutet sein höherer Abstrahlwinkel, dass etwas Energie in steileren Winkeln abgestrahlt wird als ideal für maximale Entfernung.',
+            antennaVerticalNvis: 'Die Vertikalantenne strahlt in sehr flachen Winkeln ab (ca. 20°), was schlecht für NVIS-Verbindungen ist. Signale gehen zum Horizont statt nach oben, was es schwer macht, nahegelegene Stationen zu erreichen.',
+            antennaVerticalMedium: 'Bei mittleren Entfernungen beginnt der flache Abstrahlwinkel der Vertikalantenne nützlich zu werden. Sie ist omnidirektional, du musst sie also nicht auf dein Ziel ausrichten.',
+            antennaVerticalDx: 'Die Vertikalantenne glänzt bei DX! Ihr flacher Abstrahlwinkel (20°) sendet die meiste Energie zum Horizont – perfekt für Weitstrecken-Skip. Omnidirektional bedeutet, du kannst in alle Richtungen arbeiten.',
+            antennaYagiNvis: 'Die Yagi-Antenne ist schlecht für NVIS geeignet. Ihr sehr flacher Abstrahlwinkel (15°) und das Richtdiagramm bedeuten, dass Energie zum Horizont gesendet wird, nicht nach oben für nahegelegene Kontakte.',
+            antennaYagiMedium: 'Bei mittleren Entfernungen hilft der hohe Gewinn der Yagi (8 dBi), aber denk daran, sie ist direktional – sie muss auf die Zielstation ausgerichtet sein. Der flache Winkel kann dazu führen, dass dein Signal über nähere Stationen hinwegspringt.',
+            antennaYagiDx: 'Die Yagi ist der König der DX-Antennen! Hoher Gewinn (8 dBi) bündelt Energie in eine Richtung, und der sehr flache Abstrahlwinkel (15°) ist perfekt für Weitstrecken-Ausbreitung. Richte sie auf dein Ziel und genieße das DX!'
         }
     },
 

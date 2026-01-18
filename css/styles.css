@@ -462,6 +462,78 @@ body {
     font-size: 1rem;
 }
 
+/* Antenna Selector */
+.antenna-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.antenna-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem 0.25rem;
+    background-color: var(--bg-tertiary);
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-primary);
+}
+
+.antenna-button:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: var(--accent-primary);
+}
+
+.antenna-button.selected {
+    background-color: rgba(59, 130, 246, 0.2);
+    border-color: var(--accent-primary);
+}
+
+.antenna-icon {
+    font-size: 1.25rem;
+    margin-bottom: 0.15rem;
+}
+
+.antenna-name {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* Antenna Info */
+.antenna-info {
+    margin-bottom: 0.5rem;
+}
+
+.antenna-details {
+    background-color: var(--bg-tertiary);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.antenna-description {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+}
+
+.antenna-specs {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.antenna-spec {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
 /* Time Control */
 .time-control {
     margin-bottom: 0.75rem;

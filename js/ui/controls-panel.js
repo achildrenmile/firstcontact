@@ -14,6 +14,7 @@ import { HF_BANDS, getAllBands } from '../models/bands.js';
 import { t, LANGUAGES, getCurrentLanguage, setLanguage } from '../i18n/i18n.js';
 import { SOLAR_ACTIVITY_LEVELS, getAllActivityLevels } from '../models/solar-activity.js';
 import { POWER_LEVELS, getAllPowerLevels, formatPower } from '../models/power.js';
+import { ANTENNA_TYPES, getAllAntennaTypes } from '../models/antenna.js';
 
 export class ControlsPanel {
     constructor(containerId, options = {}) {
@@ -22,6 +23,7 @@ export class ControlsPanel {
         // State
         this.selectedBand = '20m';
         this.selectedPower = 'standard';
+        this.selectedAntenna = 'dipole';
         this.currentTime = new Date();
         this.solarActivity = 'normal';
         this.mogelDellingerActive = false;
@@ -31,6 +33,7 @@ export class ControlsPanel {
         // Callbacks
         this.onBandChange = options.onBandChange || (() => {});
         this.onPowerChange = options.onPowerChange || (() => {});
+        this.onAntennaChange = options.onAntennaChange || (() => {});
         this.onTimeChange = options.onTimeChange || (() => {});
         this.onSolarActivityChange = options.onSolarActivityChange || (() => {});
         this.onMogelDellingerToggle = options.onMogelDellingerToggle || (() => {});
@@ -67,6 +70,12 @@ export class ControlsPanel {
                     <h3>${t('ui.power.title')}</h3>
                     <div class="power-selector" id="power-buttons"></div>
                     <div class="power-info" id="power-info"></div>
+                </section>
+
+                <section class="control-section">
+                    <h3>${t('ui.antenna.title')}</h3>
+                    <div class="antenna-selector" id="antenna-buttons"></div>
+                    <div class="antenna-info" id="antenna-info"></div>
                 </section>
 
                 <section class="control-section">
@@ -121,10 +130,12 @@ export class ControlsPanel {
 
         this.renderBandButtons();
         this.renderPowerButtons();
+        this.renderAntennaButtons();
         this.renderSolarActivityButtons();
         this.setupEventListeners();
         this.updateBandInfo();
         this.updatePowerInfo();
+        this.updateAntennaInfo();
         this.updateSolarActivityInfo();
     }
 
@@ -181,6 +192,24 @@ export class ControlsPanel {
     }
 
     /**
+     * Render antenna selection buttons
+     */
+    renderAntennaButtons() {
+        const container = document.getElementById('antenna-buttons');
+        const types = getAllAntennaTypes();
+
+        container.innerHTML = types.map(antenna => `
+            <button
+                class="antenna-button ${antenna.id === this.selectedAntenna ? 'selected' : ''}"
+                data-antenna="${antenna.id}"
+            >
+                <span class="antenna-icon">${antenna.icon}</span>
+                <span class="antenna-name">${t(`ui.antenna.types.${antenna.id}.name`)}</span>
+            </button>
+        `).join('');
+    }
+
+    /**
      * Render solar activity selection buttons
      */
     renderSolarActivityButtons() {
@@ -225,6 +254,14 @@ export class ControlsPanel {
             const button = e.target.closest('.power-button');
             if (button) {
                 this.selectPower(button.dataset.power);
+            }
+        });
+
+        // Antenna buttons
+        document.getElementById('antenna-buttons')?.addEventListener('click', (e) => {
+            const button = e.target.closest('.antenna-button');
+            if (button) {
+                this.selectAntenna(button.dataset.antenna);
             }
         });
 
@@ -341,6 +378,44 @@ export class ControlsPanel {
                         <span class="challenge-text">${t('ui.power.challengeMode')}</span>
                     </div>
                 ` : ''}
+            </div>
+        `;
+    }
+
+    /**
+     * Select antenna type
+     */
+    selectAntenna(antennaId) {
+        this.selectedAntenna = antennaId;
+
+        // Update button states
+        document.querySelectorAll('.antenna-button').forEach(btn => {
+            btn.classList.toggle('selected', btn.dataset.antenna === antennaId);
+        });
+
+        // Update info display
+        this.updateAntennaInfo();
+
+        // Notify callback
+        this.onAntennaChange(antennaId);
+    }
+
+    /**
+     * Update antenna info display
+     */
+    updateAntennaInfo() {
+        const antenna = ANTENNA_TYPES[this.selectedAntenna];
+        const infoContainer = document.getElementById('antenna-info');
+
+        if (!infoContainer) return;
+
+        infoContainer.innerHTML = `
+            <div class="antenna-details">
+                <p class="antenna-description">${t(`ui.antenna.types.${antenna.id}.description`)}</p>
+                <div class="antenna-specs">
+                    <span class="antenna-spec">${t('ui.antenna.gain')}: +${antenna.gainDb} dBi</span>
+                    <span class="antenna-spec">${t('ui.antenna.angle')}: ${antenna.takeoffAngle}°</span>
+                </div>
             </div>
         `;
     }
@@ -506,6 +581,7 @@ export class ControlsPanel {
         return {
             band: this.selectedBand,
             power: this.selectedPower,
+            antenna: this.selectedAntenna,
             time: this.currentTime,
             solarActivity: this.solarActivity,
             mogelDellingerActive: this.mogelDellingerActive,

@@ -23,6 +23,7 @@ import {
 import { t, formatDistance } from '../i18n/i18n.js';
 import { SolarConditions, MOGEL_DELLINGER_EVENT, AURORA_EVENT, SPORADIC_E_EVENT } from '../models/solar-activity.js';
 import { getPowerLevel, calculatePowerFactor } from '../models/power.js';
+import { getAntennaType, calculateAntennaFactor, getSkipZoneModifier } from '../models/antenna.js';
 
 // Global solar conditions instance
 let globalSolarConditions = new SolarConditions();
@@ -103,9 +104,10 @@ export class HopInfo {
  * Main propagation evaluation function
  * Now evaluates both short path and long path, choosing the better one
  */
-export function evaluatePropagation({ source, target, bandId, dateTime, powerId = 'standard' }) {
+export function evaluatePropagation({ source, target, bandId, dateTime, powerId = 'standard', antennaId = 'dipole' }) {
     const band = HF_BANDS[bandId];
     const power = getPowerLevel(powerId);
+    const antenna = getAntennaType(antennaId);
 
     if (!band) {
         const result = new PropagationResult();
@@ -124,7 +126,7 @@ export function evaluatePropagation({ source, target, bandId, dateTime, powerId 
 
     // Always evaluate short path
     const shortPathResult = evaluateSinglePath({
-        source, target, bandId, dateTime, band, power,
+        source, target, bandId, dateTime, band, power, antenna,
         distance: shortPathDistance,
         isLongPath: false
     });
@@ -138,7 +140,7 @@ export function evaluatePropagation({ source, target, bandId, dateTime, powerId 
 
     if (shortPathDistance > LONG_PATH_THRESHOLD) {
         longPathResult = evaluateSinglePath({
-            source, target, bandId, dateTime, band, power,
+            source, target, bandId, dateTime, band, power, antenna,
             distance: longPathDistance,
             isLongPath: true
         });
@@ -219,10 +221,11 @@ function comparePaths(shortResult, longResult, shortDistance, longDistance) {
 /**
  * Evaluate propagation for a single path (short or long)
  */
-function evaluateSinglePath({ source, target, bandId, dateTime, band, power, distance, isLongPath }) {
+function evaluateSinglePath({ source, target, bandId, dateTime, band, power, antenna, distance, isLongPath }) {
     const result = new PropagationResult();
     const bandName = t(`bands.${bandId}.name`);
     result.power = power; // Store power info in result
+    result.antenna = antenna; // Store antenna info in result
 
     // Get ionospheric conditions along the path (includes solar activity effects)
     const pathConditions = analyzePathConditions(source, target, dateTime, isLongPath);
@@ -335,6 +338,10 @@ function evaluateSinglePath({ source, target, bandId, dateTime, band, power, dis
     // Add power factor (QRP/Standard/High Power)
     const powerFactor = evaluatePower(power, pathConditions);
     result.factors.push(powerFactor);
+
+    // Add antenna factor (Dipole/Vertical/Yagi)
+    const antennaFactor = evaluateAntenna(antenna, distance, pathConditions);
+    result.factors.push(antennaFactor);
 
     // Calculate overall signal strength from factors
     result.signalStrength = calculateSignalStrength(result.factors);
@@ -463,6 +470,71 @@ function evaluatePower(power, pathConditions) {
     );
     factor.impactText = impactText;
     factor.powerWatts = power.watts;
+
+    return factor;
+}
+
+/**
+ * Evaluate antenna effect on signal strength
+ * Different antennas have different characteristics:
+ * - Gain: More gain = stronger signal
+ * - Takeoff angle: Low angles for DX, high angles for NVIS
+ * - Directional: Yagi needs to point at target but has highest gain
+ */
+function evaluateAntenna(antenna, distance, pathConditions) {
+    // Calculate antenna factor using the model
+    const antennaEffect = calculateAntennaFactor(antenna.id, distance, pathConditions);
+
+    // Determine factor description based on antenna type and distance
+    let description, educational;
+
+    const isNVIS = distance < 500;
+    const isDX = distance > 1500;
+
+    if (antenna.id === 'dipole') {
+        if (isNVIS) {
+            description = t('propagation.antenna.dipoleNvis');
+            educational = t('propagation.educational.antennaDipoleNvis');
+        } else if (isDX) {
+            description = t('propagation.antenna.dipoleDx');
+            educational = t('propagation.educational.antennaDipoleDx');
+        } else {
+            description = t('propagation.antenna.dipoleMedium');
+            educational = t('propagation.educational.antennaDipoleMedium');
+        }
+    } else if (antenna.id === 'vertical') {
+        if (isNVIS) {
+            description = t('propagation.antenna.verticalNvis');
+            educational = t('propagation.educational.antennaVerticalNvis');
+        } else if (isDX) {
+            description = t('propagation.antenna.verticalDx');
+            educational = t('propagation.educational.antennaVerticalDx');
+        } else {
+            description = t('propagation.antenna.verticalMedium');
+            educational = t('propagation.educational.antennaVerticalMedium');
+        }
+    } else if (antenna.id === 'yagi') {
+        if (isNVIS) {
+            description = t('propagation.antenna.yagiNvis');
+            educational = t('propagation.educational.antennaYagiNvis');
+        } else if (isDX) {
+            description = t('propagation.antenna.yagiDx');
+            educational = t('propagation.educational.antennaYagiDx');
+        } else {
+            description = t('propagation.antenna.yagiMedium');
+            educational = t('propagation.educational.antennaYagiMedium');
+        }
+    }
+
+    const factor = new PropagationFactor(
+        t('propagation.factors.antenna'),
+        antennaEffect.impact,
+        description,
+        educational
+    );
+    factor.gainDb = antenna.gainDb;
+    factor.takeoffAngle = antenna.takeoffAngle;
+    factor.directional = antenna.directional;
 
     return factor;
 }
