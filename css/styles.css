@@ -505,12 +505,13 @@ body {
 
 .event-button-group {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 0.5rem;
 }
 
 .mogel-dellinger-button,
-.aurora-button {
+.aurora-button,
+.sporadic-e-button {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -534,12 +535,20 @@ body {
     border: 2px solid #2ecc71;
 }
 
+.sporadic-e-button {
+    border: 2px solid #9b59b6;
+}
+
 .mogel-dellinger-button:hover {
     background-color: rgba(231, 76, 60, 0.1);
 }
 
 .aurora-button:hover {
     background-color: rgba(46, 204, 113, 0.1);
+}
+
+.sporadic-e-button:hover {
+    background-color: rgba(155, 89, 182, 0.1);
 }
 
 .mogel-dellinger-button.active {
@@ -552,6 +561,12 @@ body {
     background-color: #2ecc71;
     color: white;
     animation: pulse-green 1.5s ease-in-out infinite;
+}
+
+.sporadic-e-button.active {
+    background-color: #9b59b6;
+    color: white;
+    animation: pulse-purple 1.5s ease-in-out infinite;
 }
 
 @keyframes pulse-red {
@@ -572,13 +587,20 @@ body {
     }
 }
 
-.md-icon,
-.aurora-icon {
+@keyframes pulse-purple {
+    0%, 100% {
+        box-shadow: 0 0 5px #9b59b6;
+    }
+    50% {
+        box-shadow: 0 0 20px #9b59b6, 0 0 40px rgba(155, 89, 182, 0.5);
+    }
+}
+
+.event-icon {
     font-size: 1.2rem;
 }
 
-.md-label,
-.aurora-label {
+.event-label {
     text-align: center;
     line-height: 1.2;
 }

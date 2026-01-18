@@ -66,6 +66,11 @@ export default {
             active: 'Aurora aktiv!',
             hint: 'Löst Aurora-Störung auf Polarpfaden aus'
         },
+        sporadicE: {
+            trigger: 'Sporadic E',
+            active: 'Es aktiv!',
+            hint: 'Sommermagie auf 10m/15m'
+        },
         buttons: {
             tutorial: 'Tutorial',
             tutorialTitle: 'Tutorial starten',
@@ -222,6 +227,25 @@ export default {
         learningHint: 'Wenn Signale zu nördlichen Regionen rau klingen oder verschwinden – prüfe die Aurora-Aktivität!'
     },
 
+    // Sporadic E Effect
+    sporadicE: {
+        name: 'Sporadic E',
+        alternateNames: 'Auch bekannt als: Es, E-Skip, Short Skip, Überreichweiten',
+        simpleDescription: 'Dichte Ionisationsflecken in der E-Schicht erzeugen überraschende Öffnungen auf höheren Bändern.',
+        detailedDescription: 'Sporadic E ist eines der aufregendsten Phänomene im Amateurfunk! Dichte Ionisationsflecken bilden sich in der E-Schicht (ca. 110 km Höhe) und erzeugen eine reflektierende Fläche für höhere Frequenzen, die normalerweise durchdringen würden. Dies ermöglicht Kontakte über 500-2300 km – oft in der "Skip-Zone", die normalerweise unerreichbar ist.',
+        symptoms: {
+            title: 'Woran erkennst du es:',
+            list: [
+                'Plötzlich starke Signale auf 10m oder 15m',
+                'Stationen in mittlerer Entfernung (500-2000 km)',
+                'Signale können schnell erscheinen und verschwinden',
+                'Am häufigsten an Sommernachmittagen',
+                'Höhere Bänder öffnen, die normalerweise tot sind'
+            ]
+        },
+        learningHint: 'Wenn 10m plötzlich zu Stationen in 1000-2000 km Entfernung im Sommer öffnet – du erlebst vielleicht Sporadic E!'
+    },
+
     // Layer States
     layerStates: {
         dLayerAbsent: '{layer} ist größtenteils abwesend (Nachtbedingungen)',
@@ -312,6 +336,13 @@ export default {
             minorFlutter: 'Leichtes Aurora-Flattern auf {band}'
         },
 
+        // Sporadic E messages
+        sporadicE: {
+            excellent: 'Ausgezeichnete Sporadic-E-Öffnung auf {band}!',
+            good: 'Gute Sporadic-E-Bedingungen für {band}',
+            moderate: 'Moderate Es-Aktivität verstärkt {band}'
+        },
+
         // Signal meter
         signalLabel: 'Signal: {quality} ({value}%)',
 
@@ -386,7 +417,11 @@ export default {
             // Aurora educational
             auroraSevere: 'Starke Aurora-Aktivität blockiert diesen Polarpfad! Geladene Teilchen von der Sonne erzeugen intensive ionosphärische Störungen in hohen Breiten. Signale werden extrem verzerrt oder komplett absorbiert. Versuche einen Pfad, der die Polarregion vermeidet.',
             auroraModerate: 'Moderate Aurora-Aktivität verursacht Signalverzerrung auf diesem Polarpfad. Das charakteristische "Aurora-Flattern" – ein raues, brummendes Signal – macht die Signale schwer lesbar. {band}-Signale über hohe Breiten sind besonders betroffen.',
-            auroraMinor: 'Leichte Aurora-Aktivität ist auf diesem Pfad erkennbar. {band}-Signale, die Polarregionen kreuzen, können etwas Flattern oder Schwund aufweisen. Dies ist bei erhöhter geomagnetischer Aktivität normal.'
+            auroraMinor: 'Leichte Aurora-Aktivität ist auf diesem Pfad erkennbar. {band}-Signale, die Polarregionen kreuzen, können etwas Flattern oder Schwund aufweisen. Dies ist bei erhöhter geomagnetischer Aktivität normal.',
+            // Sporadic E educational
+            sporadicEExcellent: 'Ausgezeichnete Sporadic-E-Bedingungen! Dichte Ionisationsflecken in der E-Schicht erzeugen eine reflektierende Oberfläche für {band}. Dieser {distance} km Pfad ist perfekt für Es – erwarte starke Signale! Es ist am häufigsten im Sommer.',
+            sporadicEGood: 'Gute Sporadic-E-Aktivität verstärkt die {band}-Ausbreitung. Die E-Schicht (etwa 110 km Höhe) hat dichte Ionisationsflecken entwickelt, die höhere Frequenzen reflektieren können. Das ist die "Sommermagie", die Funkamateure lieben!',
+            sporadicEModerate: 'Etwas Sporadic-E-Aktivität ist vorhanden und gibt {band} einen Schub. Es erzeugt kürzere Öffnungen (500-2000 km) im Vergleich zur F-Schicht-Ausbreitung, weil die E-Schicht niedriger liegt.'
         }
     },
 
@@ -439,6 +474,11 @@ export default {
                 name: 'Aurora-Effekt',
                 insight: 'Aurora (Nord-/Südlichter) stört Funksignale auf Polarpfaden! Geladene Teilchen, die in das Erdmagnetfeld bei hohen Breiten eindringen, erzeugen ionosphärische Störungen, die das charakteristische "Aurora-Flattern" auf KW-Signalen verursachen.',
                 experiment: 'Probiere einen Pfad, der keine hohen Breiten kreuzt – Ost-West-Pfade bei niedrigeren Breiten vermeiden die Aurorazone.'
+            },
+            sporadicE: {
+                name: 'Sporadic E (Es)',
+                insight: 'Du erlebst Sporadic E! Dichte Ionisationsflecken bilden sich in der E-Schicht und erzeugen überraschende Öffnungen auf {band}. Es ist am häufigsten im Sommer und ermöglicht Kontakte über 500-2000 km – Entfernungen, die normalerweise in der "Skip-Zone" liegen.',
+                experiment: 'Probiere 10m oder 15m an Sommernachmittagen – du könntest eine Es-Öffnung erwischen und Stationen erreichen, die normalerweise unerreichbar sind!'
             }
         }
     },

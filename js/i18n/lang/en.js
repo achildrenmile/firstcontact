@@ -66,6 +66,11 @@ export default {
             active: 'Aurora Active!',
             hint: 'Triggers aurora disturbance on polar paths'
         },
+        sporadicE: {
+            trigger: 'Sporadic E',
+            active: 'Es Active!',
+            hint: 'Summer magic on 10m/15m'
+        },
         buttons: {
             tutorial: 'Tutorial',
             tutorialTitle: 'Start tutorial',
@@ -222,6 +227,25 @@ export default {
         learningHint: 'If signals to northern regions sound raspy or disappear - check for aurora activity!'
     },
 
+    // Sporadic E Effect
+    sporadicE: {
+        name: 'Sporadic E',
+        alternateNames: 'Also known as: Es, E-Skip, Short Skip',
+        simpleDescription: 'Dense ionization patches in the E layer create surprise openings on higher bands.',
+        detailedDescription: 'Sporadic E is one of the most exciting phenomena in amateur radio! Dense patches of ionization form in the E layer (about 110 km altitude), creating a reflective surface for higher frequencies that normally pass through. This enables contacts at distances of 500-2300 km - often filling in the "skip zone" that is normally unreachable.',
+        symptoms: {
+            title: 'How to recognize it:',
+            list: [
+                'Sudden strong signals on 10m or 15m',
+                'Stations at medium distances (500-2000 km)',
+                'Signals may appear and disappear quickly',
+                'Most common in summer afternoons',
+                'Higher bands open that are normally dead'
+            ]
+        },
+        learningHint: 'If 10m suddenly opens to stations 1000-2000 km away in summer - you might be experiencing Sporadic E!'
+    },
+
     // Layer States
     layerStates: {
         dLayerAbsent: '{layer} is mostly absent (nighttime conditions)',
@@ -312,6 +336,13 @@ export default {
             minorFlutter: 'Minor aurora flutter on {band}'
         },
 
+        // Sporadic E messages
+        sporadicE: {
+            excellent: 'Excellent Sporadic E opening on {band}!',
+            good: 'Good Sporadic E conditions for {band}',
+            moderate: 'Moderate Es activity boosting {band}'
+        },
+
         // Signal meter
         signalLabel: 'Signal: {quality} ({value}%)',
 
@@ -386,7 +417,11 @@ export default {
             // Aurora educational
             auroraSevere: 'Severe aurora activity is blocking this polar path! Charged particles from the sun are creating intense ionospheric disturbances at high latitudes. Signals become extremely distorted or completely absorbed. Try a path that avoids the polar region.',
             auroraModerate: 'Moderate aurora activity is causing signal distortion on this polar path. The characteristic "aurora flutter" - a raspy, buzzing quality - makes signals hard to copy. {band} signals crossing high latitudes are especially affected.',
-            auroraMinor: 'Minor aurora activity is detectable on this path. {band} signals crossing polar regions may have some flutter or fading. This is common during elevated geomagnetic activity.'
+            auroraMinor: 'Minor aurora activity is detectable on this path. {band} signals crossing polar regions may have some flutter or fading. This is common during elevated geomagnetic activity.',
+            // Sporadic E educational
+            sporadicEExcellent: 'Excellent Sporadic E (Es) conditions! Dense patches of ionization in the E layer are creating a reflective surface for {band}. This {distance} km path is perfect for Es - expect strong signals! Es is most common in summer.',
+            sporadicEGood: 'Good Sporadic E activity is enhancing {band} propagation. The E layer (at about 110 km altitude) has developed dense ionization patches that can reflect higher frequencies. This is the "summer magic" that amateur radio operators love!',
+            sporadicEModerate: 'Some Sporadic E activity is present, giving {band} a boost. Es creates shorter-distance openings (500-2000 km) compared to F layer propagation, because the E layer is lower.'
         }
     },
 
@@ -439,6 +474,11 @@ export default {
                 name: 'Aurora Effect',
                 insight: 'Aurora (Northern/Southern Lights) disrupts radio signals on polar paths! Charged particles entering Earth\'s magnetic field at high latitudes create ionospheric disturbances that cause the characteristic "aurora flutter" on HF signals.',
                 experiment: 'Try a path that doesn\'t cross high latitudes - paths going east-west at lower latitudes avoid the auroral zone.'
+            },
+            sporadicE: {
+                name: 'Sporadic E (Es)',
+                insight: 'You\'re experiencing Sporadic E! Dense ionization patches form in the E layer, creating surprise openings on {band}. Es is most common in summer and enables contacts at 500-2000 km - distances that are normally in the "skip zone".',
+                experiment: 'Try 10m or 15m during summer afternoons - you might catch an Es opening and work stations that are normally unreachable!'
             }
         }
     },

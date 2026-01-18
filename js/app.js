@@ -387,7 +387,8 @@ class FirstContactApp {
             onTimeChange: (time) => this.handleTimeChange(time),
             onSolarActivityChange: (activityId) => this.handleSolarActivityChange(activityId),
             onMogelDellingerToggle: (active) => this.handleMogelDellingerToggle(active),
-            onAuroraToggle: (active) => this.handleAuroraToggle(active)
+            onAuroraToggle: (active) => this.handleAuroraToggle(active),
+            onSporadicEToggle: (active) => this.handleSporadicEToggle(active)
         });
 
         // Feedback Panel
@@ -495,6 +496,23 @@ class FirstContactApp {
             solarConditions.triggerAurora('moderate');
         } else {
             solarConditions.clearAurora();
+        }
+
+        // If we have a target, re-evaluate
+        if (this.state.targetLocation) {
+            this.attemptContact();
+        }
+    }
+
+    /**
+     * Handle Sporadic E toggle
+     */
+    handleSporadicEToggle(active) {
+        const solarConditions = getSolarConditions();
+        if (active) {
+            solarConditions.triggerSporadicE('moderate');
+        } else {
+            solarConditions.clearSporadicE();
         }
 
         // If we have a target, re-evaluate

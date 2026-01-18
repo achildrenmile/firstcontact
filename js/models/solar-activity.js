@@ -273,6 +273,99 @@ export const AURORA_EVENT = {
 };
 
 /**
+ * Sporadic E (Es) Propagation
+ *
+ * Sporadic E is a mysterious and exciting phenomenon where dense patches of
+ * ionization form in the E layer, enabling unusual propagation on higher HF
+ * bands (especially 10m, 15m) and even VHF.
+ *
+ * EDUCATIONAL DESIGN NOTES:
+ * - Most common in summer months (May-August in Northern Hemisphere)
+ * - Enables single-hop distances of 500-2300 km
+ * - Unpredictable but creates exciting openings
+ * - E layer is lower (100-120 km) than F layer (250-400 km)
+ * - Higher frequencies benefit most (10m, 15m, even 6m/2m)
+ */
+export const SPORADIC_E_EVENT = {
+    id: 'sporadicE',
+    name: 'Sporadic E',
+    alternateNames: ['Es', 'E-Skip', 'Short Skip'],
+
+    // Geographic and temporal characteristics
+    characteristics: {
+        typicalDistance: { min: 500, max: 2300 },  // km per hop
+        reflectionAltitude: 110,  // km (E layer)
+        peakMonths: [5, 6, 7, 8],  // May-August
+        peakHours: [10, 18]  // 10:00-18:00 local time
+    },
+
+    // Effect on different bands
+    bandEffects: {
+        '10m': { boost: 0.9, description: 'Excellent Es conditions' },
+        '15m': { boost: 0.7, description: 'Good Es conditions' },
+        '20m': { boost: 0.3, description: 'Occasional Es boost' },
+        '40m': { boost: 0.1, description: 'Rare Es effect' },
+        '80m': { boost: 0, description: 'No Es effect' },
+        '160m': { boost: 0, description: 'No Es effect' }
+    },
+
+    // Intensity levels
+    intensityLevels: {
+        weak: {
+            id: 'weak',
+            mufBoost: 1.2,
+            maxDistance: 1200,
+            affectedBands: ['10m'],
+            description: 'Weak Es - occasional 10m openings'
+        },
+        moderate: {
+            id: 'moderate',
+            mufBoost: 1.5,
+            maxDistance: 1800,
+            affectedBands: ['10m', '15m'],
+            description: 'Moderate Es - good 10m/15m openings'
+        },
+        strong: {
+            id: 'strong',
+            mufBoost: 2.0,
+            maxDistance: 2300,
+            affectedBands: ['10m', '15m', '20m'],
+            description: 'Strong Es - widespread openings, even 20m affected'
+        }
+    },
+
+    // Educational content
+    personality: 'The Summer Surprise',
+    simpleDescription: 'Dense ionization patches in the E layer create surprise openings on higher bands, especially in summer.',
+    detailedDescription: `Sporadic E is one of the most exciting phenomena in amateur radio!
+        Dense patches of ionization form in the E layer (about 110 km altitude),
+        creating a reflective surface for higher frequencies that normally pass right through.
+
+        Key characteristics:
+        • Most common May-August (Northern Hemisphere)
+        • Enables single-hop distances of 500-2300 km
+        • Favors higher bands: 10m, 15m, sometimes even 6m/2m
+        • Openings can last minutes to hours
+        • Often appears suddenly and unexpectedly
+        • E layer is lower than F layer, so skip distances are shorter`,
+
+    learningHint: 'If 10m suddenly opens to stations 1000-2000 km away in summer - you might be experiencing Sporadic E!',
+
+    // How to recognize it
+    symptoms: [
+        'Sudden strong signals on 10m or 15m',
+        'Stations at medium distances (500-2000 km)',
+        'Signals may appear and disappear quickly',
+        'Most common in summer afternoons',
+        'Higher bands open that are normally dead'
+    ],
+
+    // Visual representation
+    color: '#9b59b6',
+    icon: '✨'
+};
+
+/**
  * Current solar conditions state
  */
 export class SolarConditions {
@@ -283,6 +376,8 @@ export class SolarConditions {
         this.mogelDellingerStartTime = null;
         this.auroraActive = false;
         this.auroraSeverity = null;
+        this.sporadicEActive = false;
+        this.sporadicEIntensity = null;
     }
 
     /**
@@ -391,6 +486,70 @@ export class SolarConditions {
             flutterIntensity: severityConfig.flutterIntensity,
             severity: this.auroraSeverity,
             affectedLatitude
+        };
+    }
+
+    /**
+     * Trigger a Sporadic E event
+     */
+    triggerSporadicE(intensity = 'moderate') {
+        this.sporadicEActive = true;
+        this.sporadicEIntensity = intensity;
+    }
+
+    /**
+     * Clear Sporadic E event
+     */
+    clearSporadicE() {
+        this.sporadicEActive = false;
+        this.sporadicEIntensity = null;
+    }
+
+    /**
+     * Check if Sporadic E affects a given band and distance
+     * Sporadic E favors higher frequencies and medium distances (500-2300 km)
+     * @param {string} bandId - The band being evaluated
+     * @param {number} distance - Distance in km
+     */
+    getSporadicEEffect(bandId, distance) {
+        if (!this.sporadicEActive) {
+            return { affected: false, boost: 0 };
+        }
+
+        const intensityConfig = SPORADIC_E_EVENT.intensityLevels[this.sporadicEIntensity];
+        const bandEffect = SPORADIC_E_EVENT.bandEffects[bandId];
+
+        // Check if this band is affected
+        if (!bandEffect || bandEffect.boost === 0) {
+            return { affected: false, boost: 0 };
+        }
+
+        // Check if this band is in the affected list for this intensity
+        if (!intensityConfig.affectedBands.includes(bandId)) {
+            return { affected: false, boost: 0 };
+        }
+
+        // Sporadic E works best at medium distances (500-2300 km)
+        const minDist = SPORADIC_E_EVENT.characteristics.typicalDistance.min;
+        const maxDist = intensityConfig.maxDistance;
+
+        let distanceScale = 1.0;
+        if (distance < minDist) {
+            // Too close - Es skip zone
+            distanceScale = distance / minDist;
+        } else if (distance > maxDist) {
+            // Too far for single-hop Es
+            distanceScale = Math.max(0, 1 - (distance - maxDist) / 1000);
+        }
+
+        const effectiveBoost = bandEffect.boost * distanceScale;
+
+        return {
+            affected: effectiveBoost > 0.1,
+            boost: effectiveBoost,
+            intensity: this.sporadicEIntensity,
+            maxDistance: maxDist,
+            optimalRange: `${minDist}-${maxDist} km`
         };
     }
 

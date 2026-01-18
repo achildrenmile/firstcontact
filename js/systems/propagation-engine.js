@@ -21,7 +21,7 @@ import {
     doesPathCrossGreyLine
 } from './sun-position.js';
 import { t, formatDistance } from '../i18n/i18n.js';
-import { SolarConditions, MOGEL_DELLINGER_EVENT, AURORA_EVENT } from '../models/solar-activity.js';
+import { SolarConditions, MOGEL_DELLINGER_EVENT, AURORA_EVENT, SPORADIC_E_EVENT } from '../models/solar-activity.js';
 
 // Global solar conditions instance
 let globalSolarConditions = new SolarConditions();
@@ -166,6 +166,12 @@ export function evaluatePropagation({ source, target, bandId, dateTime }) {
         }
     }
 
+    // Evaluate Sporadic E effect (enhances higher bands at medium distances)
+    const sporadicEFactor = evaluateSporadicE(bandId, pathConditions);
+    if (sporadicEFactor) {
+        result.factors.push(sporadicEFactor);
+    }
+
     // Evaluate D layer absorption
     const absorptionFactor = evaluateAbsorption(band, bandId, pathConditions);
     result.factors.push(absorptionFactor);
@@ -271,6 +277,12 @@ function analyzePathConditions(source, target, dateTime) {
     // Check Aurora effect
     const auroraEffect = globalSolarConditions.getAuroraEffect(maxAbsLatitude, percentInPolarZone);
 
+    // Calculate distance for Sporadic E evaluation
+    const totalDistance = calculateDistance(
+        source.latitude, source.longitude,
+        target.latitude, target.longitude
+    );
+
     const avgDLayerIonization = average(samples.map(s => s.layers.D.ionization));
     const avgFLayerIonization = average(samples.map(s => s.layers.F.ionization));
     const avgFLayerReflection = average(samples.map(s => s.layers.F.reflectionQuality));
@@ -296,7 +308,9 @@ function analyzePathConditions(source, target, dateTime) {
         // Aurora info
         auroraEffect,
         maxAbsLatitude,
-        percentInPolarZone
+        percentInPolarZone,
+        // Distance for Sporadic E
+        totalDistance
     };
 }
 
@@ -614,6 +628,43 @@ function evaluateAurora(bandId, pathConditions) {
 }
 
 /**
+ * Evaluate Sporadic E effect
+ * Sporadic E creates dense ionization patches in the E layer that can
+ * reflect higher frequencies, especially 10m and 15m, at medium distances
+ */
+function evaluateSporadicE(bandId, pathConditions) {
+    const effect = globalSolarConditions.getSporadicEEffect(bandId, pathConditions.totalDistance);
+
+    if (!effect || !effect.affected) {
+        return null;
+    }
+
+    const bandName = t(`bands.${bandId}.name`);
+    const distance = Math.round(pathConditions.totalDistance);
+
+    let impact, description, educational;
+
+    if (effect.boost > 0.7) {
+        // Strong boost - excellent Es conditions for this band
+        impact = 0.6;
+        description = t('propagation.sporadicE.excellent', { band: bandName });
+        educational = t('propagation.educational.sporadicEExcellent', { band: bandName, distance });
+    } else if (effect.boost > 0.4) {
+        // Good boost
+        impact = 0.4;
+        description = t('propagation.sporadicE.good', { band: bandName });
+        educational = t('propagation.educational.sporadicEGood', { band: bandName });
+    } else {
+        // Moderate boost
+        impact = 0.2;
+        description = t('propagation.sporadicE.moderate', { band: bandName });
+        educational = t('propagation.educational.sporadicEModerate', { band: bandName });
+    }
+
+    return new PropagationFactor('Sporadic E', impact, description, educational);
+}
+
+/**
  * Calculate overall signal strength from factors
  */
 function calculateSignalStrength(factors) {
@@ -804,6 +855,16 @@ function extractLearningPoints(result, band, bandId, pathConditions) {
             concept: t('learning.concepts.aurora.name'),
             insight: t('learning.concepts.aurora.insight'),
             experiment: t('learning.concepts.aurora.experiment')
+        });
+    }
+
+    // Check for Sporadic E lesson
+    const sporadicEFactor = result.factors.find(f => f.name === 'Sporadic E');
+    if (sporadicEFactor && sporadicEFactor.impact > 0.2) {
+        points.push({
+            concept: t('learning.concepts.sporadicE.name'),
+            insight: t('learning.concepts.sporadicE.insight', { band: bandName }),
+            experiment: t('learning.concepts.sporadicE.experiment')
         });
     }
 
