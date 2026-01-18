@@ -25,6 +25,3 @@ Thumbs.db
 # Node modules (will be installed in container)
 node_modules/
 dist/
-
-# Development files
-index.html
