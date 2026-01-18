@@ -153,8 +153,7 @@ firstcontact/
 │       └── lang/
 │           ├── de.js       # German translations
 │           └── en.js       # English translations
-├── world.json              # TopoJSON world map data
-└── countries.json          # Country data
+└── world.json              # TopoJSON world map data
 ```
 
 ## Technical Details

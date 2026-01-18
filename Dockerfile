@@ -37,7 +37,6 @@ FROM nginx:alpine
 # Copy static files
 COPY favicon.svg /usr/share/nginx/html/
 COPY world.json /usr/share/nginx/html/
-COPY countries.json /usr/share/nginx/html/
 
 # Copy bundled JavaScript, hashed CSS, and updated HTML from builder
 COPY --from=builder /app/dist/*.js /usr/share/nginx/html/
