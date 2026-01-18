@@ -69,7 +69,7 @@ export default {
         sporadicE: {
             trigger: 'Sporadic E',
             active: 'Es Active!',
-            hint: 'Summer magic on 10m/15m'
+            hint: 'Magic Band! Best on 6m, also 10m/15m'
         },
         buttons: {
             tutorial: 'Tutorial',
@@ -787,10 +787,15 @@ export default {
             text: 'Each band has its own "personality":',
             '160m': 'Night only, completely absorbed during day - "Top Band"',
             '80m': 'Good at night, heavily absorbed during day',
+            '60m': 'NVIS specialist - signals go straight up and back down (regional)',
             '40m': 'Versatile, often works day and night',
+            '30m': 'WARC band - good compromise between 40m and 20m',
             '20m': 'The "workhorse" - good for long distances during day',
+            '17m': 'WARC band - often open when 20m fades',
             '15m': 'Needs good solar illumination',
-            '10m': 'Only open with strong ionosphere'
+            '12m': 'WARC band - like 10m but needs slightly less ionization',
+            '10m': 'Only open with strong ionosphere',
+            '6m': 'The "Magic Band" - comes alive with Sporadic E!'
         },
         time: {
             title: 'Time Control',
@@ -803,6 +808,14 @@ export default {
                 text: 'The twilight zone (boundary between day and night) often provides excellent propagation conditions!'
             },
             tip2: {
+                title: 'Sporadic E:',
+                text: 'Enable Sporadic E and try the 6m "Magic Band" - it can suddenly open to 1000-2000 km distances, especially in summer!'
+            },
+            tip3: {
+                title: 'WARC Bands:',
+                text: '30m, 17m and 12m are quieter bands without contests - often open when neighboring bands are marginal.'
+            },
+            tip4: {
                 title: 'Experiment:',
                 text: 'Try different band/time combinations. There are no mistakes - only learning opportunities!'
             }

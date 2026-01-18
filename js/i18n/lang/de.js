@@ -69,7 +69,7 @@ export default {
         sporadicE: {
             trigger: 'Sporadic E',
             active: 'Es aktiv!',
-            hint: 'Sommermagie auf 10m/15m'
+            hint: 'Magic Band! Besonders 6m, auch 10m/15m'
         },
         buttons: {
             tutorial: 'Tutorial',
@@ -787,10 +787,15 @@ export default {
             text: 'Jedes Band hat seinen eigenen "Charakter":',
             '160m': 'Nur nachts, tagsüber komplett absorbiert - "Top Band"',
             '80m': 'Nachts gut, tagsüber stark gedämpft',
+            '60m': 'NVIS-Spezialist - Signale gehen steil hoch und zurück (regional)',
             '40m': 'Vielseitig, funktioniert oft Tag und Nacht',
+            '30m': 'WARC-Band - guter Kompromiss zwischen 40m und 20m',
             '20m': 'Das "Arbeitspferd" - gut für weite Entfernungen tagsüber',
+            '17m': 'WARC-Band - oft offen wenn 20m schließt',
             '15m': 'Braucht gute Sonneneinstrahlung',
-            '10m': 'Nur bei starker Ionosphäre offen'
+            '12m': 'WARC-Band - wie 10m aber braucht etwas weniger Ionisation',
+            '10m': 'Nur bei starker Ionosphäre offen',
+            '6m': 'Das "Magic Band" - erwacht mit Sporadic E zum Leben!'
         },
         time: {
             title: 'Zeit-Steuerung',
@@ -803,6 +808,14 @@ export default {
                 text: 'Die Dämmerungszone (Grenzlinie zwischen Tag und Nacht) bietet oft besonders gute Ausbreitungsbedingungen!'
             },
             tip2: {
+                title: 'Sporadic E:',
+                text: 'Aktiviere Sporadic E und probiere das 6m "Magic Band" - es kann plötzlich über 1000-2000 km öffnen, besonders im Sommer!'
+            },
+            tip3: {
+                title: 'WARC-Bänder:',
+                text: '30m, 17m und 12m sind ruhigere Bänder ohne Conteste - oft offen wenn Nachbarbänder marginal sind.'
+            },
+            tip4: {
                 title: 'Experimentiere:',
                 text: 'Probiere verschiedene Band/Zeit-Kombinationen aus. Es gibt keine Fehler - nur Lerngelegenheiten!'
             }

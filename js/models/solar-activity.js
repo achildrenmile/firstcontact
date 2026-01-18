@@ -140,21 +140,21 @@ export const MOGEL_DELLINGER_EVENT = {
             id: 'minor',
             flareClass: 'M',
             absorptionMultiplier: 3,
-            affectedBands: ['160m', '80m', '40m'],
+            affectedBands: ['160m', '80m', '60m', '40m'],
             description: 'Minor disturbance - lower bands affected'
         },
         moderate: {
             id: 'moderate',
             flareClass: 'M5+',
             absorptionMultiplier: 5,
-            affectedBands: ['160m', '80m', '40m', '20m'],
+            affectedBands: ['160m', '80m', '60m', '40m', '30m', '20m'],
             description: 'Moderate blackout - most bands affected on day side'
         },
         severe: {
             id: 'severe',
             flareClass: 'X',
             absorptionMultiplier: 10,
-            affectedBands: ['160m', '80m', '40m', '20m', '15m', '10m'],
+            affectedBands: ['160m', '80m', '60m', '40m', '30m', '20m', '17m', '15m', '12m', '10m', '6m'],
             description: 'Complete HF blackout on the sunlit side of Earth'
         }
     },
@@ -591,8 +591,8 @@ export function getActivityLevel(levelId) {
 export function explainSolarEffectOnBand(activityLevel, bandId) {
     const activity = SOLAR_ACTIVITY_LEVELS[activityLevel];
     const freq = {
-        '160m': 1.9, '80m': 3.75, '40m': 7.15,
-        '20m': 14.175, '15m': 21.225, '10m': 28.85
+        '160m': 1.9, '80m': 3.75, '60m': 5.35, '40m': 7.15, '30m': 10.125,
+        '20m': 14.175, '17m': 18.118, '15m': 21.225, '12m': 24.94, '10m': 28.85, '6m': 50.15
     }[bandId] || 14;
 
     const isHighBand = freq > 15;

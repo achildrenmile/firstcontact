@@ -177,10 +177,15 @@ class FirstContactApp {
                         <ul>
                             <li><strong>160m</strong> - ${t('help.bands.160m')}</li>
                             <li><strong>80m</strong> - ${t('help.bands.80m')}</li>
+                            <li><strong>60m</strong> - ${t('help.bands.60m')}</li>
                             <li><strong>40m</strong> - ${t('help.bands.40m')}</li>
+                            <li><strong>30m</strong> - ${t('help.bands.30m')}</li>
                             <li><strong>20m</strong> - ${t('help.bands.20m')}</li>
+                            <li><strong>17m</strong> - ${t('help.bands.17m')}</li>
                             <li><strong>15m</strong> - ${t('help.bands.15m')}</li>
+                            <li><strong>12m</strong> - ${t('help.bands.12m')}</li>
                             <li><strong>10m</strong> - ${t('help.bands.10m')}</li>
+                            <li><strong>6m</strong> - ${t('help.bands.6m')}</li>
                         </ul>
                     </div>
 
@@ -198,6 +203,14 @@ class FirstContactApp {
                         <div class="help-tip">
                             <strong>${t('help.tips.tip2.title')}</strong><br>
                             ${t('help.tips.tip2.text')}
+                        </div>
+                        <div class="help-tip">
+                            <strong>${t('help.tips.tip3.title')}</strong><br>
+                            ${t('help.tips.tip3.text')}
+                        </div>
+                        <div class="help-tip">
+                            <strong>${t('help.tips.tip4.title')}</strong><br>
+                            ${t('help.tips.tip4.text')}
                         </div>
                     </div>
                 </div>

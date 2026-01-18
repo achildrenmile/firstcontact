@@ -532,8 +532,8 @@ function evaluateSolarActivity(bandId, pathConditions) {
 
     // Get band frequency to determine sensitivity
     const bandFreqs = {
-        '160m': 1.9, '80m': 3.75, '40m': 7.15,
-        '20m': 14.175, '15m': 21.225, '10m': 28.85
+        '160m': 1.9, '80m': 3.75, '60m': 5.35, '40m': 7.15, '30m': 10.125,
+        '20m': 14.175, '17m': 18.118, '15m': 21.225, '12m': 24.94, '10m': 28.85, '6m': 50.15
     };
     const freq = bandFreqs[bandId] || 14;
     const isHighBand = freq > 15;
@@ -595,8 +595,8 @@ function evaluateAurora(bandId, pathConditions) {
 
     // Get band frequency - higher frequencies are more affected by aurora
     const bandFreqs = {
-        '160m': 1.9, '80m': 3.75, '40m': 7.15,
-        '20m': 14.175, '15m': 21.225, '10m': 28.85
+        '160m': 1.9, '80m': 3.75, '60m': 5.35, '40m': 7.15, '30m': 10.125,
+        '20m': 14.175, '17m': 18.118, '15m': 21.225, '12m': 24.94, '10m': 28.85, '6m': 50.15
     };
     const freq = bandFreqs[bandId] || 14;
 
