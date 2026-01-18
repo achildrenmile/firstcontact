@@ -21,7 +21,7 @@ import {
     doesPathCrossGreyLine
 } from './sun-position.js';
 import { t, formatDistance } from '../i18n/i18n.js';
-import { SolarConditions, MOGEL_DELLINGER_EVENT } from '../models/solar-activity.js';
+import { SolarConditions, MOGEL_DELLINGER_EVENT, AURORA_EVENT } from '../models/solar-activity.js';
 
 // Global solar conditions instance
 let globalSolarConditions = new SolarConditions();
@@ -145,6 +145,27 @@ export function evaluatePropagation({ source, target, bandId, dateTime }) {
         result.factors.push(solarActivityFactor);
     }
 
+    // Evaluate Aurora effect (affects polar paths)
+    const auroraFactor = evaluateAurora(bandId, pathConditions);
+    if (auroraFactor) {
+        result.factors.push(auroraFactor);
+
+        // If severe aurora on polar path, it can dominate
+        if (auroraFactor.impact < -0.7) {
+            result.signalStrength = Math.max(0, 20 + auroraFactor.impact * 30);
+            result.success = result.signalStrength >= 20;
+            result.qualityDescription = t('propagation.quality.auroraFlutter');
+            result.summary = t('propagation.aurora.blocked');
+            result.path = buildSignalPath(source, target, hopAnalysis, result.success);
+            result.learningPoints = [{
+                concept: t('learning.concepts.aurora.name'),
+                insight: t('learning.concepts.aurora.insight'),
+                experiment: t('learning.concepts.aurora.experiment')
+            }];
+            return result;
+        }
+    }
+
     // Evaluate D layer absorption
     const absorptionFactor = evaluateAbsorption(band, bandId, pathConditions);
     result.factors.push(absorptionFactor);
@@ -199,7 +220,11 @@ function analyzePathConditions(source, target, dateTime) {
     );
 
     // Calculate what percent of path is in daylight (for Mögel-Dellinger)
+    // Also track polar zone exposure for Aurora
     let dayCount = 0;
+    let polarCount = 0;
+    let maxAbsLatitude = 0;
+    const POLAR_THRESHOLD = 55; // Degrees latitude considered "polar" for Aurora
 
     const samples = pathPoints.map(point => {
         const elevation = calculateSolarElevation(point.latitude, point.longitude, dateTime);
@@ -208,17 +233,24 @@ function analyzePathConditions(source, target, dateTime) {
         // Check if this point is in daylight (sun above horizon)
         if (elevation > 0) dayCount++;
 
+        // Track polar zone exposure (both north and south)
+        const absLatitude = Math.abs(point.latitude);
+        if (absLatitude > POLAR_THRESHOLD) polarCount++;
+        if (absLatitude > maxAbsLatitude) maxAbsLatitude = absLatitude;
+
         const layers = ionosphere.calculateLayerStates(elevation, greyLine.isGreyLine);
 
         return {
             point,
             elevation,
             greyLine,
-            layers
+            layers,
+            absLatitude
         };
     });
 
     const pathDayPercent = dayCount / samples.length;
+    const percentInPolarZone = polarCount / samples.length;
 
     // Check Mögel-Dellinger effect
     const mogelDellingerEffect = globalSolarConditions.getMogelDellingerEffect(pathDayPercent);
@@ -235,6 +267,9 @@ function analyzePathConditions(source, target, dateTime) {
             );
         });
     }
+
+    // Check Aurora effect
+    const auroraEffect = globalSolarConditions.getAuroraEffect(maxAbsLatitude, percentInPolarZone);
 
     const avgDLayerIonization = average(samples.map(s => s.layers.D.ionization));
     const avgFLayerIonization = average(samples.map(s => s.layers.F.ionization));
@@ -257,7 +292,11 @@ function analyzePathConditions(source, target, dateTime) {
         solarEffects,
         // Mögel-Dellinger info
         mogelDellingerEffect,
-        pathDayPercent
+        pathDayPercent,
+        // Aurora info
+        auroraEffect,
+        maxAbsLatitude,
+        percentInPolarZone
     };
 }
 
@@ -528,6 +567,53 @@ function evaluateSolarActivity(bandId, pathConditions) {
 }
 
 /**
+ * Evaluate Aurora effect on polar paths
+ * Aurora causes signal distortion and absorption on paths crossing high latitudes
+ */
+function evaluateAurora(bandId, pathConditions) {
+    const effect = pathConditions.auroraEffect;
+
+    if (!effect || !effect.affected) {
+        return null;
+    }
+
+    const bandName = t(`bands.${bandId}.name`);
+
+    // Get band frequency - higher frequencies are more affected by aurora
+    const bandFreqs = {
+        '160m': 1.9, '80m': 3.75, '40m': 7.15,
+        '20m': 14.175, '15m': 21.225, '10m': 28.85
+    };
+    const freq = bandFreqs[bandId] || 14;
+
+    // Higher frequencies are more severely affected by aurora
+    const freqMultiplier = freq > 15 ? 1.2 : freq > 7 ? 1.0 : 0.8;
+
+    let impact, description, educational;
+
+    const baseDegradation = effect.degradation * freqMultiplier;
+
+    if (effect.severity === 'severe') {
+        impact = -0.9 * baseDegradation;
+        description = t('propagation.aurora.severeFlutter', { band: bandName });
+        educational = t('propagation.educational.auroraSevere');
+    } else if (effect.severity === 'moderate') {
+        impact = -0.6 * baseDegradation;
+        description = t('propagation.aurora.moderateFlutter', { band: bandName });
+        educational = t('propagation.educational.auroraModerate', { band: bandName });
+    } else {
+        impact = -0.3 * baseDegradation;
+        description = t('propagation.aurora.minorFlutter', { band: bandName });
+        educational = t('propagation.educational.auroraMinor', { band: bandName });
+    }
+
+    // Scale by polar zone exposure
+    impact = impact * Math.max(0.5, pathConditions.percentInPolarZone * 2);
+
+    return new PropagationFactor('Aurora', impact, description, educational);
+}
+
+/**
  * Calculate overall signal strength from factors
  */
 function calculateSignalStrength(factors) {
@@ -709,6 +795,16 @@ function extractLearningPoints(result, band, bandId, pathConditions) {
                 experiment: t('learning.concepts.solarStorm.experiment')
             });
         }
+    }
+
+    // Check for Aurora lesson
+    const auroraFactor = result.factors.find(f => f.name === 'Aurora');
+    if (auroraFactor && auroraFactor.impact < -0.2) {
+        points.push({
+            concept: t('learning.concepts.aurora.name'),
+            insight: t('learning.concepts.aurora.insight'),
+            experiment: t('learning.concepts.aurora.experiment')
+        });
     }
 
     return points;

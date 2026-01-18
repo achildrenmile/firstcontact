@@ -61,6 +61,11 @@ export default {
             active: 'Solar Flare Active!',
             hint: 'Triggers a Mögel-Dellinger radio blackout'
         },
+        aurora: {
+            trigger: 'Simulate Aurora',
+            active: 'Aurora Active!',
+            hint: 'Triggers aurora disturbance on polar paths'
+        },
         buttons: {
             tutorial: 'Tutorial',
             tutorialTitle: 'Start tutorial',
@@ -198,6 +203,25 @@ export default {
         learningHint: 'If HF suddenly goes dead during the day but works at night - it might be a Mögel-Dellinger event!'
     },
 
+    // Aurora Effect
+    aurora: {
+        name: 'Aurora',
+        alternateNames: 'Also known as: Northern Lights, Southern Lights, Aurora Borealis, Aurora Australis',
+        simpleDescription: 'Aurora disrupts radio signals crossing polar regions with characteristic flutter and absorption.',
+        detailedDescription: 'Aurora occurs when charged particles from the sun enter Earth\'s magnetic field at the poles. These particles create the beautiful Northern and Southern Lights, but also cause significant ionospheric disturbances. For HF radio, this means trouble on paths crossing high latitudes - signals become raspy (aurora flutter) or may be completely blocked.',
+        symptoms: {
+            title: 'How to recognize it:',
+            list: [
+                'Raspy, buzzing signal quality (aurora flutter)',
+                'Signals fade and return rapidly',
+                'Only affects polar or high-latitude paths',
+                'Non-polar paths work normally',
+                'Often during geomagnetic storm warnings'
+            ]
+        },
+        learningHint: 'If signals to northern regions sound raspy or disappear - check for aurora activity!'
+    },
+
     // Layer States
     layerStates: {
         dLayerAbsent: '{layer} is mostly absent (nighttime conditions)',
@@ -259,7 +283,8 @@ export default {
             fair: 'Fair',
             weak: 'Weak but readable',
             notReadable: 'Not readable',
-            blackout: 'Radio Blackout!'
+            blackout: 'Radio Blackout!',
+            auroraFlutter: 'Aurora Flutter!'
         },
 
         // Mögel-Dellinger messages
@@ -277,6 +302,14 @@ export default {
             activeHighBand: 'Active sun boosting {band} propagation!',
             activeLowBand: 'Active sun increasing D-layer absorption on {band}',
             storm: 'Geomagnetic storm disrupting ionosphere'
+        },
+
+        // Aurora messages
+        aurora: {
+            blocked: 'Polar path blocked by aurora activity!',
+            severeFlutter: 'Severe aurora flutter affecting {band} on polar path',
+            moderateFlutter: 'Moderate aurora disturbance on {band}',
+            minorFlutter: 'Minor aurora flutter on {band}'
         },
 
         // Signal meter
@@ -349,7 +382,11 @@ export default {
             solarQuietHighBand: '{band} needs strong F-layer ionization to reflect signals. During quiet solar conditions, the ionosphere is weaker and higher frequencies often pass through into space instead of reflecting back.',
             solarActiveHighBand: 'Active solar conditions create strong F-layer ionization - perfect for {band}! The higher frequencies that normally struggle can now reflect efficiently for worldwide contacts.',
             solarActiveLowBand: 'With active solar conditions, the D-layer is also more ionized, which means more absorption of lower frequencies like {band} during the day.',
-            solarStorm: 'Geomagnetic storms disrupt the orderly structure of the ionosphere. Propagation becomes unpredictable - signals may fade in and out, or the ionosphere may become completely unreliable. Wait for conditions to settle.'
+            solarStorm: 'Geomagnetic storms disrupt the orderly structure of the ionosphere. Propagation becomes unpredictable - signals may fade in and out, or the ionosphere may become completely unreliable. Wait for conditions to settle.',
+            // Aurora educational
+            auroraSevere: 'Severe aurora activity is blocking this polar path! Charged particles from the sun are creating intense ionospheric disturbances at high latitudes. Signals become extremely distorted or completely absorbed. Try a path that avoids the polar region.',
+            auroraModerate: 'Moderate aurora activity is causing signal distortion on this polar path. The characteristic "aurora flutter" - a raspy, buzzing quality - makes signals hard to copy. {band} signals crossing high latitudes are especially affected.',
+            auroraMinor: 'Minor aurora activity is detectable on this path. {band} signals crossing polar regions may have some flutter or fading. This is common during elevated geomagnetic activity.'
         }
     },
 
@@ -397,6 +434,11 @@ export default {
                 name: 'Geomagnetic Storm',
                 insight: 'A geomagnetic storm is disrupting the ionosphere. Solar material hitting Earth\'s magnetic field creates chaotic conditions.',
                 experiment: 'Wait for conditions to settle, or try very low bands at night which may still work.'
+            },
+            aurora: {
+                name: 'Aurora Effect',
+                insight: 'Aurora (Northern/Southern Lights) disrupts radio signals on polar paths! Charged particles entering Earth\'s magnetic field at high latitudes create ionospheric disturbances that cause the characteristic "aurora flutter" on HF signals.',
+                experiment: 'Try a path that doesn\'t cross high latitudes - paths going east-west at lower latitudes avoid the auroral zone.'
             }
         }
     },

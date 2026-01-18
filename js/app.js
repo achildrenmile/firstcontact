@@ -6,7 +6,7 @@
 
 import { Location, PRESET_LOCATIONS, calculateDistance } from './models/location.js';
 import { HF_BANDS } from './models/bands.js';
-import { evaluatePropagation } from './systems/propagation-engine.js';
+import { evaluatePropagation, getSolarConditions } from './systems/propagation-engine.js';
 import { generateExplanation, explainBandChange, detectDiscovery } from './systems/explanation-engine.js';
 import { getLightingCondition } from './systems/sun-position.js';
 import { WorldMap } from './ui/world-map.js';
@@ -384,7 +384,10 @@ class FirstContactApp {
         // Controls Panel
         this.controlsPanel = new ControlsPanel('controls-panel', {
             onBandChange: (bandId) => this.handleBandChange(bandId),
-            onTimeChange: (time) => this.handleTimeChange(time)
+            onTimeChange: (time) => this.handleTimeChange(time),
+            onSolarActivityChange: (activityId) => this.handleSolarActivityChange(activityId),
+            onMogelDellingerToggle: (active) => this.handleMogelDellingerToggle(active),
+            onAuroraToggle: (active) => this.handleAuroraToggle(active)
         });
 
         // Feedback Panel
@@ -446,6 +449,53 @@ class FirstContactApp {
      */
     handleTimeChange(time) {
         this.setTime(time);
+
+        // If we have a target, re-evaluate
+        if (this.state.targetLocation) {
+            this.attemptContact();
+        }
+    }
+
+    /**
+     * Handle solar activity change
+     */
+    handleSolarActivityChange(activityId) {
+        const solarConditions = getSolarConditions();
+        solarConditions.setActivityLevel(activityId);
+
+        // If we have a target, re-evaluate
+        if (this.state.targetLocation) {
+            this.attemptContact();
+        }
+    }
+
+    /**
+     * Handle Mögel-Dellinger toggle
+     */
+    handleMogelDellingerToggle(active) {
+        const solarConditions = getSolarConditions();
+        if (active) {
+            solarConditions.triggerMogelDellinger('moderate');
+        } else {
+            solarConditions.clearMogelDellinger();
+        }
+
+        // If we have a target, re-evaluate
+        if (this.state.targetLocation) {
+            this.attemptContact();
+        }
+    }
+
+    /**
+     * Handle Aurora toggle
+     */
+    handleAuroraToggle(active) {
+        const solarConditions = getSolarConditions();
+        if (active) {
+            solarConditions.triggerAurora('moderate');
+        } else {
+            solarConditions.clearAurora();
+        }
 
         // If we have a target, re-evaluate
         if (this.state.targetLocation) {

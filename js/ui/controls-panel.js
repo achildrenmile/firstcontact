@@ -23,12 +23,14 @@ export class ControlsPanel {
         this.currentTime = new Date();
         this.solarActivity = 'normal';
         this.mogelDellingerActive = false;
+        this.auroraActive = false;
 
         // Callbacks
         this.onBandChange = options.onBandChange || (() => {});
         this.onTimeChange = options.onTimeChange || (() => {});
         this.onSolarActivityChange = options.onSolarActivityChange || (() => {});
         this.onMogelDellingerToggle = options.onMogelDellingerToggle || (() => {});
+        this.onAuroraToggle = options.onAuroraToggle || (() => {});
 
         // Build the UI
         this.render();
@@ -74,12 +76,21 @@ export class ControlsPanel {
                     <h3>${t('ui.solarActivity')}</h3>
                     <div class="solar-activity-selector" id="solar-activity-buttons"></div>
                     <div class="solar-activity-info" id="solar-activity-info"></div>
-                    <div class="mogel-dellinger-control">
-                        <button class="mogel-dellinger-button ${this.mogelDellingerActive ? 'active' : ''}" id="mogel-dellinger-btn">
-                            <span class="md-icon">⚡</span>
-                            <span class="md-label">${t('ui.mogelDellinger.trigger')}</span>
-                        </button>
-                        <div class="mogel-dellinger-hint">${t('ui.mogelDellinger.hint')}</div>
+                    <div class="special-events-control">
+                        <div class="event-button-group">
+                            <button class="mogel-dellinger-button ${this.mogelDellingerActive ? 'active' : ''}" id="mogel-dellinger-btn">
+                                <span class="md-icon">⚡</span>
+                                <span class="md-label">${t('ui.mogelDellinger.trigger')}</span>
+                            </button>
+                            <button class="aurora-button ${this.auroraActive ? 'active' : ''}" id="aurora-btn">
+                                <span class="aurora-icon">🌌</span>
+                                <span class="aurora-label">${t('ui.aurora.trigger')}</span>
+                            </button>
+                        </div>
+                        <div class="event-hints">
+                            <div class="mogel-dellinger-hint">${t('ui.mogelDellinger.hint')}</div>
+                            <div class="aurora-hint">${t('ui.aurora.hint')}</div>
+                        </div>
                     </div>
                 </section>
 
@@ -198,6 +209,11 @@ export class ControlsPanel {
         document.getElementById('mogel-dellinger-btn')?.addEventListener('click', () => {
             this.toggleMogelDellinger();
         });
+
+        // Aurora button
+        document.getElementById('aurora-btn')?.addEventListener('click', () => {
+            this.toggleAurora();
+        });
     }
 
     /**
@@ -275,6 +291,26 @@ export class ControlsPanel {
 
         // Notify callback
         this.onMogelDellingerToggle(this.mogelDellingerActive);
+    }
+
+    /**
+     * Toggle Aurora event
+     */
+    toggleAurora() {
+        this.auroraActive = !this.auroraActive;
+
+        // Update button state
+        const btn = document.getElementById('aurora-btn');
+        btn.classList.toggle('active', this.auroraActive);
+
+        // Update label
+        const label = btn.querySelector('.aurora-label');
+        label.textContent = this.auroraActive
+            ? t('ui.aurora.active')
+            : t('ui.aurora.trigger');
+
+        // Notify callback
+        this.onAuroraToggle(this.auroraActive);
     }
 
     /**
@@ -361,7 +397,8 @@ export class ControlsPanel {
             band: this.selectedBand,
             time: this.currentTime,
             solarActivity: this.solarActivity,
-            mogelDellingerActive: this.mogelDellingerActive
+            mogelDellingerActive: this.mogelDellingerActive,
+            auroraActive: this.auroraActive
         };
     }
 }

@@ -190,6 +190,89 @@ export const MOGEL_DELLINGER_EVENT = {
 };
 
 /**
+ * Aurora Effect on HF Propagation
+ *
+ * Aurora (Northern/Southern Lights) occurs when charged particles from the sun
+ * interact with Earth's magnetic field at high latitudes. This creates spectacular
+ * light displays but also disrupts HF radio propagation on polar paths.
+ *
+ * EDUCATIONAL DESIGN NOTES:
+ * - Aurora primarily affects paths crossing high latitudes (> ~55°)
+ * - Causes characteristic "aurora flutter" - raspy, distorted signals
+ * - Can completely block polar paths during intense events
+ * - Sometimes enables unusual VHF "aurora scatter" (not modeled here)
+ */
+export const AURORA_EVENT = {
+    id: 'aurora',
+    name: 'Aurora',
+    alternateNames: ['Northern Lights', 'Southern Lights', 'Aurora Borealis', 'Aurora Australis', 'Polar Aurora'],
+
+    // Geographic thresholds
+    auroralZone: {
+        normalLatitude: 65,      // Auroral oval typically at 65-70°
+        activeLatitude: 55,      // Expands during active conditions
+        stormLatitude: 45        // Can reach mid-latitudes during severe storms
+    },
+
+    // Effect severity levels based on Kp index
+    severityLevels: {
+        minor: {
+            id: 'minor',
+            kpIndex: '4-5',
+            affectedLatitude: 60,
+            signalDegradation: 0.3,
+            flutterIntensity: 'light',
+            description: 'Minor aurora - some polar path disturbance'
+        },
+        moderate: {
+            id: 'moderate',
+            kpIndex: '6-7',
+            affectedLatitude: 55,
+            signalDegradation: 0.6,
+            flutterIntensity: 'moderate',
+            description: 'Moderate aurora - polar paths significantly affected'
+        },
+        severe: {
+            id: 'severe',
+            kpIndex: '8-9',
+            affectedLatitude: 45,
+            signalDegradation: 0.9,
+            flutterIntensity: 'severe',
+            description: 'Major geomagnetic storm - aurora visible at mid-latitudes, polar paths blocked'
+        }
+    },
+
+    // Educational content
+    personality: 'The Polar Light Show',
+    simpleDescription: 'Aurora disrupts radio signals crossing polar regions with characteristic flutter and absorption.',
+    detailedDescription: `Aurora occurs when solar wind particles enter Earth's magnetic field at the poles.
+        These charged particles collide with atmospheric gases, creating the beautiful light displays
+        known as Northern Lights (Aurora Borealis) and Southern Lights (Aurora Australis).
+
+        For HF radio operators, aurora means trouble on polar paths:
+        • Signals become raspy and distorted ("aurora flutter")
+        • Polar paths may be completely blocked
+        • The auroral zone expands during geomagnetic storms
+        • Non-polar paths remain unaffected
+        • Higher frequency bands are affected more than lower bands`,
+
+    learningHint: 'If your signal to northern Europe or across the North Pole sounds raspy or disappears - check for aurora activity!',
+
+    // How to recognize it
+    symptoms: [
+        'Raspy, buzzing signal quality (aurora flutter)',
+        'Signals fade and return rapidly',
+        'Only affects polar or high-latitude paths',
+        'Non-polar paths work normally',
+        'Often accompanied by geomagnetic storm warnings'
+    ],
+
+    // Visual representation
+    color: '#2ecc71',
+    icon: '🌌'
+};
+
+/**
  * Current solar conditions state
  */
 export class SolarConditions {
@@ -198,6 +281,8 @@ export class SolarConditions {
         this.mogelDellingerActive = false;
         this.mogelDellingerSeverity = null;
         this.mogelDellingerStartTime = null;
+        this.auroraActive = false;
+        this.auroraSeverity = null;
     }
 
     /**
@@ -253,6 +338,59 @@ export class SolarConditions {
             absorptionMultiplier: 1 + (severityConfig.absorptionMultiplier - 1) * effectStrength,
             severity: this.mogelDellingerSeverity,
             affectedBands: severityConfig.affectedBands
+        };
+    }
+
+    /**
+     * Trigger an Aurora event
+     */
+    triggerAurora(severity = 'moderate') {
+        this.auroraActive = true;
+        this.auroraSeverity = severity;
+    }
+
+    /**
+     * Clear Aurora event
+     */
+    clearAurora() {
+        this.auroraActive = false;
+        this.auroraSeverity = null;
+    }
+
+    /**
+     * Check if Aurora affects a given path based on latitude
+     * Aurora primarily affects high-latitude (polar) paths
+     * @param {number} maxPathLatitude - Maximum absolute latitude along the path
+     * @param {number} percentInPolarZone - Percentage of path in polar region
+     */
+    getAuroraEffect(maxPathLatitude, percentInPolarZone) {
+        if (!this.auroraActive) {
+            return { affected: false, degradation: 0, flutterIntensity: null };
+        }
+
+        const severityConfig = AURORA_EVENT.severityLevels[this.auroraSeverity];
+        const affectedLatitude = severityConfig.affectedLatitude;
+
+        // Check if path crosses into the affected zone
+        if (maxPathLatitude < affectedLatitude) {
+            return { affected: false, degradation: 0, flutterIntensity: null };
+        }
+
+        // Calculate effect strength based on how deep into auroral zone
+        const latitudeExcess = maxPathLatitude - affectedLatitude;
+        const latitudeScale = Math.min(1, latitudeExcess / 20); // Full effect at 20° above threshold
+
+        // Effect also depends on how much of the path is in polar regions
+        const polarScale = Math.min(1, percentInPolarZone * 2); // Full effect if 50%+ in polar zone
+
+        const effectStrength = Math.max(latitudeScale, polarScale);
+
+        return {
+            affected: true,
+            degradation: severityConfig.signalDegradation * effectStrength,
+            flutterIntensity: severityConfig.flutterIntensity,
+            severity: this.auroraSeverity,
+            affectedLatitude
         };
     }
 

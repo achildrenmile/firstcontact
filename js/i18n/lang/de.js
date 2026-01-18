@@ -61,6 +61,11 @@ export default {
             active: 'Sonneneruption aktiv!',
             hint: 'Löst einen Mögel-Dellinger Funkausfall aus'
         },
+        aurora: {
+            trigger: 'Aurora simulieren',
+            active: 'Aurora aktiv!',
+            hint: 'Löst Aurora-Störung auf Polarpfaden aus'
+        },
         buttons: {
             tutorial: 'Tutorial',
             tutorialTitle: 'Tutorial starten',
@@ -198,6 +203,25 @@ export default {
         learningHint: 'Wenn KW tagsüber plötzlich ausfällt, aber nachts funktioniert – könnte es ein Mögel-Dellinger-Ereignis sein!'
     },
 
+    // Aurora Effect
+    aurora: {
+        name: 'Aurora',
+        alternateNames: 'Auch bekannt als: Nordlicht, Südlicht, Aurora Borealis, Aurora Australis, Polarlicht',
+        simpleDescription: 'Aurora stört Funksignale, die Polarregionen kreuzen, mit charakteristischem Flattern und Absorption.',
+        detailedDescription: 'Aurora entsteht, wenn geladene Teilchen von der Sonne in das Erdmagnetfeld an den Polen eindringen. Diese Teilchen erzeugen die wunderschönen Nord- und Südlichter, aber auch erhebliche ionosphärische Störungen. Für den KW-Funk bedeutet dies Probleme bei Pfaden über hohe Breiten – Signale werden rau (Aurora-Flattern) oder können komplett blockiert werden.',
+        symptoms: {
+            title: 'Woran erkennst du sie:',
+            list: [
+                'Raue, brummende Signalqualität (Aurora-Flattern)',
+                'Signale schwinden und kehren schnell zurück',
+                'Betrifft nur polare oder hochbreitige Pfade',
+                'Nicht-polare Pfade funktionieren normal',
+                'Oft bei geomagnetischen Sturmwarnungen'
+            ]
+        },
+        learningHint: 'Wenn Signale zu nördlichen Regionen rau klingen oder verschwinden – prüfe die Aurora-Aktivität!'
+    },
+
     // Layer States
     layerStates: {
         dLayerAbsent: '{layer} ist größtenteils abwesend (Nachtbedingungen)',
@@ -259,7 +283,8 @@ export default {
             fair: 'Ausreichend',
             weak: 'Schwach aber lesbar',
             notReadable: 'Nicht lesbar',
-            blackout: 'Funkausfall!'
+            blackout: 'Funkausfall!',
+            auroraFlutter: 'Aurora-Flattern!'
         },
 
         // Mögel-Dellinger messages
@@ -277,6 +302,14 @@ export default {
             activeHighBand: 'Aktive Sonne verstärkt {band}-Ausbreitung!',
             activeLowBand: 'Aktive Sonne erhöht D-Schicht-Absorption auf {band}',
             storm: 'Geomagnetischer Sturm stört Ionosphäre'
+        },
+
+        // Aurora messages
+        aurora: {
+            blocked: 'Polarpfad durch Aurora-Aktivität blockiert!',
+            severeFlutter: 'Starkes Aurora-Flattern beeinträchtigt {band} auf Polarpfad',
+            moderateFlutter: 'Moderate Aurora-Störung auf {band}',
+            minorFlutter: 'Leichtes Aurora-Flattern auf {band}'
         },
 
         // Signal meter
@@ -349,7 +382,11 @@ export default {
             solarQuietHighBand: '{band} braucht starke F-Schicht-Ionisation, um Signale zu reflektieren. Bei ruhigen Sonnenbedingungen ist die Ionosphäre schwächer und höhere Frequenzen durchdringen oft ins All, anstatt zurückreflektiert zu werden.',
             solarActiveHighBand: 'Aktive Sonnenbedingungen erzeugen starke F-Schicht-Ionisation – perfekt für {band}! Die höheren Frequenzen, die normalerweise kämpfen, können jetzt effizient für weltweite Verbindungen reflektieren.',
             solarActiveLowBand: 'Bei aktiven Sonnenbedingungen ist auch die D-Schicht stärker ionisiert, was mehr Absorption von niedrigeren Frequenzen wie {band} tagsüber bedeutet.',
-            solarStorm: 'Geomagnetische Stürme stören die geordnete Struktur der Ionosphäre. Die Ausbreitung wird unvorhersagbar – Signale können ein- und ausfaden, oder die Ionosphäre kann völlig unzuverlässig werden. Warte, bis sich die Bedingungen beruhigen.'
+            solarStorm: 'Geomagnetische Stürme stören die geordnete Struktur der Ionosphäre. Die Ausbreitung wird unvorhersagbar – Signale können ein- und ausfaden, oder die Ionosphäre kann völlig unzuverlässig werden. Warte, bis sich die Bedingungen beruhigen.',
+            // Aurora educational
+            auroraSevere: 'Starke Aurora-Aktivität blockiert diesen Polarpfad! Geladene Teilchen von der Sonne erzeugen intensive ionosphärische Störungen in hohen Breiten. Signale werden extrem verzerrt oder komplett absorbiert. Versuche einen Pfad, der die Polarregion vermeidet.',
+            auroraModerate: 'Moderate Aurora-Aktivität verursacht Signalverzerrung auf diesem Polarpfad. Das charakteristische "Aurora-Flattern" – ein raues, brummendes Signal – macht die Signale schwer lesbar. {band}-Signale über hohe Breiten sind besonders betroffen.',
+            auroraMinor: 'Leichte Aurora-Aktivität ist auf diesem Pfad erkennbar. {band}-Signale, die Polarregionen kreuzen, können etwas Flattern oder Schwund aufweisen. Dies ist bei erhöhter geomagnetischer Aktivität normal.'
         }
     },
 
@@ -397,6 +434,11 @@ export default {
                 name: 'Geomagnetischer Sturm',
                 insight: 'Ein geomagnetischer Sturm stört die Ionosphäre. Sonnenmaterial, das auf das Erdmagnetfeld trifft, erzeugt chaotische Bedingungen.',
                 experiment: 'Warte, bis sich die Bedingungen beruhigen, oder probiere sehr niedrige Bänder nachts, die noch funktionieren könnten.'
+            },
+            aurora: {
+                name: 'Aurora-Effekt',
+                insight: 'Aurora (Nord-/Südlichter) stört Funksignale auf Polarpfaden! Geladene Teilchen, die in das Erdmagnetfeld bei hohen Breiten eindringen, erzeugen ionosphärische Störungen, die das charakteristische "Aurora-Flattern" auf KW-Signalen verursachen.',
+                experiment: 'Probiere einen Pfad, der keine hohen Breiten kreuzt – Ost-West-Pfade bei niedrigeren Breiten vermeiden die Aurorazone.'
             }
         }
     },
