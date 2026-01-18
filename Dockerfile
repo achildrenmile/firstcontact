@@ -51,7 +51,14 @@ RUN echo 'server { \
     root /usr/share/nginx/html; \
     index index.html; \
     \
-    # HTML files: no cache, always revalidate \
+    # Root and HTML files: no cache, always revalidate \
+    location = / { \
+        add_header Cache-Control "no-cache, no-store, must-revalidate"; \
+        add_header Pragma "no-cache"; \
+        add_header Expires "0"; \
+        try_files /index.html =404; \
+    } \
+    \
     location ~* \.html$ { \
         add_header Cache-Control "no-cache, no-store, must-revalidate"; \
         add_header Pragma "no-cache"; \
