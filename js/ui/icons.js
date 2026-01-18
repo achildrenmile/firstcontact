@@ -155,26 +155,23 @@ export const icons = {
         <path d="M12 2a10 10 0 0 0 0 20" stroke-dasharray="4 2"/>
     </svg>`,
 
-    // Power Levels
-    batteryLow: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="7" width="18" height="10" rx="2"/>
-        <path d="M22 11v2"/>
-        <path d="M6 11v2"/>
+    // Power Levels (radio waves)
+    powerLow: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="6" cy="12" r="2" fill="currentColor"/>
+        <path d="M10 9a5 5 0 0 1 0 6"/>
     </svg>`,
 
-    batteryMed: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="7" width="18" height="10" rx="2"/>
-        <path d="M22 11v2"/>
-        <path d="M6 11v2"/>
-        <path d="M10 11v2"/>
+    powerMed: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="4" cy="12" r="2" fill="currentColor"/>
+        <path d="M8 9a5 5 0 0 1 0 6"/>
+        <path d="M12 6a9 9 0 0 1 0 12"/>
     </svg>`,
 
-    batteryFull: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="7" width="18" height="10" rx="2"/>
-        <path d="M22 11v2"/>
-        <path d="M6 11v2"/>
-        <path d="M10 11v2"/>
-        <path d="M14 11v2"/>
+    powerHigh: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="3" cy="12" r="2" fill="currentColor"/>
+        <path d="M7 9a5 5 0 0 1 0 6"/>
+        <path d="M11 6a9 9 0 0 1 0 12"/>
+        <path d="M15 3a13 13 0 0 1 0 18"/>
     </svg>`,
 
     // Antenna Types
