@@ -907,7 +907,7 @@ export default {
             },
             map_intro: {
                 title: 'The World Map',
-                content: 'This is your overview of the world. You can see the day-night boundary, skip zones, and select targets for radio contacts. Zoom with mouse wheel, pan by dragging.'
+                content: 'This is your overview of the world. You can see the day-night boundary, skip zones, and select targets for radio contacts. Zoom with mouse wheel, pan by dragging. Use the Grid toggle in the top-left to show the Maidenhead locator grid!'
             },
             your_location: {
                 title: 'Your Location',
@@ -1010,7 +1010,8 @@ export default {
             cities: 'Other cities - click to connect',
             sun: 'Current sun position',
             greyline: 'Grey Line - twilight zone with special propagation',
-            skipzone: 'Skip Zone - the circle around you where signals cannot reach'
+            skipzone: 'Skip Zone - the circle around you where signals cannot reach',
+            maidenhead: 'Maidenhead Grid - Toggle to show amateur radio grid locator squares (AA-RR). Used worldwide by radio amateurs to describe locations.'
         },
         location: {
             title: 'Your Location',

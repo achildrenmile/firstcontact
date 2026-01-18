@@ -907,7 +907,7 @@ export default {
             },
             map_intro: {
                 title: 'Die Weltkarte',
-                content: 'Dies ist deine Übersicht über die Welt. Du siehst die Tag-Nacht-Grenze, Skip-Zonen und kannst Ziele für Funkverbindungen auswählen. Zoome mit dem Mausrad, verschiebe durch Ziehen.'
+                content: 'Dies ist deine Übersicht über die Welt. Du siehst die Tag-Nacht-Grenze, Skip-Zonen und kannst Ziele für Funkverbindungen auswählen. Zoome mit dem Mausrad, verschiebe durch Ziehen. Nutze den Grid-Schalter oben links, um das Maidenhead-Gitter anzuzeigen!'
             },
             your_location: {
                 title: 'Dein Standort',
@@ -1010,7 +1010,8 @@ export default {
             cities: 'Andere Städte - klicke zum Verbinden',
             sun: 'Aktuelle Sonnenposition',
             greyline: 'Grey Line - Dämmerungszone mit spezieller Ausbreitung',
-            skipzone: 'Skip-Zone - der Kreis um dich herum, den Signale nicht erreichen können'
+            skipzone: 'Skip-Zone - der Kreis um dich herum, den Signale nicht erreichen können',
+            maidenhead: 'Maidenhead-Gitter - Schalter zum Anzeigen der Amateurfunk-Gitterfelder (AA-RR). Wird weltweit von Funkamateuren zur Standortbeschreibung verwendet.'
         },
         location: {
             title: 'Dein Standort',
