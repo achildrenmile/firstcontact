@@ -119,7 +119,31 @@ export class Tutorial {
                 allowClick: true
             }),
 
-            // Step 9: Make first contact
+            // Step 9: Solar activity explanation
+            new TutorialStep({
+                id: 'solar_activity',
+                targetSelector: '.solar-activity-selector',
+                position: 'right',
+                waitForAction: 'click'
+            }),
+
+            // Step 10: Special events intro
+            new TutorialStep({
+                id: 'special_events',
+                targetSelector: '.special-events-control',
+                position: 'right',
+                waitForAction: 'click'
+            }),
+
+            // Step 11: Sporadic E explanation (most exciting for new users)
+            new TutorialStep({
+                id: 'sporadic_e',
+                targetSelector: '#sporadic-e-btn',
+                position: 'right',
+                waitForAction: 'click'
+            }),
+
+            // Step 12: Make first contact
             new TutorialStep({
                 id: 'first_contact',
                 targetSelector: '#world-map',
@@ -306,26 +330,55 @@ export class Tutorial {
             return;
         }
 
-        // Scroll the target element into view (smooth scroll within its container)
-        target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+        // Find the scrollable parent container (#controls has overflow-y: auto)
+        const scrollableParent = document.getElementById('controls');
 
-        // Wait a bit for scroll to complete, then position highlight
+        if (scrollableParent && target.closest('#controls')) {
+            // Calculate if element is visible in the scrollable container
+            const parentRect = scrollableParent.getBoundingClientRect();
+            const targetRect = target.getBoundingClientRect();
+
+            // Check if target is outside visible area of parent
+            const isAbove = targetRect.top < parentRect.top;
+            const isBelow = targetRect.bottom > parentRect.bottom;
+
+            if (isAbove || isBelow) {
+                // Calculate scroll position to center the element
+                const targetMiddle = targetRect.top + targetRect.height / 2;
+                const parentMiddle = parentRect.top + parentRect.height / 2;
+                const scrollOffset = targetMiddle - parentMiddle;
+
+                scrollableParent.scrollBy({ top: scrollOffset, behavior: 'smooth' });
+            }
+        } else {
+            // Fallback: use scrollIntoView on the target for non-controls elements
+            target.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        }
+
+        // Wait for scroll to complete, then position highlight
         setTimeout(() => {
-            const rect = target.getBoundingClientRect();
-            const padding = 8;
+            this.positionHighlight(target, step);
+        }, 300);
+    }
 
-            this.highlight.style.display = 'block';
-            this.highlight.style.left = `${rect.left - padding}px`;
-            this.highlight.style.top = `${rect.top - padding}px`;
-            this.highlight.style.width = `${rect.width + padding * 2}px`;
-            this.highlight.style.height = `${rect.height + padding * 2}px`;
+    /**
+     * Position the highlight around a target element
+     */
+    positionHighlight(target, step) {
+        const rect = target.getBoundingClientRect();
+        const padding = 8;
 
-            // Allow or block clicks on highlighted element
-            this.highlight.style.pointerEvents = step.allowClick ? 'none' : 'auto';
+        this.highlight.style.display = 'block';
+        this.highlight.style.left = `${rect.left - padding}px`;
+        this.highlight.style.top = `${rect.top - padding}px`;
+        this.highlight.style.width = `${rect.width + padding * 2}px`;
+        this.highlight.style.height = `${rect.height + padding * 2}px`;
 
-            // Also reposition tooltip after scroll
-            this.positionTooltip(step);
-        }, 150);
+        // Allow or block clicks on highlighted element
+        this.highlight.style.pointerEvents = step.allowClick ? 'none' : 'auto';
+
+        // Also reposition tooltip after scroll
+        this.positionTooltip(step);
     }
 
     /**

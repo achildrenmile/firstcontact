@@ -745,6 +745,18 @@ export default {
                 title: 'Try It Out!',
                 content: 'Drag the slider and observe how the day-night boundary shifts. The time is shown in UTC.'
             },
+            solar_activity: {
+                title: 'Solar Activity',
+                content: 'The sun influences radio propagation. During high solar activity, higher bands (10m, 15m) work better. During quiet conditions, lower bands are more reliable.'
+            },
+            special_events: {
+                title: 'Special Events',
+                content: 'These buttons simulate special propagation events: Solar Flares cause radio blackouts, Aurora disrupts polar paths, and Sporadic E creates magic on higher bands!'
+            },
+            sporadic_e: {
+                title: 'Sporadic E - The Magic!',
+                content: 'Enable Sporadic E and try the 6m "Magic Band"! Es creates surprise openings to 1000-2000 km - distances normally unreachable. Most common in summer!'
+            },
             first_contact: {
                 title: 'Your First Contact',
                 content: 'Now click on a location on the map to attempt a radio contact. Try somewhere on the day side!'

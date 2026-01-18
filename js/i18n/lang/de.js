@@ -745,6 +745,18 @@ export default {
                 title: 'Probiere es aus!',
                 content: 'Ziehe den Schieberegler und beobachte, wie sich die Tag-Nacht-Grenze verschiebt. Die Uhrzeit ist in UTC angegeben.'
             },
+            solar_activity: {
+                title: 'Sonnenaktivität',
+                content: 'Die Sonne beeinflusst die Funkausbreitung. Bei hoher Sonnenaktivität funktionieren höhere Bänder (10m, 15m) besser. Bei ruhigen Bedingungen sind niedrigere Bänder zuverlässiger.'
+            },
+            special_events: {
+                title: 'Spezielle Ereignisse',
+                content: 'Diese Buttons simulieren besondere Ausbreitungsereignisse: Sonneneruptionen verursachen Funkausfälle, Aurora stört Polarpfade, und Sporadic E erzeugt Magie auf höheren Bändern!'
+            },
+            sporadic_e: {
+                title: 'Sporadic E - Die Magie!',
+                content: 'Aktiviere Sporadic E und probiere das 6m "Magic Band"! Es erzeugt überraschende Öffnungen über 1000-2000 km - Entfernungen, die normalerweise unerreichbar sind. Besonders häufig im Sommer!'
+            },
             first_contact: {
                 title: 'Dein erster Kontakt',
                 content: 'Klicke jetzt auf einen Ort auf der Karte, um eine Funkverbindung zu versuchen. Probiere einen Ort auf der Tagseite!'
