@@ -178,9 +178,9 @@ export const HF_BANDS = {
 
         simpleDescription: 'A narrow WARC band. Good compromise between day and night performance.',
         detailedDescription: `The 30 meter band is one of the WARC bands - a narrow allocation
-            between 40m and 20m. It combines some of the best characteristics of both:
-            less D-layer absorption than 40m, but more reliable than 20m at night.
-            It's popular for digital modes and CW due to its narrow bandwidth.`,
+            between 40m and 20m. It combines characteristics of both: less D-layer absorption
+            than 40m during the day, and a lower frequency than 20m, so it can still reflect
+            when the MUF drops at night and 20m closes. Popular for digital modes and CW.`,
 
         characteristics: {
             dayAbsorption: 0.35,
@@ -246,11 +246,11 @@ export const HF_BANDS = {
         personality: 'The Hidden Gem',
         tagline: 'Often open when others are closed',
 
-        simpleDescription: 'A WARC band between 20m and 15m. Often provides a path when the main bands fade.',
-        detailedDescription: `The 17 meter band sits between 20m and 15m, and often stays open
-            when 20m is fading in the evening or 15m hasn't opened yet. It's a WARC band
-            with no contests, so it tends to be quieter. Many operators discover excellent
-            DX opportunities here that they missed on the busier bands.`,
+        simpleDescription: 'A WARC band between 20m and 15m. Opens after 20m when ionization increases.',
+        detailedDescription: `The 17 meter band sits between 20m and 15m in frequency. It requires
+            more ionization than 20m to open, so it typically opens later in the morning and
+            closes earlier in the evening. It's a WARC band with no contests, making it quieter.
+            When 20m is well open but 15m needs more ionization, 17m often provides the bridge.`,
 
         characteristics: {
             dayAbsorption: 0.15,
@@ -263,9 +263,9 @@ export const HF_BANDS = {
             skipZoneNight: 700
         },
 
-        bestTimeOfDay: 'day, often extends into evening',
+        bestTimeOfDay: 'day, when ionization is strong',
         typicalRange: 'continental to worldwide',
-        learningHint: 'Check this band when 20m closes - it often stays open longer!',
+        learningHint: 'When 20m is wide open, check 17m - it may also be open with less crowding!',
 
         color: '#16a085',
         icon: 'band17m'

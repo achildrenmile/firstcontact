@@ -207,8 +207,8 @@ export default {
             personality: 'The Quiet Achiever',
             tagline: 'A narrow band with big potential',
             simpleDescription: 'A narrow WARC band. Good compromise between day and night performance.',
-            detailedDescription: 'The 30 meter band is one of the WARC bands - a narrow allocation between 40m and 20m. It combines some of the best characteristics of both: less D-layer absorption than 40m, but more reliable than 20m at night. Popular for digital modes and CW.',
-            learningHint: 'Notice how this band works when 40m is too absorbed and 20m needs more ionization.',
+            detailedDescription: 'The 30 meter band is one of the WARC bands between 40m and 20m. It combines characteristics of both: less D-layer absorption than 40m during the day, and a lower frequency than 20m so it can still reflect when the MUF drops at night and 20m closes. Popular for digital modes and CW.',
+            learningHint: 'Notice how this band still works at night when 20m has closed - lower frequency needs less ionization.',
             bestTimeOfDay: 'anytime - good day and night',
             typicalRange: 'continental to intercontinental'
         },
@@ -225,11 +225,11 @@ export default {
         '17m': {
             name: '17 Meters',
             personality: 'The Hidden Gem',
-            tagline: 'Often open when others are closed',
-            simpleDescription: 'A WARC band between 20m and 15m. Often provides a path when the main bands fade.',
-            detailedDescription: 'The 17 meter band sits between 20m and 15m, and often stays open when 20m is fading in the evening or 15m hasn\'t opened yet. It\'s a WARC band with no contests, so it tends to be quieter.',
-            learningHint: 'Check this band when 20m closes - it often stays open longer!',
-            bestTimeOfDay: 'day, often extends into evening',
+            tagline: 'Opens after 20m when ionization increases',
+            simpleDescription: 'A WARC band between 20m and 15m. Opens after 20m when ionization increases.',
+            detailedDescription: 'The 17 meter band sits between 20m and 15m in frequency. It requires more ionization than 20m to open, so it typically opens later in the morning and closes earlier in the evening. As a WARC band with no contests, it tends to be quieter. When 20m is wide open but 15m needs more ionization, 17m often provides the bridge.',
+            learningHint: 'When 20m is wide open, check 17m - it may also be open with less crowding!',
+            bestTimeOfDay: 'day, when ionization is strong',
             typicalRange: 'continental to worldwide'
         },
         '15m': {
@@ -1033,7 +1033,7 @@ export default {
             '40m': 'Versatile, often works day and night',
             '30m': 'WARC band - good compromise between 40m and 20m',
             '20m': 'The "workhorse" - good for long distances during day',
-            '17m': 'WARC band - often open when 20m fades',
+            '17m': 'WARC band - opens after 20m when ionization is strong',
             '15m': 'Needs good solar illumination',
             '12m': 'WARC band - like 10m but needs slightly less ionization',
             '10m': 'Only open with strong ionosphere',

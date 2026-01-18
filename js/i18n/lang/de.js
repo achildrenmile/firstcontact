@@ -207,8 +207,8 @@ export default {
             personality: 'Der stille Erfolgsbringer',
             tagline: 'Ein schmales Band mit großem Potenzial',
             simpleDescription: 'Ein schmales WARC-Band. Guter Kompromiss zwischen Tag- und Nachtleistung.',
-            detailedDescription: 'Das 30-Meter-Band ist eines der WARC-Bänder – eine schmale Zuweisung zwischen 40m und 20m. Es kombiniert die besten Eigenschaften beider Bänder: weniger D-Schicht-Absorption als 40m, aber zuverlässiger als 20m nachts. Beliebt für digitale Betriebsarten und CW.',
-            learningHint: 'Beachte, wie dieses Band funktioniert, wenn 40m zu stark absorbiert wird und 20m mehr Ionisation braucht.',
+            detailedDescription: 'Das 30-Meter-Band ist eines der WARC-Bänder zwischen 40m und 20m. Es kombiniert Eigenschaften beider: weniger D-Schicht-Absorption als 40m tagsüber, und eine niedrigere Frequenz als 20m – daher kann es nachts noch reflektieren, wenn die MUF fällt und 20m schließt. Beliebt für digitale Betriebsarten und CW.',
+            learningHint: 'Beachte, wie dieses Band nachts noch funktioniert, wenn 20m bereits geschlossen ist – die niedrigere Frequenz braucht weniger Ionisation.',
             bestTimeOfDay: 'jederzeit – gut bei Tag und Nacht',
             typicalRange: 'kontinental bis interkontinental'
         },
@@ -225,11 +225,11 @@ export default {
         '17m': {
             name: '17 Meter',
             personality: 'Das versteckte Juwel',
-            tagline: 'Oft offen, wenn andere schließen',
-            simpleDescription: 'Ein WARC-Band zwischen 20m und 15m. Bietet oft einen Pfad, wenn die Hauptbänder schließen.',
-            detailedDescription: 'Das 17-Meter-Band liegt zwischen 20m und 15m und bleibt oft offen, wenn 20m abends schließt oder 15m noch nicht geöffnet hat. Es ist ein WARC-Band ohne Conteste, daher ist es tendenziell ruhiger.',
-            learningHint: 'Prüfe dieses Band, wenn 20m schließt – es bleibt oft länger offen!',
-            bestTimeOfDay: 'tagsüber, oft bis in den Abend',
+            tagline: 'Öffnet nach 20m bei stärkerer Ionisation',
+            simpleDescription: 'Ein WARC-Band zwischen 20m und 15m. Öffnet nach 20m, wenn die Ionisation zunimmt.',
+            detailedDescription: 'Das 17-Meter-Band liegt frequenzmäßig zwischen 20m und 15m. Es benötigt mehr Ionisation als 20m, öffnet daher morgens später und schließt abends früher. Als WARC-Band ohne Conteste ist es ruhiger. Wenn 20m gut offen ist, aber 15m noch mehr Ionisation braucht, bietet 17m oft die Brücke.',
+            learningHint: 'Wenn 20m weit offen ist, prüfe 17m – es könnte auch offen sein, mit weniger Betrieb!',
+            bestTimeOfDay: 'tagsüber bei guter Ionisation',
             typicalRange: 'kontinental bis weltweit'
         },
         '15m': {
@@ -1033,7 +1033,7 @@ export default {
             '40m': 'Vielseitig, funktioniert oft Tag und Nacht',
             '30m': 'WARC-Band - guter Kompromiss zwischen 40m und 20m',
             '20m': 'Das "Arbeitspferd" - gut für weite Entfernungen tagsüber',
-            '17m': 'WARC-Band - oft offen wenn 20m schließt',
+            '17m': 'WARC-Band - öffnet nach 20m bei starker Ionisation',
             '15m': 'Braucht gute Sonneneinstrahlung',
             '12m': 'WARC-Band - wie 10m aber braucht etwas weniger Ionisation',
             '10m': 'Nur bei starker Ionosphäre offen',
