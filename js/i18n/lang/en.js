@@ -805,7 +805,7 @@ export default {
         slightlyBetter: '{band} is slightly better.',
         muchWorse: '{oldBand} was working much better!',
         wasBetter: '{oldBand} was working better.',
-        similar: 'Both bands are performing similarly.',
+        similar: 'Similar signal strength on both bands.',
         higherLessAbsorbed: 'The higher frequency of {band} is less affected by D layer absorption and can travel farther per hop.',
         lowerReflectsBetter: 'The lower frequency of {band} reflects more reliably from the ionosphere, even with weaker ionization.',
         lowerWorksBetter: 'The lower frequency of {band} works better because it can reflect from the ionosphere even with current conditions.',
