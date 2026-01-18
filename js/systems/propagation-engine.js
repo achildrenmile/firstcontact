@@ -283,6 +283,28 @@ function evaluateSinglePath({ source, target, bandId, dateTime, band, distance, 
         result.factors.push(sporadicEFactor);
     }
 
+    // Evaluate skip zone (too close for sky wave, too far for ground wave)
+    const skipZoneFactor = evaluateSkipZone(band, bandId, distance, pathConditions);
+    if (skipZoneFactor) {
+        result.factors.push(skipZoneFactor);
+
+        // If deep in skip zone, signal cannot propagate
+        if (skipZoneFactor.impact < -0.8) {
+            result.signalStrength = Math.max(0, 15 + skipZoneFactor.impact * 20);
+            result.success = false;
+            result.qualityDescription = t('propagation.quality.skipZone');
+            result.summary = skipZoneFactor.description;
+            result.path = buildSignalPath(source, target, hopAnalysis, false, isLongPath);
+            result.path.pathMode = isLongPath ? 'long' : 'short';
+            result.learningPoints = [{
+                concept: t('learning.concepts.skipZone.name'),
+                insight: t('learning.concepts.skipZone.insight'),
+                experiment: t('learning.concepts.skipZone.experiment')
+            }];
+            return result;
+        }
+    }
+
     // Evaluate D layer absorption
     const absorptionFactor = evaluateAbsorption(band, bandId, pathConditions);
     result.factors.push(absorptionFactor);
@@ -325,6 +347,77 @@ function evaluateSinglePath({ source, target, bandId, dateTime, band, distance, 
     result.learningPoints = extractLearningPoints(result, band, bandId, pathConditions);
 
     return result;
+}
+
+/**
+ * Evaluate skip zone effect
+ * The skip zone is the area between ground wave coverage and where the first sky wave returns.
+ * Signals in this zone cannot be received - too far for ground wave, too close for sky wave.
+ */
+function evaluateSkipZone(band, bandId, distance, pathConditions) {
+    const chars = band.characteristics;
+    const groundWaveMax = chars.groundWaveMax || 50;
+    const isDay = pathConditions.mostlyDay;
+    const skipZoneMin = isDay ? chars.skipZoneDay : chars.skipZoneNight;
+
+    // If distance is within ground wave range, no problem
+    if (distance <= groundWaveMax) {
+        return new PropagationFactor(
+            'Ground Wave',
+            0.3,
+            t('propagation.skipZone.groundWave', { distance: Math.round(distance) }),
+            t('propagation.educational.groundWave')
+        );
+    }
+
+    // If distance is beyond skip zone, sky wave works
+    if (distance >= skipZoneMin) {
+        return null; // No skip zone issue
+    }
+
+    // Distance is in the skip zone!
+    const skipZoneSize = skipZoneMin - groundWaveMax;
+    const distanceIntoSkip = distance - groundWaveMax;
+    const percentIntoSkip = distanceIntoSkip / skipZoneSize;
+
+    // Impact is worst in the middle of the skip zone
+    // Near the edges, some signal might leak through
+    let impact, description, educational;
+    const bandName = t(`bands.${bandId}.name`);
+
+    if (percentIntoSkip > 0.3 && percentIntoSkip < 0.7) {
+        // Deep in skip zone - no propagation possible
+        impact = -1.0;
+        description = t('propagation.skipZone.inSkipZone', {
+            band: bandName,
+            distance: Math.round(distance),
+            skipMin: Math.round(skipZoneMin)
+        });
+        educational = t('propagation.educational.skipZoneDeep', {
+            band: bandName,
+            groundMax: groundWaveMax,
+            skipMin: skipZoneMin
+        });
+    } else if (percentIntoSkip <= 0.3) {
+        // Near ground wave edge - weak signals possible
+        impact = -0.6;
+        description = t('propagation.skipZone.nearGroundWaveEdge', {
+            band: bandName,
+            distance: Math.round(distance)
+        });
+        educational = t('propagation.educational.skipZoneNearGround', { band: bandName });
+    } else {
+        // Near sky wave return - weak signals possible
+        impact = -0.5;
+        description = t('propagation.skipZone.nearSkyWaveEdge', {
+            band: bandName,
+            distance: Math.round(distance),
+            skipMin: Math.round(skipZoneMin)
+        });
+        educational = t('propagation.educational.skipZoneNearSky', { band: bandName });
+    }
+
+    return new PropagationFactor('Skip Zone', impact, description, educational);
 }
 
 /**

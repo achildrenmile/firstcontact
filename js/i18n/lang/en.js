@@ -358,7 +358,8 @@ export default {
             weak: 'Weak but readable',
             notReadable: 'Not readable',
             blackout: 'Radio Blackout!',
-            auroraFlutter: 'Aurora Flutter!'
+            auroraFlutter: 'Aurora Flutter!',
+            skipZone: 'In Skip Zone!'
         },
 
         // Mögel-Dellinger messages
@@ -391,6 +392,14 @@ export default {
             excellent: 'Excellent Sporadic E opening on {band}!',
             good: 'Good Sporadic E conditions for {band}',
             moderate: 'Moderate Es activity boosting {band}'
+        },
+
+        // Skip Zone messages
+        skipZone: {
+            groundWave: 'Ground wave contact at {distance} km',
+            inSkipZone: '{band} signals cannot reach {distance} km - in the skip zone! Sky wave returns at {skipMin} km.',
+            nearGroundWaveEdge: '{band} at {distance} km is just beyond ground wave range - weak signals possible',
+            nearSkyWaveEdge: '{band} at {distance} km is near where sky wave returns ({skipMin} km) - marginal signals'
         },
 
         // Signal meter
@@ -497,7 +506,12 @@ export default {
             // Long path educational
             longPathVeryLong: 'This is an extremely long path, traveling over 30,000 km around the globe. Each additional hop weakens the signal considerably. Long path is worth trying when short path conditions are poor.',
             longPathLong: 'The long path travels over 25,000 km - more than half way around the world in the "wrong" direction. Despite the extra distance, this can work when short path crosses unfavorable conditions.',
-            longPathModerate: 'Taking the long path adds significant distance, but it avoids whatever obstacles are blocking the short path. The different route may cross better ionospheric conditions.'
+            longPathModerate: 'Taking the long path adds significant distance, but it avoids whatever obstacles are blocking the short path. The different route may cross better ionospheric conditions.',
+            // Skip zone educational
+            groundWave: 'At very short distances, signals travel along the ground (ground wave). This works regardless of ionospheric conditions but is limited to about 50-100 km depending on frequency and terrain.',
+            skipZoneDeep: 'You\'re in the "skip zone" or "dead zone"! {band} ground waves only reach about {groundMax} km, but the sky wave doesn\'t return to Earth until about {skipMin} km. Signals literally skip over this area - that\'s why it\'s called the skip zone!',
+            skipZoneNearGround: 'You\'re just beyond ground wave range for {band}. Some weak signals might still reach via scatter or near-vertical incidence, but reliable communication requires either closer or farther distances.',
+            skipZoneNearSky: 'You\'re near the edge of where {band} sky waves return to Earth. Signals are marginal - sometimes they get through, sometimes they don\'t. Move farther away for more reliable sky wave propagation.'
         }
     },
 
@@ -565,6 +579,11 @@ export default {
                 name: 'Short vs Long Path',
                 insight: 'Both short and long path work for this contact! The short path is the direct great-circle route, while the long path goes the other way around the Earth. DXers often compare both paths - sometimes one works much better than the other.',
                 experiment: 'For very long contacts, try the same station at different times - you might find the preferred path changes during the day!'
+            },
+            skipZone: {
+                name: 'Skip Zone (Dead Zone)',
+                insight: 'You discovered the skip zone! This is the area between ground wave range (about 50-100 km) and where sky waves first return to Earth. Radio signals literally "skip" over this area - the ground wave fades out before the sky wave comes back down. The skip zone size depends on frequency: higher frequencies have larger skip zones.',
+                experiment: 'Try a lower frequency band like 60m or 80m - these have shorter skip zones and can reach nearby stations via NVIS (Near Vertical Incidence Skywave).'
             }
         }
     },

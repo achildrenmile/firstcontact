@@ -39,7 +39,11 @@ export const HF_BANDS = {
             nightAbsorption: 0.3,    // Some absorption even at night
             fLayerReflection: 0.8,   // Reflects well when it gets there
             typicalHopDistance: 500, // km per hop (shorter due to lower angle)
-            maxHops: 2               // Practical limit - signals weaken quickly
+            maxHops: 2,              // Practical limit - signals weaken quickly
+            // Skip zone: area between ground wave and first sky wave return
+            groundWaveMax: 100,      // km - ground wave effective range
+            skipZoneDay: 150,        // km - minimum sky wave distance (day)
+            skipZoneNight: 100       // km - minimum sky wave distance (night, lower F layer)
         },
 
         // Guidance for player experimentation
@@ -76,7 +80,10 @@ export const HF_BANDS = {
             nightAbsorption: 0.2,    // Low absorption at night
             fLayerReflection: 0.85,  // Reflects well from F layer when it gets there
             typicalHopDistance: 800, // km per hop (approximate)
-            maxHops: 2               // Practical limit for this band
+            maxHops: 2,              // Practical limit for this band
+            groundWaveMax: 80,
+            skipZoneDay: 200,
+            skipZoneNight: 150
         },
 
         // Guidance for player experimentation
@@ -110,7 +117,10 @@ export const HF_BANDS = {
             nightAbsorption: 0.2,
             fLayerReflection: 0.85,
             typicalHopDistance: 400,
-            maxHops: 2
+            maxHops: 2,
+            groundWaveMax: 60,
+            skipZoneDay: 100,        // NVIS band - very short skip zone
+            skipZoneNight: 80
         },
 
         bestTimeOfDay: 'day for NVIS, night for longer distance',
@@ -142,7 +152,10 @@ export const HF_BANDS = {
             nightAbsorption: 0.15,
             fLayerReflection: 0.9,
             typicalHopDistance: 1500,
-            maxHops: 3
+            maxHops: 3,
+            groundWaveMax: 60,
+            skipZoneDay: 300,
+            skipZoneNight: 200
         },
 
         bestTimeOfDay: 'anytime',
@@ -174,7 +187,10 @@ export const HF_BANDS = {
             nightAbsorption: 0.12,
             fLayerReflection: 0.9,
             typicalHopDistance: 2000,
-            maxHops: 3
+            maxHops: 3,
+            groundWaveMax: 50,
+            skipZoneDay: 500,
+            skipZoneNight: 350
         },
 
         bestTimeOfDay: 'anytime - good day and night',
@@ -206,7 +222,10 @@ export const HF_BANDS = {
             nightAbsorption: 0.1,
             fLayerReflection: 0.95,
             typicalHopDistance: 2500,
-            maxHops: 4
+            maxHops: 4,
+            groundWaveMax: 40,
+            skipZoneDay: 800,
+            skipZoneNight: 500
         },
 
         bestTimeOfDay: 'day',
@@ -238,7 +257,10 @@ export const HF_BANDS = {
             nightAbsorption: 0.08,
             fLayerReflection: 0.88,
             typicalHopDistance: 2800,
-            maxHops: 4
+            maxHops: 4,
+            groundWaveMax: 35,
+            skipZoneDay: 1000,
+            skipZoneNight: 700
         },
 
         bestTimeOfDay: 'day, often extends into evening',
@@ -270,7 +292,10 @@ export const HF_BANDS = {
             nightAbsorption: 0.05,
             fLayerReflection: 0.8, // Needs good ionization
             typicalHopDistance: 3000,
-            maxHops: 4
+            maxHops: 4,
+            groundWaveMax: 30,
+            skipZoneDay: 1200,
+            skipZoneNight: 900
         },
 
         bestTimeOfDay: 'midday',
@@ -302,7 +327,10 @@ export const HF_BANDS = {
             nightAbsorption: 0.03,
             fLayerReflection: 0.7,
             typicalHopDistance: 3200,
-            maxHops: 4
+            maxHops: 4,
+            groundWaveMax: 25,
+            skipZoneDay: 1500,
+            skipZoneNight: 1100
         },
 
         bestTimeOfDay: 'midday, needs good ionization',
@@ -334,7 +362,10 @@ export const HF_BANDS = {
             nightAbsorption: 0.02,
             fLayerReflection: 0.6, // Often passes through
             typicalHopDistance: 3500,
-            maxHops: 5
+            maxHops: 5,
+            groundWaveMax: 20,
+            skipZoneDay: 1800,
+            skipZoneNight: 1400
         },
 
         bestTimeOfDay: 'midday during high solar activity',
@@ -367,7 +398,10 @@ export const HF_BANDS = {
             nightAbsorption: 0.01,
             fLayerReflection: 0.3,  // Usually passes through - needs Es or high solar activity
             typicalHopDistance: 1500,  // Via Sporadic E
-            maxHops: 2
+            maxHops: 2,
+            groundWaveMax: 50,       // VHF-ish, better ground wave
+            skipZoneDay: 500,        // Via Sporadic E
+            skipZoneNight: 500
         },
 
         bestTimeOfDay: 'summer afternoons for Sporadic E, solar maximum for F2',

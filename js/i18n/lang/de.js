@@ -358,7 +358,8 @@ export default {
             weak: 'Schwach aber lesbar',
             notReadable: 'Nicht lesbar',
             blackout: 'Funkausfall!',
-            auroraFlutter: 'Aurora-Flattern!'
+            auroraFlutter: 'Aurora-Flattern!',
+            skipZone: 'In der Totzone!'
         },
 
         // Mögel-Dellinger messages
@@ -391,6 +392,14 @@ export default {
             excellent: 'Ausgezeichnete Sporadic-E-Öffnung auf {band}!',
             good: 'Gute Sporadic-E-Bedingungen für {band}',
             moderate: 'Moderate Es-Aktivität verstärkt {band}'
+        },
+
+        // Skip Zone messages
+        skipZone: {
+            groundWave: 'Bodenwellen-Verbindung bei {distance} km',
+            inSkipZone: '{band}-Signale erreichen {distance} km nicht - in der Totzone! Raumwelle kehrt erst bei {skipMin} km zurück.',
+            nearGroundWaveEdge: '{band} bei {distance} km ist knapp außerhalb der Bodenwellen-Reichweite - schwache Signale möglich',
+            nearSkyWaveEdge: '{band} bei {distance} km ist nahe am Raumwellen-Rückkehrpunkt ({skipMin} km) - marginale Signale'
         },
 
         // Signal meter
@@ -497,7 +506,12 @@ export default {
             // Long path educational
             longPathVeryLong: 'Dies ist ein extrem langer Pfad mit über 30.000 km rund um den Globus. Jeder zusätzliche Sprung schwächt das Signal erheblich. Long Path ist einen Versuch wert, wenn die Short Path Bedingungen schlecht sind.',
             longPathLong: 'Der Long Path legt über 25.000 km zurück – mehr als die halbe Erde in die "falsche" Richtung. Trotz der zusätzlichen Distanz kann dies funktionieren, wenn der Short Path ungünstige Bedingungen kreuzt.',
-            longPathModerate: 'Der Long Path fügt erhebliche Distanz hinzu, umgeht aber die Hindernisse, die den Short Path blockieren. Die andere Route kann bessere ionosphärische Bedingungen kreuzen.'
+            longPathModerate: 'Der Long Path fügt erhebliche Distanz hinzu, umgeht aber die Hindernisse, die den Short Path blockieren. Die andere Route kann bessere ionosphärische Bedingungen kreuzen.',
+            // Skip zone educational
+            groundWave: 'Bei sehr kurzen Entfernungen breiten sich Signale entlang des Bodens aus (Bodenwelle). Dies funktioniert unabhängig von ionosphärischen Bedingungen, ist aber auf etwa 50-100 km beschränkt, abhängig von Frequenz und Gelände.',
+            skipZoneDeep: 'Du bist in der "Totzone" (Skip Zone)! Die Bodenwelle von {band} reicht nur etwa {groundMax} km, aber die Raumwelle kehrt erst bei etwa {skipMin} km zur Erde zurück. Signale überspringen diesen Bereich buchstäblich – daher der Name "Skip Zone"!',
+            skipZoneNearGround: 'Du bist knapp außerhalb der Bodenwellen-Reichweite für {band}. Einige schwache Signale könnten über Streuung oder NVIS noch ankommen, aber zuverlässige Kommunikation erfordert entweder nähere oder weitere Entfernungen.',
+            skipZoneNearSky: 'Du bist nahe am Punkt, wo {band}-Raumwellen zur Erde zurückkehren. Signale sind marginal – manchmal kommen sie durch, manchmal nicht. Gehe weiter weg für zuverlässigere Raumwellen-Ausbreitung.'
         }
     },
 
@@ -565,6 +579,11 @@ export default {
                 name: 'Short vs Long Path',
                 insight: 'Sowohl Short als auch Long Path funktionieren für diese Verbindung! Der Short Path ist die direkte Großkreis-Route, während der Long Path den anderen Weg um die Erde nimmt. DXer vergleichen oft beide Pfade – manchmal funktioniert einer viel besser als der andere.',
                 experiment: 'Bei sehr weiten Verbindungen probiere dieselbe Station zu verschiedenen Zeiten – du wirst feststellen, dass sich der bevorzugte Pfad im Laufe des Tages ändert!'
+            },
+            skipZone: {
+                name: 'Totzone (Skip Zone)',
+                insight: 'Du hast die Totzone entdeckt! Dies ist der Bereich zwischen der Bodenwellen-Reichweite (etwa 50-100 km) und dem Punkt, wo Raumwellen zur Erde zurückkehren. Funksignale "überspringen" diesen Bereich buchstäblich – die Bodenwelle klingt ab, bevor die Raumwelle zurückkommt. Die Größe der Totzone hängt von der Frequenz ab: höhere Frequenzen haben größere Totzonen.',
+                experiment: 'Probiere ein niedrigeres Frequenzband wie 60m oder 80m – diese haben kürzere Totzonen und können nahegelegene Stationen via NVIS (Near Vertical Incidence Skywave) erreichen.'
             }
         }
     },
