@@ -97,6 +97,8 @@ export default {
         },
         antenna: {
             title: 'Antenna Type',
+            gain: 'Gain',
+            angle: 'Takeoff Angle',
             types: {
                 dipole: {
                     name: 'Dipole',

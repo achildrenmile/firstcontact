@@ -97,6 +97,8 @@ export default {
         },
         antenna: {
             title: 'Antennentyp',
+            gain: 'Gewinn',
+            angle: 'Abstrahlwinkel',
             types: {
                 dipole: {
                     name: 'Dipol',
