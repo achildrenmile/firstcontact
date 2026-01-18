@@ -39,6 +39,15 @@ export class WorldMap {
         this.signalPath = null;
         this.isAnimating = false;
 
+        // Zoom and pan state
+        this.zoom = 1;
+        this.minZoom = 1;
+        this.maxZoom = 4;
+        this.panX = 0;
+        this.panY = 0;
+        this.isPanning = false;
+        this.lastPanPoint = null;
+
         // Event callbacks
         this.onLocationClick = options.onLocationClick || (() => {});
 
@@ -77,7 +86,7 @@ export class WorldMap {
     }
 
     /**
-     * Update canvas size based on container width
+     * Update canvas size based on container size
      */
     updateCanvasSize() {
         const container = this.canvas.parentElement;
@@ -87,13 +96,23 @@ export class WorldMap {
             return;
         }
 
-        // Get available width (with some padding)
-        const availableWidth = container.clientWidth - 20;
-        const maxWidth = Math.min(availableWidth, this.baseWidth);
+        // Get available space in container
+        const availableWidth = container.clientWidth;
+        const availableHeight = container.clientHeight;
 
-        // Maintain 2:1 aspect ratio
-        this.width = Math.max(300, maxWidth);
-        this.height = this.width / 2;
+        // Use the largest size that fits while maintaining 2:1 aspect ratio
+        const aspectRatio = 2;
+        let width = availableWidth;
+        let height = width / aspectRatio;
+
+        // If height exceeds available, scale down
+        if (height > availableHeight) {
+            height = availableHeight;
+            width = height * aspectRatio;
+        }
+
+        this.width = Math.max(300, width);
+        this.height = this.width / aspectRatio;
 
         // Set canvas dimensions
         this.canvas.width = this.width;
@@ -352,14 +371,105 @@ export class WorldMap {
                 e.preventDefault();
             }
         }, { passive: false });
+
+        // Wheel zoom
+        this.canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const rect = this.canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+            const newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.zoom * zoomFactor));
+
+            if (newZoom !== this.zoom) {
+                // Zoom towards mouse position
+                const scaleChange = newZoom / this.zoom;
+                this.panX = mouseX - (mouseX - this.panX) * scaleChange;
+                this.panY = mouseY - (mouseY - this.panY) * scaleChange;
+                this.zoom = newZoom;
+                this.constrainPan();
+                this.render();
+            }
+        }, { passive: false });
+
+        // Pan with middle mouse or drag when zoomed
+        this.canvas.addEventListener('mousedown', (e) => {
+            if (this.zoom > 1 && (e.button === 0 || e.button === 1)) {
+                const { x, y } = this.getCanvasCoords(e);
+                const { lat, lon } = this.pixelToLatLon(x, y);
+                const nearest = this.findNearestLocation(lat, lon, 30);
+
+                if (!nearest) {
+                    this.isPanning = true;
+                    this.lastPanPoint = { x: e.clientX, y: e.clientY };
+                    this.canvas.style.cursor = 'grabbing';
+                    e.preventDefault();
+                }
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (this.isPanning && this.lastPanPoint) {
+                const dx = e.clientX - this.lastPanPoint.x;
+                const dy = e.clientY - this.lastPanPoint.y;
+                this.panX += dx;
+                this.panY += dy;
+                this.lastPanPoint = { x: e.clientX, y: e.clientY };
+                this.constrainPan();
+                this.render();
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (this.isPanning) {
+                this.isPanning = false;
+                this.lastPanPoint = null;
+                this.canvas.style.cursor = 'default';
+            }
+        });
+
+        // Double-click to reset zoom
+        this.canvas.addEventListener('dblclick', (e) => {
+            if (this.zoom !== 1) {
+                this.zoom = 1;
+                this.panX = 0;
+                this.panY = 0;
+                this.render();
+            }
+        });
+    }
+
+    /**
+     * Constrain pan to keep map visible
+     */
+    constrainPan() {
+        const rect = this.canvas.getBoundingClientRect();
+        const scaledWidth = rect.width * this.zoom;
+        const scaledHeight = rect.height * this.zoom;
+
+        const maxPanX = (scaledWidth - rect.width) / 2;
+        const maxPanY = (scaledHeight - rect.height) / 2;
+
+        this.panX = Math.max(-maxPanX, Math.min(maxPanX, this.panX));
+        this.panY = Math.max(-maxPanY, Math.min(maxPanY, this.panY));
     }
 
     /**
      * Convert pixel coordinates to lat/lon (Equirectangular projection)
+     * Accounts for zoom and pan
      */
     pixelToLatLon(x, y) {
-        const lon = (x / this.width) * 360 - 180;
-        const lat = 90 - (y / this.height) * 180;
+        // Reverse the zoom/pan transformation
+        const centerX = this.width / 2;
+        const centerY = this.height / 2;
+
+        // Undo pan and zoom
+        const mapX = (x - this.panX - centerX) / this.zoom + centerX;
+        const mapY = (y - this.panY - centerY) / this.zoom + centerY;
+
+        const lon = (mapX / this.width) * 360 - 180;
+        const lat = 90 - (mapY / this.height) * 180;
         return { lat, lon };
     }
 
@@ -450,8 +560,17 @@ export class WorldMap {
     render() {
         const ctx = this.ctx;
 
-        // Clear canvas
+        // Save context state
+        ctx.save();
+
+        // Clear canvas (before transform)
         ctx.clearRect(0, 0, this.width, this.height);
+
+        // Apply zoom and pan transformation
+        ctx.translate(this.panX, this.panY);
+        ctx.translate(this.width / 2, this.height / 2);
+        ctx.scale(this.zoom, this.zoom);
+        ctx.translate(-this.width / 2, -this.height / 2);
 
         // Draw base map
         this.drawBaseMap();
@@ -480,6 +599,9 @@ export class WorldMap {
 
         // Draw sun position indicator
         this.drawSunIndicator();
+
+        // Restore context state
+        ctx.restore();
     }
 
     /**
