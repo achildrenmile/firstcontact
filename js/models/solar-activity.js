@@ -301,10 +301,15 @@ export const SPORADIC_E_EVENT = {
 
     // Effect on different bands
     bandEffects: {
+        '6m': { boost: 1.0, description: 'THE Magic Band for Es!' },
         '10m': { boost: 0.9, description: 'Excellent Es conditions' },
+        '12m': { boost: 0.85, description: 'Very good Es conditions' },
         '15m': { boost: 0.7, description: 'Good Es conditions' },
+        '17m': { boost: 0.5, description: 'Moderate Es conditions' },
         '20m': { boost: 0.3, description: 'Occasional Es boost' },
-        '40m': { boost: 0.1, description: 'Rare Es effect' },
+        '30m': { boost: 0.15, description: 'Rare Es effect' },
+        '40m': { boost: 0.1, description: 'Very rare Es effect' },
+        '60m': { boost: 0, description: 'No Es effect' },
         '80m': { boost: 0, description: 'No Es effect' },
         '160m': { boost: 0, description: 'No Es effect' }
     },
@@ -315,22 +320,22 @@ export const SPORADIC_E_EVENT = {
             id: 'weak',
             mufBoost: 1.2,
             maxDistance: 1200,
-            affectedBands: ['10m'],
-            description: 'Weak Es - occasional 10m openings'
+            affectedBands: ['6m', '10m'],
+            description: 'Weak Es - 6m/10m openings'
         },
         moderate: {
             id: 'moderate',
             mufBoost: 1.5,
             maxDistance: 1800,
-            affectedBands: ['10m', '15m'],
-            description: 'Moderate Es - good 10m/15m openings'
+            affectedBands: ['6m', '10m', '12m', '15m'],
+            description: 'Moderate Es - good openings on 6m through 15m'
         },
         strong: {
             id: 'strong',
             mufBoost: 2.0,
             maxDistance: 2300,
-            affectedBands: ['10m', '15m', '20m'],
-            description: 'Strong Es - widespread openings, even 20m affected'
+            affectedBands: ['6m', '10m', '12m', '15m', '17m', '20m'],
+            description: 'Strong Es - widespread openings down to 20m'
         }
     },
 

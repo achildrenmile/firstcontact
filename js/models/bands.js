@@ -89,6 +89,38 @@ export const HF_BANDS = {
         icon: '🌙'
     },
 
+    '60m': {
+        id: '60m',
+        name: '60 Meters',
+        frequencyRange: { min: 5.25, max: 5.45 },
+        centerFrequency: 5.35,
+        wavelengthMeters: 60,
+
+        personality: 'The NVIS Specialist',
+        tagline: 'Signals that go straight up and come back down',
+
+        simpleDescription: 'Good for regional coverage. Signals bounce nearly straight up, filling in nearby areas.',
+        detailedDescription: `The 60 meter band is excellent for NVIS (Near Vertical Incidence Skywave)
+            propagation. Signals can travel nearly straight up and reflect back down, providing reliable
+            coverage within about 500km. This fills in the "skip zone" that other bands miss.
+            It's a shared band with limited frequencies in most countries.`,
+
+        characteristics: {
+            dayAbsorption: 0.7,
+            nightAbsorption: 0.2,
+            fLayerReflection: 0.85,
+            typicalHopDistance: 400,
+            maxHops: 2
+        },
+
+        bestTimeOfDay: 'day for NVIS, night for longer distance',
+        typicalRange: 'regional (300-600 km)',
+        learningHint: 'This band shows how signals can go nearly straight up - great for nearby contacts!',
+
+        color: '#c0392b',
+        icon: '📡'
+    },
+
     '40m': {
         id: '40m',
         name: '40 Meters',
@@ -119,6 +151,38 @@ export const HF_BANDS = {
 
         color: '#e67e22',
         icon: '🔄'
+    },
+
+    '30m': {
+        id: '30m',
+        name: '30 Meters',
+        frequencyRange: { min: 10.1, max: 10.15 },
+        centerFrequency: 10.125,
+        wavelengthMeters: 30,
+
+        personality: 'The Quiet Achiever',
+        tagline: 'A narrow band with big potential',
+
+        simpleDescription: 'A narrow WARC band. Good compromise between day and night performance.',
+        detailedDescription: `The 30 meter band is one of the WARC bands - a narrow allocation
+            between 40m and 20m. It combines some of the best characteristics of both:
+            less D-layer absorption than 40m, but more reliable than 20m at night.
+            It's popular for digital modes and CW due to its narrow bandwidth.`,
+
+        characteristics: {
+            dayAbsorption: 0.35,
+            nightAbsorption: 0.12,
+            fLayerReflection: 0.9,
+            typicalHopDistance: 2000,
+            maxHops: 3
+        },
+
+        bestTimeOfDay: 'anytime - good day and night',
+        typicalRange: 'continental to intercontinental',
+        learningHint: 'Notice how this band works when 40m is too absorbed and 20m needs more ionization.',
+
+        color: '#d35400',
+        icon: '🎯'
     },
 
     '20m': {
@@ -153,6 +217,38 @@ export const HF_BANDS = {
         icon: '🌍'
     },
 
+    '17m': {
+        id: '17m',
+        name: '17 Meters',
+        frequencyRange: { min: 18.068, max: 18.168 },
+        centerFrequency: 18.118,
+        wavelengthMeters: 17,
+
+        personality: 'The Hidden Gem',
+        tagline: 'Often open when others are closed',
+
+        simpleDescription: 'A WARC band between 20m and 15m. Often provides a path when the main bands fade.',
+        detailedDescription: `The 17 meter band sits between 20m and 15m, and often stays open
+            when 20m is fading in the evening or 15m hasn't opened yet. It's a WARC band
+            with no contests, so it tends to be quieter. Many operators discover excellent
+            DX opportunities here that they missed on the busier bands.`,
+
+        characteristics: {
+            dayAbsorption: 0.15,
+            nightAbsorption: 0.08,
+            fLayerReflection: 0.88,
+            typicalHopDistance: 2800,
+            maxHops: 4
+        },
+
+        bestTimeOfDay: 'day, often extends into evening',
+        typicalRange: 'continental to worldwide',
+        learningHint: 'Check this band when 20m closes - it often stays open longer!',
+
+        color: '#16a085',
+        icon: '💎'
+    },
+
     '15m': {
         id: '15m',
         name: '15 Meters',
@@ -185,6 +281,38 @@ export const HF_BANDS = {
         icon: '⭐'
     },
 
+    '12m': {
+        id: '12m',
+        name: '12 Meters',
+        frequencyRange: { min: 24.89, max: 24.99 },
+        centerFrequency: 24.94,
+        wavelengthMeters: 12,
+
+        personality: 'The Reliable Cousin',
+        tagline: 'Like 10m, but more forgiving',
+
+        simpleDescription: 'A WARC band that often works when 10m is marginal. Slightly easier conditions needed.',
+        detailedDescription: `The 12 meter band is the highest WARC band, sitting just below 10m.
+            It needs slightly less ionization than 10m, so it often opens earlier and stays
+            open longer. When 10m is marginal, check 12m - it might be wide open!
+            Like all WARC bands, it's contest-free and often less crowded.`,
+
+        characteristics: {
+            dayAbsorption: 0.08,
+            nightAbsorption: 0.03,
+            fLayerReflection: 0.7,
+            typicalHopDistance: 3200,
+            maxHops: 4
+        },
+
+        bestTimeOfDay: 'midday, needs good ionization',
+        typicalRange: 'worldwide when open',
+        learningHint: 'When 10m seems dead, try 12m - it needs slightly less ionization.',
+
+        color: '#8e44ad',
+        icon: '🔮'
+    },
+
     '10m': {
         id: '10m',
         name: '10 Meters',
@@ -215,6 +343,39 @@ export const HF_BANDS = {
 
         color: '#9b59b6',
         icon: '✨'
+    },
+
+    '6m': {
+        id: '6m',
+        name: '6 Meters',
+        frequencyRange: { min: 50.0, max: 54.0 },
+        centerFrequency: 50.15,
+        wavelengthMeters: 6,
+
+        personality: 'The Magic Band',
+        tagline: 'Unpredictable, exciting, magical',
+
+        simpleDescription: 'The "Magic Band"! Normally quiet, but can suddenly open via Sporadic E or during solar maximum.',
+        detailedDescription: `The 6 meter band is called the "Magic Band" because of its unpredictable
+            and exciting propagation. Most of the time, it's limited to local contacts. But when
+            Sporadic E occurs (especially in summer), it can suddenly open to stations 500-2300 km
+            away. During solar maximum, even F2 layer propagation becomes possible for worldwide contacts.
+            It's the transition point between HF and VHF.`,
+
+        characteristics: {
+            dayAbsorption: 0.02,
+            nightAbsorption: 0.01,
+            fLayerReflection: 0.3,  // Usually passes through - needs Es or high solar activity
+            typicalHopDistance: 1500,  // Via Sporadic E
+            maxHops: 2
+        },
+
+        bestTimeOfDay: 'summer afternoons for Sporadic E, solar maximum for F2',
+        typicalRange: 'local normally, 500-2300 km via Sporadic E, worldwide during solar max',
+        learningHint: 'Enable Sporadic E and watch this band come alive! This is THE band for Es propagation.',
+
+        color: '#e91e63',
+        icon: '🪄'
     }
 };
 

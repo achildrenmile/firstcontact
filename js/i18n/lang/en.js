@@ -101,6 +101,16 @@ export default {
             bestTimeOfDay: 'night',
             typicalRange: 'regional to continental'
         },
+        '60m': {
+            name: '60 Meters',
+            personality: 'The NVIS Specialist',
+            tagline: 'Signals that go straight up and come back down',
+            simpleDescription: 'Good for regional coverage. Signals bounce nearly straight up, filling in nearby areas.',
+            detailedDescription: 'The 60 meter band is excellent for NVIS (Near Vertical Incidence Skywave) propagation. Signals can travel nearly straight up and reflect back down, providing reliable coverage within about 500km. This fills in the "skip zone" that other bands miss.',
+            learningHint: 'This band shows how signals can go nearly straight up - great for nearby contacts!',
+            bestTimeOfDay: 'day for NVIS, night for longer distance',
+            typicalRange: 'regional (300-600 km)'
+        },
         '40m': {
             name: '40 Meters',
             personality: 'The Reliable Worker',
@@ -111,6 +121,16 @@ export default {
             bestTimeOfDay: 'anytime',
             typicalRange: 'regional by day, continental by night'
         },
+        '30m': {
+            name: '30 Meters',
+            personality: 'The Quiet Achiever',
+            tagline: 'A narrow band with big potential',
+            simpleDescription: 'A narrow WARC band. Good compromise between day and night performance.',
+            detailedDescription: 'The 30 meter band is one of the WARC bands - a narrow allocation between 40m and 20m. It combines some of the best characteristics of both: less D-layer absorption than 40m, but more reliable than 20m at night. Popular for digital modes and CW.',
+            learningHint: 'Notice how this band works when 40m is too absorbed and 20m needs more ionization.',
+            bestTimeOfDay: 'anytime - good day and night',
+            typicalRange: 'continental to intercontinental'
+        },
         '20m': {
             name: '20 Meters',
             personality: 'The World Traveler',
@@ -119,6 +139,16 @@ export default {
             detailedDescription: 'The 20 meter band is legendary for long-distance communication. It needs good F layer ionization to work, which means daylight somewhere on your signal path. When conditions align, you can talk around the world! It\'s less affected by D layer absorption than lower bands.',
             learningHint: 'This band shows you how signals can follow the daylight around the Earth.',
             bestTimeOfDay: 'day',
+            typicalRange: 'continental to worldwide'
+        },
+        '17m': {
+            name: '17 Meters',
+            personality: 'The Hidden Gem',
+            tagline: 'Often open when others are closed',
+            simpleDescription: 'A WARC band between 20m and 15m. Often provides a path when the main bands fade.',
+            detailedDescription: 'The 17 meter band sits between 20m and 15m, and often stays open when 20m is fading in the evening or 15m hasn\'t opened yet. It\'s a WARC band with no contests, so it tends to be quieter.',
+            learningHint: 'Check this band when 20m closes - it often stays open longer!',
+            bestTimeOfDay: 'day, often extends into evening',
             typicalRange: 'continental to worldwide'
         },
         '15m': {
@@ -131,6 +161,16 @@ export default {
             bestTimeOfDay: 'midday',
             typicalRange: 'worldwide when open'
         },
+        '12m': {
+            name: '12 Meters',
+            personality: 'The Reliable Cousin',
+            tagline: 'Like 10m, but more forgiving',
+            simpleDescription: 'A WARC band that often works when 10m is marginal. Slightly easier conditions needed.',
+            detailedDescription: 'The 12 meter band is the highest WARC band, sitting just below 10m. It needs slightly less ionization than 10m, so it often opens earlier and stays open longer. When 10m is marginal, check 12m!',
+            learningHint: 'When 10m seems dead, try 12m - it needs slightly less ionization.',
+            bestTimeOfDay: 'midday, needs good ionization',
+            typicalRange: 'worldwide when open'
+        },
         '10m': {
             name: '10 Meters',
             personality: 'The Spectacular Performer',
@@ -140,6 +180,16 @@ export default {
             learningHint: 'This band teaches you that higher frequencies need stronger ionization to reflect.',
             bestTimeOfDay: 'midday during high solar activity',
             typicalRange: 'worldwide or nothing'
+        },
+        '6m': {
+            name: '6 Meters',
+            personality: 'The Magic Band',
+            tagline: 'Unpredictable, exciting, magical',
+            simpleDescription: 'The "Magic Band"! Normally quiet, but can suddenly open via Sporadic E or during solar maximum.',
+            detailedDescription: 'The 6 meter band lives at the boundary between HF and VHF. Most of the time it\'s quiet - signals simply pass through the ionosphere into space. But when Sporadic E clouds form or during high solar activity, this band can suddenly spring to life with strong signals over 1000-2000 km. It\'s called the "Magic Band" because openings are unpredictable and exciting!',
+            learningHint: 'Check this band in summer - Sporadic E can create magical openings!',
+            bestTimeOfDay: 'summer afternoons for Es, midday during solar maximum',
+            typicalRange: 'nothing or 1000-2000 km via Es'
         }
     },
 

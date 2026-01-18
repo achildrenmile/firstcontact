@@ -101,6 +101,16 @@ export default {
             bestTimeOfDay: 'nachts',
             typicalRange: 'regional bis kontinental'
         },
+        '60m': {
+            name: '60 Meter',
+            personality: 'Der NVIS-Spezialist',
+            tagline: 'Signale, die geradeaus hochgehen und zurückkommen',
+            simpleDescription: 'Gut für regionale Abdeckung. Signale springen fast senkrecht hoch und füllen nahegelegene Bereiche.',
+            detailedDescription: 'Das 60-Meter-Band ist ausgezeichnet für NVIS (Near Vertical Incidence Skywave) Ausbreitung. Signale können fast senkrecht nach oben reisen und zurückreflektiert werden, was zuverlässige Abdeckung innerhalb von etwa 500 km ermöglicht. Dies füllt die "Skip-Zone", die andere Bänder verfehlen.',
+            learningHint: 'Dieses Band zeigt, wie Signale fast senkrecht nach oben gehen können – ideal für nahegelegene Kontakte!',
+            bestTimeOfDay: 'tagsüber für NVIS, nachts für weitere Entfernungen',
+            typicalRange: 'regional (300-600 km)'
+        },
         '40m': {
             name: '40 Meter',
             personality: 'Der zuverlässige Arbeiter',
@@ -111,6 +121,16 @@ export default {
             bestTimeOfDay: 'jederzeit',
             typicalRange: 'regional am Tag, kontinental bei Nacht'
         },
+        '30m': {
+            name: '30 Meter',
+            personality: 'Der stille Erfolgsbringer',
+            tagline: 'Ein schmales Band mit großem Potenzial',
+            simpleDescription: 'Ein schmales WARC-Band. Guter Kompromiss zwischen Tag- und Nachtleistung.',
+            detailedDescription: 'Das 30-Meter-Band ist eines der WARC-Bänder – eine schmale Zuweisung zwischen 40m und 20m. Es kombiniert die besten Eigenschaften beider Bänder: weniger D-Schicht-Absorption als 40m, aber zuverlässiger als 20m nachts. Beliebt für digitale Betriebsarten und CW.',
+            learningHint: 'Beachte, wie dieses Band funktioniert, wenn 40m zu stark absorbiert wird und 20m mehr Ionisation braucht.',
+            bestTimeOfDay: 'jederzeit – gut bei Tag und Nacht',
+            typicalRange: 'kontinental bis interkontinental'
+        },
         '20m': {
             name: '20 Meter',
             personality: 'Der Weltreisende',
@@ -119,6 +139,16 @@ export default {
             detailedDescription: 'Das 20-Meter-Band ist legendär für Weitstreckenverbindungen. Es braucht gute F-Schicht-Ionisation, was bedeutet, dass irgendwo auf deinem Signalpfad Tageslicht sein muss. Wenn die Bedingungen stimmen, kannst du um die Welt funken! Es wird weniger von der D-Schicht-Absorption beeinflusst als niedrigere Bänder.',
             learningHint: 'Dieses Band zeigt dir, wie Signale dem Tageslicht um die Erde folgen können.',
             bestTimeOfDay: 'tagsüber',
+            typicalRange: 'kontinental bis weltweit'
+        },
+        '17m': {
+            name: '17 Meter',
+            personality: 'Das versteckte Juwel',
+            tagline: 'Oft offen, wenn andere schließen',
+            simpleDescription: 'Ein WARC-Band zwischen 20m und 15m. Bietet oft einen Pfad, wenn die Hauptbänder schließen.',
+            detailedDescription: 'Das 17-Meter-Band liegt zwischen 20m und 15m und bleibt oft offen, wenn 20m abends schließt oder 15m noch nicht geöffnet hat. Es ist ein WARC-Band ohne Conteste, daher ist es tendenziell ruhiger.',
+            learningHint: 'Prüfe dieses Band, wenn 20m schließt – es bleibt oft länger offen!',
+            bestTimeOfDay: 'tagsüber, oft bis in den Abend',
             typicalRange: 'kontinental bis weltweit'
         },
         '15m': {
@@ -131,6 +161,16 @@ export default {
             bestTimeOfDay: 'mittags',
             typicalRange: 'weltweit, wenn offen'
         },
+        '12m': {
+            name: '12 Meter',
+            personality: 'Der zuverlässige Cousin',
+            tagline: 'Wie 10m, aber nachsichtiger',
+            simpleDescription: 'Ein WARC-Band, das oft funktioniert, wenn 10m marginal ist. Braucht etwas weniger Ionisation.',
+            detailedDescription: 'Das 12-Meter-Band ist das höchste WARC-Band, direkt unter 10m. Es braucht etwas weniger Ionisation als 10m, daher öffnet es oft früher und bleibt länger offen. Wenn 10m marginal ist, probiere 12m!',
+            learningHint: 'Wenn 10m tot scheint, probiere 12m – es braucht etwas weniger Ionisation.',
+            bestTimeOfDay: 'mittags, braucht gute Ionisation',
+            typicalRange: 'weltweit, wenn offen'
+        },
         '10m': {
             name: '10 Meter',
             personality: 'Der spektakuläre Performer',
@@ -140,6 +180,16 @@ export default {
             learningHint: 'Dieses Band zeigt dir, dass höhere Frequenzen stärkere Ionisation brauchen, um reflektiert zu werden.',
             bestTimeOfDay: 'mittags bei hoher Sonnenaktivität',
             typicalRange: 'weltweit oder gar nichts'
+        },
+        '6m': {
+            name: '6 Meter',
+            personality: 'Das Magic Band',
+            tagline: 'Unvorhersehbar, aufregend, magisch',
+            simpleDescription: 'Das "Magic Band"! Normalerweise ruhig, kann aber plötzlich via Sporadic E oder bei Sonnenmaximum öffnen.',
+            detailedDescription: 'Das 6-Meter-Band lebt an der Grenze zwischen KW und UKW. Meistens ist es ruhig – Signale durchdringen einfach die Ionosphäre ins All. Aber wenn Sporadic-E-Wolken sich bilden oder bei hoher Sonnenaktivität, kann dieses Band plötzlich mit starken Signalen über 1000-2000 km zum Leben erwachen. Es heißt "Magic Band", weil Öffnungen unvorhersehbar und aufregend sind!',
+            learningHint: 'Prüfe dieses Band im Sommer – Sporadic E kann magische Öffnungen erzeugen!',
+            bestTimeOfDay: 'Sommernachmittage für Es, mittags bei Sonnenmaximum',
+            typicalRange: 'nichts oder 1000-2000 km via Es'
         }
     },
 
