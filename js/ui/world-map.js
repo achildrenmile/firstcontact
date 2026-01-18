@@ -633,6 +633,7 @@ export class WorldMap {
      * Set the current simulation time
      */
     setTime(dateTime) {
+        console.log('WorldMap.setTime called with:', dateTime.toISOString());
         this.currentTime = dateTime;
         this.render();
     }
