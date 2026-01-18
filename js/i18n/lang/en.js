@@ -76,6 +76,24 @@ export default {
             tutorialTitle: 'Start tutorial',
             help: 'Help',
             helpTitle: 'Show help'
+        },
+        power: {
+            title: 'Transmit Power',
+            challengeMode: 'QRP Challenge Mode!',
+            levels: {
+                qrp: {
+                    name: 'QRP',
+                    description: '5 Watts - The ultimate challenge! Can you make contacts with minimal power?'
+                },
+                standard: {
+                    name: 'Standard',
+                    description: '100 Watts - Typical amateur radio power level for reliable contacts.'
+                },
+                high: {
+                    name: 'High Power',
+                    description: '1000 Watts - Maximum legal power for tough conditions.'
+                }
+            }
         }
     },
 
@@ -440,7 +458,18 @@ export default {
             dLayerAbsorption: 'D Layer Absorption',
             fLayerReflection: 'F Layer Reflection',
             greyLineEffect: 'Grey Line Effect',
-            pathGeometry: 'Path Geometry'
+            pathGeometry: 'Path Geometry',
+            power: 'Transmit Power'
+        },
+
+        // Power effect messages
+        power: {
+            qrpImpact: '-13 dB',
+            qrpDescription: 'QRP (5W) - Weak signal, challenging conditions',
+            standardImpact: '0 dB',
+            standardDescription: 'Standard power (100W) - Normal signal level',
+            highImpact: '+10 dB',
+            highDescription: 'High power (1kW) - Strong signal, better margin'
         },
 
         // Factor impacts
@@ -511,7 +540,11 @@ export default {
             groundWave: 'At very short distances, signals travel along the ground (ground wave). This works regardless of ionospheric conditions but is limited to about 50-100 km depending on frequency and terrain.',
             skipZoneDeep: 'You\'re in the "skip zone" or "dead zone"! {band} ground waves only reach about {groundMax} km, but the sky wave doesn\'t return to Earth until about {skipMin} km. Signals literally skip over this area - that\'s why it\'s called the skip zone!',
             skipZoneNearGround: 'You\'re just beyond ground wave range for {band}. Some weak signals might still reach via scatter or near-vertical incidence, but reliable communication requires either closer or farther distances.',
-            skipZoneNearSky: 'You\'re near the edge of where {band} sky waves return to Earth. Signals are marginal - sometimes they get through, sometimes they don\'t. Move farther away for more reliable sky wave propagation.'
+            skipZoneNearSky: 'You\'re near the edge of where {band} sky waves return to Earth. Signals are marginal - sometimes they get through, sometimes they don\'t. Move farther away for more reliable sky wave propagation.',
+            // Power educational
+            powerQrp: 'QRP (5 Watts) is the ultimate challenge in amateur radio! With 13 dB less signal than standard power, marginal paths become impossible. But QRP successes are incredibly rewarding - you\'re doing more with less!',
+            powerStandard: 'Standard power (100 Watts) provides a good balance between signal strength and equipment requirements. This is the typical power level for most amateur radio contacts.',
+            powerHigh: 'High power (1000 Watts) gives you a 10 dB advantage over standard power. This extra margin can make the difference on marginal paths or when fighting absorption. But remember: good antennas are often more effective than raw power!'
         }
     },
 

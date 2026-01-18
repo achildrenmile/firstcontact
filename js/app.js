@@ -25,6 +25,7 @@ class FirstContactApp {
             playerLocation: PRESET_LOCATIONS.vienna || PRESET_LOCATIONS.berlin,
             targetLocation: null,
             selectedBand: '20m',
+            selectedPower: 'standard',
             currentTime: new Date(),
             lastResult: null,
             lastBandResult: {},  // Results by band for comparison
@@ -430,6 +431,7 @@ class FirstContactApp {
         // Controls Panel
         this.controlsPanel = new ControlsPanel('controls-panel', {
             onBandChange: (bandId) => this.handleBandChange(bandId),
+            onPowerChange: (powerId) => this.handlePowerChange(powerId),
             onTimeChange: (time) => this.handleTimeChange(time),
             onSolarActivityChange: (activityId) => this.handleSolarActivityChange(activityId),
             onMogelDellingerToggle: (active) => this.handleMogelDellingerToggle(active),
@@ -488,6 +490,18 @@ class FirstContactApp {
                 );
                 this.feedbackPanel.showBandComparison(comparison);
             }
+        }
+    }
+
+    /**
+     * Handle power change
+     */
+    handlePowerChange(powerId) {
+        this.state.selectedPower = powerId;
+
+        // If we have a target, re-evaluate
+        if (this.state.targetLocation) {
+            this.attemptContact();
         }
     }
 
@@ -596,6 +610,7 @@ class FirstContactApp {
                     source: this.state.playerLocation,
                     target: this.state.targetLocation,
                     bandId: this.state.selectedBand,
+                    powerId: this.state.selectedPower,
                     dateTime: this.state.currentTime
                 });
 

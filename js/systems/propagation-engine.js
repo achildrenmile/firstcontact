@@ -22,6 +22,7 @@ import {
 } from './sun-position.js';
 import { t, formatDistance } from '../i18n/i18n.js';
 import { SolarConditions, MOGEL_DELLINGER_EVENT, AURORA_EVENT, SPORADIC_E_EVENT } from '../models/solar-activity.js';
+import { getPowerLevel, calculatePowerFactor } from '../models/power.js';
 
 // Global solar conditions instance
 let globalSolarConditions = new SolarConditions();
@@ -102,8 +103,9 @@ export class HopInfo {
  * Main propagation evaluation function
  * Now evaluates both short path and long path, choosing the better one
  */
-export function evaluatePropagation({ source, target, bandId, dateTime }) {
+export function evaluatePropagation({ source, target, bandId, dateTime, powerId = 'standard' }) {
     const band = HF_BANDS[bandId];
+    const power = getPowerLevel(powerId);
 
     if (!band) {
         const result = new PropagationResult();
@@ -122,7 +124,7 @@ export function evaluatePropagation({ source, target, bandId, dateTime }) {
 
     // Always evaluate short path
     const shortPathResult = evaluateSinglePath({
-        source, target, bandId, dateTime, band,
+        source, target, bandId, dateTime, band, power,
         distance: shortPathDistance,
         isLongPath: false
     });
@@ -136,7 +138,7 @@ export function evaluatePropagation({ source, target, bandId, dateTime }) {
 
     if (shortPathDistance > LONG_PATH_THRESHOLD) {
         longPathResult = evaluateSinglePath({
-            source, target, bandId, dateTime, band,
+            source, target, bandId, dateTime, band, power,
             distance: longPathDistance,
             isLongPath: true
         });
@@ -217,9 +219,10 @@ function comparePaths(shortResult, longResult, shortDistance, longDistance) {
 /**
  * Evaluate propagation for a single path (short or long)
  */
-function evaluateSinglePath({ source, target, bandId, dateTime, band, distance, isLongPath }) {
+function evaluateSinglePath({ source, target, bandId, dateTime, band, power, distance, isLongPath }) {
     const result = new PropagationResult();
     const bandName = t(`bands.${bandId}.name`);
+    result.power = power; // Store power info in result
 
     // Get ionospheric conditions along the path (includes solar activity effects)
     const pathConditions = analyzePathConditions(source, target, dateTime, isLongPath);
@@ -329,6 +332,10 @@ function evaluateSinglePath({ source, target, bandId, dateTime, band, distance, 
         result.factors.push(longPathPenalty);
     }
 
+    // Add power factor (QRP/Standard/High Power)
+    const powerFactor = evaluatePower(power, pathConditions);
+    result.factors.push(powerFactor);
+
     // Calculate overall signal strength from factors
     result.signalStrength = calculateSignalStrength(result.factors);
 
@@ -418,6 +425,46 @@ function evaluateSkipZone(band, bandId, distance, pathConditions) {
     }
 
     return new PropagationFactor('Skip Zone', impact, description, educational);
+}
+
+/**
+ * Evaluate power level effect on signal strength
+ */
+function evaluatePower(power, pathConditions) {
+    // Calculate power impact
+    const conditions = {
+        highAbsorption: pathConditions.dLayerStrength > 0.6,
+        marginalReflection: pathConditions.fLayerStrength < 0.5
+    };
+    const powerEffect = calculatePowerFactor(power.id, conditions);
+
+    // Determine factor description based on power level
+    let description, educational, impactText;
+
+    if (power.id === 'qrp') {
+        impactText = t('propagation.power.qrpImpact');
+        description = t('propagation.power.qrpDescription');
+        educational = t('propagation.educational.powerQrp');
+    } else if (power.id === 'high') {
+        impactText = t('propagation.power.highImpact');
+        description = t('propagation.power.highDescription');
+        educational = t('propagation.educational.powerHigh');
+    } else {
+        impactText = t('propagation.power.standardImpact');
+        description = t('propagation.power.standardDescription');
+        educational = t('propagation.educational.powerStandard');
+    }
+
+    const factor = new PropagationFactor(
+        t('propagation.factors.power'),
+        powerEffect.impact,
+        description,
+        educational
+    );
+    factor.impactText = impactText;
+    factor.powerWatts = power.watts;
+
+    return factor;
 }
 
 /**

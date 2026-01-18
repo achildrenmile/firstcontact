@@ -13,6 +13,7 @@
 import { HF_BANDS, getAllBands } from '../models/bands.js';
 import { t, LANGUAGES, getCurrentLanguage, setLanguage } from '../i18n/i18n.js';
 import { SOLAR_ACTIVITY_LEVELS, getAllActivityLevels } from '../models/solar-activity.js';
+import { POWER_LEVELS, getAllPowerLevels, formatPower } from '../models/power.js';
 
 export class ControlsPanel {
     constructor(containerId, options = {}) {
@@ -20,6 +21,7 @@ export class ControlsPanel {
 
         // State
         this.selectedBand = '20m';
+        this.selectedPower = 'standard';
         this.currentTime = new Date();
         this.solarActivity = 'normal';
         this.mogelDellingerActive = false;
@@ -28,6 +30,7 @@ export class ControlsPanel {
 
         // Callbacks
         this.onBandChange = options.onBandChange || (() => {});
+        this.onPowerChange = options.onPowerChange || (() => {});
         this.onTimeChange = options.onTimeChange || (() => {});
         this.onSolarActivityChange = options.onSolarActivityChange || (() => {});
         this.onMogelDellingerToggle = options.onMogelDellingerToggle || (() => {});
@@ -58,6 +61,12 @@ export class ControlsPanel {
                     <h3>${t('ui.selectBand')}</h3>
                     <div class="band-selector" id="band-buttons"></div>
                     <div class="band-info" id="band-info"></div>
+                </section>
+
+                <section class="control-section">
+                    <h3>${t('ui.power.title')}</h3>
+                    <div class="power-selector" id="power-buttons"></div>
+                    <div class="power-info" id="power-info"></div>
                 </section>
 
                 <section class="control-section">
@@ -111,9 +120,11 @@ export class ControlsPanel {
         `;
 
         this.renderBandButtons();
+        this.renderPowerButtons();
         this.renderSolarActivityButtons();
         this.setupEventListeners();
         this.updateBandInfo();
+        this.updatePowerInfo();
         this.updateSolarActivityInfo();
     }
 
@@ -146,6 +157,25 @@ export class ControlsPanel {
             >
                 <span class="band-name">${band.id}</span>
                 <span class="band-personality">${t(`bands.${band.id}.personality`)}</span>
+            </button>
+        `).join('');
+    }
+
+    /**
+     * Render power selection buttons
+     */
+    renderPowerButtons() {
+        const container = document.getElementById('power-buttons');
+        const levels = getAllPowerLevels();
+
+        container.innerHTML = levels.map(power => `
+            <button
+                class="power-button ${power.id === this.selectedPower ? 'selected' : ''}"
+                data-power="${power.id}"
+            >
+                <span class="power-icon">${power.icon}</span>
+                <span class="power-watts">${formatPower(power.id)}</span>
+                <span class="power-name">${t(`ui.power.levels.${power.id}.name`)}</span>
             </button>
         `).join('');
     }
@@ -187,6 +217,14 @@ export class ControlsPanel {
             const button = e.target.closest('.band-button');
             if (button) {
                 this.selectBand(button.dataset.band);
+            }
+        });
+
+        // Power buttons
+        document.getElementById('power-buttons')?.addEventListener('click', (e) => {
+            const button = e.target.closest('.power-button');
+            if (button) {
+                this.selectPower(button.dataset.power);
             }
         });
 
@@ -263,6 +301,46 @@ export class ControlsPanel {
                 <div class="band-hint">
                     <strong>Tip:</strong> ${t(`bands.${band.id}.learningHint`)}
                 </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Select power level
+     */
+    selectPower(powerId) {
+        this.selectedPower = powerId;
+
+        // Update button states
+        document.querySelectorAll('.power-button').forEach(btn => {
+            btn.classList.toggle('selected', btn.dataset.power === powerId);
+        });
+
+        // Update info display
+        this.updatePowerInfo();
+
+        // Notify callback
+        this.onPowerChange(powerId);
+    }
+
+    /**
+     * Update power info display
+     */
+    updatePowerInfo() {
+        const power = POWER_LEVELS[this.selectedPower];
+        const infoContainer = document.getElementById('power-info');
+
+        if (!infoContainer) return;
+
+        infoContainer.innerHTML = `
+            <div class="power-details">
+                <p class="power-description">${t(`ui.power.levels.${power.id}.description`)}</p>
+                ${power.challenge ? `
+                    <div class="power-challenge">
+                        <span class="challenge-icon">🏆</span>
+                        <span class="challenge-text">${t('ui.power.challengeMode')}</span>
+                    </div>
+                ` : ''}
             </div>
         `;
     }
@@ -427,6 +505,7 @@ export class ControlsPanel {
     getState() {
         return {
             band: this.selectedBand,
+            power: this.selectedPower,
             time: this.currentTime,
             solarActivity: this.solarActivity,
             mogelDellingerActive: this.mogelDellingerActive,

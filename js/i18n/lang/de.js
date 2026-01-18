@@ -76,6 +76,24 @@ export default {
             tutorialTitle: 'Tutorial starten',
             help: 'Hilfe',
             helpTitle: 'Hilfe anzeigen'
+        },
+        power: {
+            title: 'Sendeleistung',
+            challengeMode: 'QRP Herausforderungsmodus!',
+            levels: {
+                qrp: {
+                    name: 'QRP',
+                    description: '5 Watt - Die ultimative Herausforderung! Schaffst du Verbindungen mit minimaler Leistung?'
+                },
+                standard: {
+                    name: 'Standard',
+                    description: '100 Watt - Typische Amateurfunk-Leistung für zuverlässige Verbindungen.'
+                },
+                high: {
+                    name: 'High Power',
+                    description: '1000 Watt - Maximale legale Leistung für schwierige Bedingungen.'
+                }
+            }
         }
     },
 
@@ -440,7 +458,18 @@ export default {
             dLayerAbsorption: 'D-Schicht-Absorption',
             fLayerReflection: 'F-Schicht-Reflexion',
             greyLineEffect: 'Grauzoneneffekt',
-            pathGeometry: 'Pfadgeometrie'
+            pathGeometry: 'Pfadgeometrie',
+            power: 'Sendeleistung'
+        },
+
+        // Power effect messages
+        power: {
+            qrpImpact: '-13 dB',
+            qrpDescription: 'QRP (5W) - Schwaches Signal, anspruchsvolle Bedingungen',
+            standardImpact: '0 dB',
+            standardDescription: 'Standardleistung (100W) - Normaler Signalpegel',
+            highImpact: '+10 dB',
+            highDescription: 'High Power (1kW) - Starkes Signal, bessere Reserve'
         },
 
         // Factor impacts
@@ -511,7 +540,11 @@ export default {
             groundWave: 'Bei sehr kurzen Entfernungen breiten sich Signale entlang des Bodens aus (Bodenwelle). Dies funktioniert unabhängig von ionosphärischen Bedingungen, ist aber auf etwa 50-100 km beschränkt, abhängig von Frequenz und Gelände.',
             skipZoneDeep: 'Du bist in der "Totzone" (Skip Zone)! Die Bodenwelle von {band} reicht nur etwa {groundMax} km, aber die Raumwelle kehrt erst bei etwa {skipMin} km zur Erde zurück. Signale überspringen diesen Bereich buchstäblich – daher der Name "Skip Zone"!',
             skipZoneNearGround: 'Du bist knapp außerhalb der Bodenwellen-Reichweite für {band}. Einige schwache Signale könnten über Streuung oder NVIS noch ankommen, aber zuverlässige Kommunikation erfordert entweder nähere oder weitere Entfernungen.',
-            skipZoneNearSky: 'Du bist nahe am Punkt, wo {band}-Raumwellen zur Erde zurückkehren. Signale sind marginal – manchmal kommen sie durch, manchmal nicht. Gehe weiter weg für zuverlässigere Raumwellen-Ausbreitung.'
+            skipZoneNearSky: 'Du bist nahe am Punkt, wo {band}-Raumwellen zur Erde zurückkehren. Signale sind marginal – manchmal kommen sie durch, manchmal nicht. Gehe weiter weg für zuverlässigere Raumwellen-Ausbreitung.',
+            // Power educational
+            powerQrp: 'QRP (5 Watt) ist die ultimative Herausforderung im Amateurfunk! Mit 13 dB weniger Signal als Standardleistung werden marginale Pfade unmöglich. Aber QRP-Erfolge sind unglaublich lohnend – du erreichst mehr mit weniger!',
+            powerStandard: 'Standardleistung (100 Watt) bietet eine gute Balance zwischen Signalstärke und Geräteanforderungen. Dies ist der typische Leistungspegel für die meisten Amateurfunkverbindungen.',
+            powerHigh: 'High Power (1000 Watt) gibt dir einen 10 dB Vorteil gegenüber Standardleistung. Diese zusätzliche Reserve kann den Unterschied auf marginalen Pfaden oder beim Kampf gegen Absorption ausmachen. Aber denk daran: Gute Antennen sind oft effektiver als rohe Leistung!'
         }
     },
 
