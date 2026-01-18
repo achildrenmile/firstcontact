@@ -1,6 +1,6 @@
 {
   "name": "firstcontact",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shortwave Radio Propagation Simulator",
   "type": "module",
   "scripts": {
