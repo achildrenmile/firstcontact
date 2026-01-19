@@ -51,7 +51,29 @@ export default {
             localConditions: 'Local conditions:',
             target: 'Target:',
             distance: 'Distance:',
-            targetConditions: 'Target conditions:'
+            targetConditions: 'Target conditions:',
+            solarIndicators: 'Solar Indicators',
+            solarFlux: 'Solar Flux:',
+            sunspots: 'Sunspots:',
+            xrayActivity: 'X-Ray:',
+            sfiLevels: {
+                veryLow: '~70 (Very Low)',
+                low: '~90 (Low)',
+                moderate: '~130 (Moderate)',
+                high: '~180 (High)'
+            },
+            sunspotLevels: {
+                minimal: 'Minimal',
+                low: 'Low',
+                moderate: 'Moderate',
+                high: 'High'
+            },
+            xrayLevels: {
+                quiet: 'Quiet',
+                elevated: 'Elevated',
+                active: 'Active',
+                flaring: 'Flaring!'
+            }
         },
         language: 'Language',
         you: 'YOU',

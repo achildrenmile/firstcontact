@@ -1038,6 +1038,50 @@ body {
     border-top: 1px solid var(--border-color);
 }
 
+/* Solar Indicators */
+.solar-indicators {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.solar-indicators-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.solar-indicator-value {
+    font-family: monospace;
+    font-size: 0.85rem;
+}
+
+.xray-quiet {
+    color: var(--accent-success);
+}
+
+.xray-elevated {
+    color: #eab308;
+}
+
+.xray-active {
+    color: #f97316;
+}
+
+.xray-flaring {
+    color: #ef4444;
+    font-weight: 700;
+    animation: xray-pulse 1s infinite;
+}
+
+@keyframes xray-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
 /* World Map */
 .map-container {
     flex: 1;

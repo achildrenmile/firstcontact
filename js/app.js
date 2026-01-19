@@ -899,6 +899,13 @@ class FirstContactApp {
             conditionEdu = t('lighting.night.educational');
         }
 
+        // Derive solar indicators from simulation state
+        const solarConditions = getSolarConditions();
+        const activityLevel = solarConditions.activityLevel;
+
+        // Map activity level to derived indicators
+        const solarIndicators = this.deriveSolarIndicators(activityLevel, solarConditions);
+
         let html = `
             <div class="current-conditions">
                 <div class="condition-item">
@@ -910,6 +917,21 @@ class FirstContactApp {
                     <span class="condition-value">${conditionDesc}</span>
                 </div>
                 <p class="condition-note">${conditionEdu}</p>
+            </div>
+            <div class="solar-indicators">
+                <div class="solar-indicators-title">${t('ui.conditions.solarIndicators')}</div>
+                <div class="condition-item">
+                    <span class="condition-label">${t('ui.conditions.solarFlux')}</span>
+                    <span class="condition-value solar-indicator-value">${solarIndicators.sfi}</span>
+                </div>
+                <div class="condition-item">
+                    <span class="condition-label">${t('ui.conditions.sunspots')}</span>
+                    <span class="condition-value solar-indicator-value">${solarIndicators.sunspots}</span>
+                </div>
+                <div class="condition-item">
+                    <span class="condition-label">${t('ui.conditions.xrayActivity')}</span>
+                    <span class="condition-value solar-indicator-value ${solarIndicators.xrayClass}">${solarIndicators.xray}</span>
+                </div>
             </div>
         `;
 
@@ -960,6 +982,51 @@ class FirstContactApp {
         }
 
         this.controlsPanel.updateConditionsDisplay(html);
+    }
+
+    /**
+     * Derive solar indicators from simulation state
+     * These are approximate values for educational purposes
+     */
+    deriveSolarIndicators(activityLevel, solarConditions) {
+        // Map activity level to SFI ranges
+        const sfiMap = {
+            quiet: t('ui.conditions.sfiLevels.veryLow'),
+            normal: t('ui.conditions.sfiLevels.low'),
+            active: t('ui.conditions.sfiLevels.moderate'),
+            storm: t('ui.conditions.sfiLevels.high')
+        };
+
+        // Map activity level to sunspot activity
+        const sunspotMap = {
+            quiet: t('ui.conditions.sunspotLevels.minimal'),
+            normal: t('ui.conditions.sunspotLevels.low'),
+            active: t('ui.conditions.sunspotLevels.moderate'),
+            storm: t('ui.conditions.sunspotLevels.high')
+        };
+
+        // X-ray activity depends on both activity level and flare state
+        let xray, xrayClass;
+        if (solarConditions.mogelDellingerActive) {
+            xray = t('ui.conditions.xrayLevels.flaring');
+            xrayClass = 'xray-flaring';
+        } else if (activityLevel === 'storm') {
+            xray = t('ui.conditions.xrayLevels.active');
+            xrayClass = 'xray-active';
+        } else if (activityLevel === 'active') {
+            xray = t('ui.conditions.xrayLevels.elevated');
+            xrayClass = 'xray-elevated';
+        } else {
+            xray = t('ui.conditions.xrayLevels.quiet');
+            xrayClass = 'xray-quiet';
+        }
+
+        return {
+            sfi: sfiMap[activityLevel] || sfiMap.normal,
+            sunspots: sunspotMap[activityLevel] || sunspotMap.normal,
+            xray,
+            xrayClass
+        };
     }
 
     /**
