@@ -1139,6 +1139,44 @@ body {
     color: #ef4444;
 }
 
+/* Band Conditions */
+.band-conditions {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.band-condition-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.35rem;
+    gap: 0.5rem;
+}
+
+.band-group-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.band-condition-value {
+    font-size: 0.8rem;
+    text-align: right;
+}
+
+.band-good {
+    color: var(--accent-success);
+}
+
+.band-fair {
+    color: #eab308;
+}
+
+.band-poor {
+    color: #ef4444;
+}
+
 /* World Map */
 .map-container {
     flex: 1;

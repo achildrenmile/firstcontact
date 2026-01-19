@@ -92,6 +92,25 @@ export default {
                 good: 'Good',
                 degraded: 'Degraded',
                 poor: 'Poor'
+            },
+            bandConditions: 'Band Conditions',
+            bandGroups: {
+                low: '80–40m',
+                mid: '30–20m',
+                high: '17–10m'
+            },
+            bandQuality: {
+                good: 'good',
+                fair: 'fair',
+                poor: 'poor',
+                closed: 'closed'
+            },
+            bandTime: {
+                day: 'day',
+                night: 'night',
+                dayAndNight: 'day & night',
+                atNight: 'at night',
+                duringDay: 'during day'
             }
         },
         language: 'Language',

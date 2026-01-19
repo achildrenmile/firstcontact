@@ -953,6 +953,7 @@ class FirstContactApp {
                     <span class="condition-value geomag-indicator-value ${geomagIndicators.polarClass}">${geomagIndicators.polar}</span>
                 </div>
             </div>
+            ${this.renderBandConditions(activityLevel, solarConditions)}
         `;
 
         if (this.state.targetLocation) {
@@ -1093,6 +1094,107 @@ class FirstContactApp {
         }
 
         return { field, fieldClass, aurora, auroraClass, polar, polarClass };
+    }
+
+    /**
+     * Render band conditions summary based on simulation state
+     * Shows day/night performance for band groups
+     */
+    renderBandConditions(activityLevel, solarConditions) {
+        // Derive band conditions for each group
+        const lowBands = this.deriveBandGroupCondition('low', activityLevel, solarConditions);
+        const midBands = this.deriveBandGroupCondition('mid', activityLevel, solarConditions);
+        const highBands = this.deriveBandGroupCondition('high', activityLevel, solarConditions);
+
+        return `
+            <div class="band-conditions">
+                <div class="solar-indicators-title">${t('ui.conditions.bandConditions')}</div>
+                <div class="band-condition-item">
+                    <span class="band-group-label">${t('ui.conditions.bandGroups.low')}</span>
+                    <span class="band-condition-value ${lowBands.class}">${lowBands.text}</span>
+                </div>
+                <div class="band-condition-item">
+                    <span class="band-group-label">${t('ui.conditions.bandGroups.mid')}</span>
+                    <span class="band-condition-value ${midBands.class}">${midBands.text}</span>
+                </div>
+                <div class="band-condition-item">
+                    <span class="band-group-label">${t('ui.conditions.bandGroups.high')}</span>
+                    <span class="band-condition-value ${highBands.class}">${highBands.text}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Derive band group condition based on simulation state
+     * @param {string} group - 'low' (80-40m), 'mid' (30-20m), or 'high' (17-10m)
+     */
+    deriveBandGroupCondition(group, activityLevel, solarConditions) {
+        const q = t('ui.conditions.bandQuality');
+        const time = t('ui.conditions.bandTime');
+
+        // During solar flare - severe degradation
+        if (solarConditions.mogelDellingerActive) {
+            if (group === 'low') {
+                return { text: `${q.closed} ${time.duringDay}`, class: 'band-poor' };
+            } else if (group === 'mid') {
+                return { text: `${q.poor} ${time.duringDay}`, class: 'band-poor' };
+            } else {
+                return { text: `${q.poor}`, class: 'band-poor' };
+            }
+        }
+
+        // During storm - degraded conditions
+        if (activityLevel === 'storm') {
+            if (group === 'low') {
+                return { text: `${q.fair} ${time.atNight}`, class: 'band-fair' };
+            } else if (group === 'mid') {
+                return { text: `${q.poor}`, class: 'band-poor' };
+            } else {
+                return { text: `${q.poor}`, class: 'band-poor' };
+            }
+        }
+
+        // Active sun - high bands come alive
+        if (activityLevel === 'active') {
+            if (group === 'low') {
+                return { text: `${q.fair} ${time.atNight}`, class: 'band-fair' };
+            } else if (group === 'mid') {
+                return { text: `${q.good} ${time.dayAndNight}`, class: 'band-good' };
+            } else {
+                // Sporadic E makes high bands even better
+                if (solarConditions.sporadicEActive) {
+                    return { text: `${q.good} ${time.dayAndNight}`, class: 'band-good' };
+                }
+                return { text: `${q.good} ${time.duringDay}`, class: 'band-good' };
+            }
+        }
+
+        // Quiet sun - lower bands better
+        if (activityLevel === 'quiet') {
+            if (group === 'low') {
+                return { text: `${q.good} ${time.atNight}`, class: 'band-good' };
+            } else if (group === 'mid') {
+                return { text: `${q.fair} ${time.dayAndNight}`, class: 'band-fair' };
+            } else {
+                if (solarConditions.sporadicEActive) {
+                    return { text: `${q.fair} ${time.duringDay}`, class: 'band-fair' };
+                }
+                return { text: `${q.poor}`, class: 'band-poor' };
+            }
+        }
+
+        // Normal conditions (default)
+        if (group === 'low') {
+            return { text: `${q.good} ${time.atNight}`, class: 'band-good' };
+        } else if (group === 'mid') {
+            return { text: `${q.good} ${time.dayAndNight}`, class: 'band-good' };
+        } else {
+            if (solarConditions.sporadicEActive) {
+                return { text: `${q.good} ${time.duringDay}`, class: 'band-good' };
+            }
+            return { text: `${q.fair}`, class: 'band-fair' };
+        }
     }
 
     /**
