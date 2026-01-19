@@ -50,11 +50,8 @@ export class FeedbackPanel {
      * Initialize the solar weather panel
      */
     initSolarWeatherPanel() {
-        if (!this.solarWeatherPanel) {
-            this.solarWeatherPanel = new SolarWeatherPanel('solar-weather-container');
-        } else {
-            this.solarWeatherPanel.update();
-        }
+        // Always create a new instance after render since the container is recreated
+        this.solarWeatherPanel = new SolarWeatherPanel('solar-weather-container');
     }
 
     /**
