@@ -2463,6 +2463,23 @@ body {
     color: var(--text-primary);
 }
 
+.weather-item-value-stacked {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.1rem;
+}
+
+.weather-item-icon {
+    font-size: 1.1rem;
+}
+
+.weather-item-personality {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
 .weather-item-description {
     font-size: 0.8rem;
     color: var(--text-secondary);
