@@ -1003,6 +1003,14 @@ class FirstContactApp {
             `;
         }
 
+        // Add learning disclaimer at the bottom
+        html += `
+            <div class="learning-disclaimer">
+                <span class="disclaimer-icon">ℹ️</span>
+                <span class="disclaimer-text">${t('ui.conditions.learningDisclaimer')}</span>
+            </div>
+        `;
+
         this.controlsPanel.updateConditionsDisplay(html);
     }
 
