@@ -111,7 +111,10 @@ export default {
                 dayAndNight: 'Tag & Nacht',
                 atNight: 'nachts',
                 duringDay: 'tagsüber'
-            }
+            },
+            transientEffects: 'Aktive Effekte',
+            solarFlareExplanation: 'Sonneneruption aktiv — vorübergehender Funkausfall auf der sonnenbeschienenen Seite der Erde. Niedrige Frequenzen werden von der stark ionisierten D-Schicht absorbiert. Der Effekt ist mittags am stärksten und klingt über Minuten bis Stunden ab.',
+            sporadicEExplanation: 'Sporadic-E-Schicht aktiv — unvorhersehbare, lokalisierte Bereiche intensiver Ionisation. Ermöglicht ungewöhnliche Kurzstrecken-Ausbreitung auf höheren Bändern (10m, 6m). Öffnungen können plötzlich erscheinen und verschwinden.'
         },
         language: 'Sprache',
         you: 'DU',

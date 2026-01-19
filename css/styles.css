@@ -1177,6 +1177,56 @@ body {
     color: #ef4444;
 }
 
+/* Transient Effects */
+.transient-effects {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.transient-effect {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    margin-bottom: 0.5rem;
+}
+
+.transient-effect:last-child {
+    margin-bottom: 0;
+}
+
+.transient-effect-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.transient-effect-text {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.transient-effect--flare {
+    background-color: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    color: var(--text-secondary);
+}
+
+.transient-effect--flare .transient-effect-icon {
+    color: #e74c3c;
+}
+
+.transient-effect--sporadic-e {
+    background-color: rgba(155, 89, 182, 0.1);
+    border: 1px solid rgba(155, 89, 182, 0.3);
+    color: var(--text-secondary);
+}
+
+.transient-effect--sporadic-e .transient-effect-icon {
+    color: #9b59b6;
+}
+
 /* World Map */
 .map-container {
     flex: 1;

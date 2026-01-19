@@ -954,6 +954,7 @@ class FirstContactApp {
                 </div>
             </div>
             ${this.renderBandConditions(activityLevel, solarConditions)}
+            ${this.renderTransientEffects(solarConditions)}
         `;
 
         if (this.state.targetLocation) {
@@ -1195,6 +1196,43 @@ class FirstContactApp {
             }
             return { text: `${q.fair}`, class: 'band-fair' };
         }
+    }
+
+    /**
+     * Render transient effect explanations
+     * Only shows when effects are actively enabled
+     */
+    renderTransientEffects(solarConditions) {
+        const effects = [];
+
+        if (solarConditions.mogelDellingerActive) {
+            effects.push(`
+                <div class="transient-effect transient-effect--flare">
+                    <span class="transient-effect-icon">⚡</span>
+                    <p class="transient-effect-text">${t('ui.conditions.solarFlareExplanation')}</p>
+                </div>
+            `);
+        }
+
+        if (solarConditions.sporadicEActive) {
+            effects.push(`
+                <div class="transient-effect transient-effect--sporadic-e">
+                    <span class="transient-effect-icon">✨</span>
+                    <p class="transient-effect-text">${t('ui.conditions.sporadicEExplanation')}</p>
+                </div>
+            `);
+        }
+
+        if (effects.length === 0) {
+            return '';
+        }
+
+        return `
+            <div class="transient-effects">
+                <div class="solar-indicators-title">${t('ui.conditions.transientEffects')}</div>
+                ${effects.join('')}
+            </div>
+        `;
     }
 
     /**

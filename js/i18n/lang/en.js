@@ -111,7 +111,10 @@ export default {
                 dayAndNight: 'day & night',
                 atNight: 'at night',
                 duringDay: 'during day'
-            }
+            },
+            transientEffects: 'Active Effects',
+            solarFlareExplanation: 'Solar flare in progress — temporary radio blackout on the sunlit side of Earth. Lower frequencies are absorbed by the intensely ionized D-layer. Effect is strongest near noon and fades over minutes to hours.',
+            sporadicEExplanation: 'Sporadic E layer active — unpredictable, localized patches of intense ionization. Enables unusual short-skip propagation on higher bands (10m, 6m). Openings may appear and vanish suddenly.'
         },
         language: 'Language',
         you: 'YOU',
