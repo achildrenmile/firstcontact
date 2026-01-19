@@ -1084,6 +1084,61 @@ body {
     50% { opacity: 0.6; }
 }
 
+/* Geomagnetic Indicators */
+.geomag-indicators {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.geomag-indicator-value {
+    font-family: monospace;
+    font-size: 0.85rem;
+}
+
+.geomag-quiet {
+    color: var(--accent-success);
+}
+
+.geomag-unsettled {
+    color: #eab308;
+}
+
+.geomag-disturbed {
+    color: #f97316;
+}
+
+.aurora-none {
+    color: var(--text-muted);
+}
+
+.aurora-possible {
+    color: #eab308;
+}
+
+.aurora-active {
+    color: #2ecc71;
+    font-weight: 700;
+    animation: aurora-glow 2s infinite;
+}
+
+@keyframes aurora-glow {
+    0%, 100% { text-shadow: 0 0 4px rgba(46, 204, 113, 0.5); }
+    50% { text-shadow: 0 0 8px rgba(46, 204, 113, 0.8); }
+}
+
+.polar-good {
+    color: var(--accent-success);
+}
+
+.polar-degraded {
+    color: #eab308;
+}
+
+.polar-poor {
+    color: #ef4444;
+}
+
 /* World Map */
 .map-container {
     flex: 1;

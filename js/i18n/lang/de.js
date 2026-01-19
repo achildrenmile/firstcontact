@@ -73,6 +73,25 @@ export default {
                 elevated: 'Erhöht',
                 active: 'Aktiv',
                 flaring: 'Eruption!'
+            },
+            geomagIndicators: 'Geomagnetische Bedingungen',
+            geomagField: 'Geomagnetfeld:',
+            auroraLikelihood: 'Polarlicht:',
+            polarPaths: 'Polarpfade:',
+            geomagLevels: {
+                quiet: 'Ruhig',
+                unsettled: 'Unruhig',
+                disturbed: 'Gestört'
+            },
+            auroraLevels: {
+                none: 'Keines',
+                possible: 'Möglich',
+                active: 'Aktiv!'
+            },
+            polarPathLevels: {
+                good: 'Gut',
+                degraded: 'Beeinträchtigt',
+                poor: 'Schlecht'
             }
         },
         language: 'Sprache',

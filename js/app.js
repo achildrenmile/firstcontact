@@ -909,6 +909,7 @@ class FirstContactApp {
 
         // Map activity level to derived indicators
         const solarIndicators = this.deriveSolarIndicators(activityLevel, solarConditions);
+        const geomagIndicators = this.deriveGeomagIndicators(activityLevel, solarConditions);
 
         let html = `
             <div class="current-conditions">
@@ -935,6 +936,21 @@ class FirstContactApp {
                 <div class="condition-item">
                     <span class="condition-label">${t('ui.conditions.xrayActivity')}</span>
                     <span class="condition-value solar-indicator-value ${solarIndicators.xrayClass}">${solarIndicators.xray}</span>
+                </div>
+            </div>
+            <div class="geomag-indicators">
+                <div class="solar-indicators-title">${t('ui.conditions.geomagIndicators')}</div>
+                <div class="condition-item">
+                    <span class="condition-label">${t('ui.conditions.geomagField')}</span>
+                    <span class="condition-value geomag-indicator-value ${geomagIndicators.fieldClass}">${geomagIndicators.field}</span>
+                </div>
+                <div class="condition-item">
+                    <span class="condition-label">${t('ui.conditions.auroraLikelihood')}</span>
+                    <span class="condition-value geomag-indicator-value ${geomagIndicators.auroraClass}">${geomagIndicators.aurora}</span>
+                </div>
+                <div class="condition-item">
+                    <span class="condition-label">${t('ui.conditions.polarPaths')}</span>
+                    <span class="condition-value geomag-indicator-value ${geomagIndicators.polarClass}">${geomagIndicators.polar}</span>
                 </div>
             </div>
         `;
@@ -1031,6 +1047,52 @@ class FirstContactApp {
             xray,
             xrayClass
         };
+    }
+
+    /**
+     * Derive geomagnetic indicators from simulation state
+     * These are approximate values for educational purposes
+     */
+    deriveGeomagIndicators(activityLevel, solarConditions) {
+        let field, fieldClass, aurora, auroraClass, polar, polarClass;
+
+        // Geomagnetic field state - derived from activity level and aurora
+        if (solarConditions.auroraActive || activityLevel === 'storm') {
+            field = t('ui.conditions.geomagLevels.disturbed');
+            fieldClass = 'geomag-disturbed';
+        } else if (activityLevel === 'active') {
+            field = t('ui.conditions.geomagLevels.unsettled');
+            fieldClass = 'geomag-unsettled';
+        } else {
+            field = t('ui.conditions.geomagLevels.quiet');
+            fieldClass = 'geomag-quiet';
+        }
+
+        // Aurora likelihood - directly influenced by aurora simulation
+        if (solarConditions.auroraActive) {
+            aurora = t('ui.conditions.auroraLevels.active');
+            auroraClass = 'aurora-active';
+        } else if (activityLevel === 'storm' || activityLevel === 'active') {
+            aurora = t('ui.conditions.auroraLevels.possible');
+            auroraClass = 'aurora-possible';
+        } else {
+            aurora = t('ui.conditions.auroraLevels.none');
+            auroraClass = 'aurora-none';
+        }
+
+        // Polar path reliability - worst when aurora is active
+        if (solarConditions.auroraActive) {
+            polar = t('ui.conditions.polarPathLevels.poor');
+            polarClass = 'polar-poor';
+        } else if (activityLevel === 'storm') {
+            polar = t('ui.conditions.polarPathLevels.degraded');
+            polarClass = 'polar-degraded';
+        } else {
+            polar = t('ui.conditions.polarPathLevels.good');
+            polarClass = 'polar-good';
+        }
+
+        return { field, fieldClass, aurora, auroraClass, polar, polarClass };
     }
 
     /**
