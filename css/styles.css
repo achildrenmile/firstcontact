@@ -259,6 +259,8 @@ body {
 
 .panel-right {
     grid-column: 3;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* Controls Panel */
