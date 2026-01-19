@@ -191,13 +191,11 @@ export class SolarWeatherPanel {
         };
 
         return `
-            <div class="weather-item">
-                <div class="weather-item-header">
-                    <span class="weather-item-label">${t('solarWeather.sunActivity')}</span>
-                    <div class="weather-item-value-stacked">
-                        <span class="weather-item-icon">${icons[activityLevel] || '☀️'}</span>
-                        <span class="weather-item-personality">${personality}</span>
-                    </div>
+            <div class="weather-item weather-item--stacked">
+                <span class="weather-item-label">${t('solarWeather.sunActivity')}</span>
+                <div class="weather-item-sun">
+                    <span class="weather-item-icon">${icons[activityLevel] || '☀️'}</span>
+                    <span class="weather-item-personality">${personality}</span>
                 </div>
                 <div class="weather-item-description">${description}</div>
             </div>

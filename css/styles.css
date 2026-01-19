@@ -2463,21 +2463,30 @@ body {
     color: var(--text-primary);
 }
 
-.weather-item-value-stacked {
+.weather-item--stacked {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 0.1rem;
+    gap: 0.25rem;
+}
+
+.weather-item--stacked .weather-item-label {
+    margin-bottom: 0.1rem;
+}
+
+.weather-item-sun {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
 }
 
 .weather-item-icon {
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .weather-item-personality {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 .weather-item-description {
