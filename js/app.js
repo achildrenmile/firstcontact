@@ -696,6 +696,9 @@ class FirstContactApp {
         const solarConditions = getSolarConditions();
         solarConditions.setActivityLevel(activityId);
 
+        // Update solar weather panel
+        this.feedbackPanel.updateSolarWeather();
+
         // If we have a target, re-evaluate
         if (this.state.targetLocation) {
             this.attemptContact();
@@ -712,6 +715,9 @@ class FirstContactApp {
         } else {
             solarConditions.clearMogelDellinger();
         }
+
+        // Update solar weather panel
+        this.feedbackPanel.updateSolarWeather();
 
         // If we have a target, re-evaluate
         if (this.state.targetLocation) {
@@ -730,6 +736,9 @@ class FirstContactApp {
             solarConditions.clearAurora();
         }
 
+        // Update solar weather panel
+        this.feedbackPanel.updateSolarWeather();
+
         // If we have a target, re-evaluate
         if (this.state.targetLocation) {
             this.attemptContact();
@@ -746,6 +755,9 @@ class FirstContactApp {
         } else {
             solarConditions.clearSporadicE();
         }
+
+        // Update solar weather panel
+        this.feedbackPanel.updateSolarWeather();
 
         // If we have a target, re-evaluate
         if (this.state.targetLocation) {

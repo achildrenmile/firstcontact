@@ -1161,6 +1161,50 @@ export default {
         }
     },
 
+    // Solar Weather Panel
+    solarWeather: {
+        panelTitle: 'Sonnenwetter & Funkbedingungen',
+        collapseHint: 'Klicken zum Einklappen',
+        expandHint: 'Klicken zum Ausklappen',
+        rating: {
+            excellent: 'Ausgezeichnet',
+            good: 'Gut',
+            fair: 'Mäßig',
+            poor: 'Schlecht',
+            severe: 'Kritisch'
+        },
+        sunActivity: 'Sonnenaktivität',
+        sunPersonality: {
+            quiet: 'Die schläfrige Sonne',
+            normal: 'Die ausgeglichene Sonne',
+            active: 'Die energische Sonne',
+            storm: 'Die zornige Sonne'
+        },
+        sunDescription: {
+            quiet: 'Niedrige Bänder funktionieren besser, höhere können geschlossen sein',
+            normal: 'Gute Bedingungen für die meisten Bänder',
+            active: 'Höhere Bänder erwachen! Super für DX',
+            storm: 'Gestörte Bedingungen, Ausbreitung unzuverlässig'
+        },
+        recommendedBands: 'Empfohlene Bänder',
+        bandRating: {
+            excellent: 'Ausgezeichnet',
+            good: 'Gut',
+            fair: 'Mäßig',
+            poor: 'Schlecht',
+            closed: 'Geschlossen'
+        },
+        events: {
+            solarFlare: 'Sonneneruption',
+            solarFlareEffect: 'KW-Ausfall auf der Tagseite',
+            aurora: 'Polarlicht',
+            auroraEffect: 'Polarpfade gestört',
+            sporadicE: 'Sporadic E',
+            sporadicEEffect: 'Magic-Band-Öffnungen!'
+        },
+        educationalNote: 'Dieses Panel zeigt, wie aktuelle Sonnenbedingungen die Funkausbreitung beeinflussen. Höhere Sonnenaktivität öffnet höhere Bänder, kann aber auch Störungen verursachen.'
+    },
+
     // Privacy Policy (Datenschutz)
     privacy: {
         title: 'Datenschutzerklärung',

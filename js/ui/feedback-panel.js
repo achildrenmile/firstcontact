@@ -7,10 +7,12 @@
  */
 
 import { t } from '../i18n/i18n.js';
+import { SolarWeatherPanel } from './solar-weather-panel.js';
 
 export class FeedbackPanel {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
+        this.solarWeatherPanel = null;
         this.render();
 
         // Listen for language changes
@@ -36,8 +38,32 @@ export class FeedbackPanel {
                         </ol>
                     </div>
                 </div>
+                <div id="solar-weather-container"></div>
             </div>
         `;
+
+        // Initialize or update solar weather panel
+        this.initSolarWeatherPanel();
+    }
+
+    /**
+     * Initialize the solar weather panel
+     */
+    initSolarWeatherPanel() {
+        if (!this.solarWeatherPanel) {
+            this.solarWeatherPanel = new SolarWeatherPanel('solar-weather-container');
+        } else {
+            this.solarWeatherPanel.update();
+        }
+    }
+
+    /**
+     * Update the solar weather panel
+     */
+    updateSolarWeather() {
+        if (this.solarWeatherPanel) {
+            this.solarWeatherPanel.update();
+        }
     }
 
     /**

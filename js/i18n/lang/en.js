@@ -1161,6 +1161,50 @@ export default {
         }
     },
 
+    // Solar Weather Panel
+    solarWeather: {
+        panelTitle: 'Solar Weather & Radio Conditions',
+        collapseHint: 'Click to collapse',
+        expandHint: 'Click to expand',
+        rating: {
+            excellent: 'Excellent',
+            good: 'Good',
+            fair: 'Fair',
+            poor: 'Poor',
+            severe: 'Severe'
+        },
+        sunActivity: 'Sun Activity',
+        sunPersonality: {
+            quiet: 'The Sleepy Sun',
+            normal: 'The Balanced Sun',
+            active: 'The Energetic Sun',
+            storm: 'The Angry Sun'
+        },
+        sunDescription: {
+            quiet: 'Lower bands work better, higher bands may be closed',
+            normal: 'Good conditions for most bands',
+            active: 'Higher bands come alive! Great for DX',
+            storm: 'Disturbed conditions, propagation unreliable'
+        },
+        recommendedBands: 'Recommended Bands',
+        bandRating: {
+            excellent: 'Excellent',
+            good: 'Good',
+            fair: 'Fair',
+            poor: 'Poor',
+            closed: 'Closed'
+        },
+        events: {
+            solarFlare: 'Solar Flare',
+            solarFlareEffect: 'HF blackout on day side',
+            aurora: 'Aurora',
+            auroraEffect: 'Polar paths disrupted',
+            sporadicE: 'Sporadic E',
+            sporadicEEffect: 'Magic Band openings!'
+        },
+        educationalNote: 'This panel shows how current solar conditions affect radio propagation. Higher solar activity opens higher bands but can also cause disturbances.'
+    },
+
     // Privacy Policy
     privacy: {
         title: 'Privacy Policy',
