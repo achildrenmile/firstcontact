@@ -1235,10 +1235,9 @@ body {
 
 /* Feedback Panel */
 .feedback-panel {
-    min-height: 100%;
     display: flex;
     flex-direction: column;
-    padding-bottom: 1rem;
+    padding-bottom: 2rem;
 }
 
 .feedback-welcome {
@@ -2384,6 +2383,7 @@ body {
     background-color: var(--bg-tertiary);
     border-radius: 0.5rem;
     margin-top: 1rem;
+    margin-bottom: 1rem;
     overflow: hidden;
     border: 1px solid var(--border-color);
 }
@@ -2428,6 +2428,7 @@ body {
 
 .solar-weather-content {
     padding: 1rem;
+    padding-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
