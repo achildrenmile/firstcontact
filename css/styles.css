@@ -94,6 +94,58 @@ body {
     border-color: var(--accent-primary);
 }
 
+/* Parent Branding - Header Logo */
+.parent-logo-container {
+    display: none; /* Hidden by default, shown via JS when configured */
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.parent-logo-container.visible {
+    display: flex;
+}
+
+.parent-logo-link {
+    display: flex;
+    align-items: center;
+}
+
+.parent-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.app-branding {
+    flex: 1;
+}
+
+/* Parent Branding - Footer */
+.parent-branding-container {
+    display: none; /* Hidden by default, shown via JS when configured */
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.parent-branding-container.visible {
+    display: flex;
+}
+
+.parent-branding-text {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.parent-branding-text a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.parent-branding-text a:hover {
+    text-decoration: underline;
+}
+
 /* SVG Icons */
 .header-icon,
 .event-icon svg,

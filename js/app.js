@@ -16,6 +16,7 @@ import { FeedbackPanel } from './ui/feedback-panel.js';
 import { initI18n, t, formatDistance, getCurrentLanguage } from './i18n/i18n.js';
 import { Tutorial, showTutorialPrompt } from './ui/tutorial.js';
 import { icon } from './ui/icons.js';
+import { loadConfig, hasParentBranding, getParentSite } from './config.js';
 
 class FirstContactApp {
     constructor() {
@@ -119,11 +120,55 @@ class FirstContactApp {
             helpBtn.title = t('ui.buttons.helpTitle');
         }
 
+        // Update parent branding
+        this.updateParentBranding();
+
         // Setup header buttons
         this.setupHeaderButtons();
 
         // Setup footer links
         this.setupFooterLinks();
+    }
+
+    /**
+     * Update parent branding in header and footer
+     */
+    updateParentBranding() {
+        const logoContainer = document.getElementById('parent-logo-container');
+        const brandingContainer = document.getElementById('parent-branding-container');
+
+        if (!hasParentBranding()) {
+            // Hide branding containers if not configured
+            if (logoContainer) logoContainer.classList.remove('visible');
+            if (brandingContainer) brandingContainer.classList.remove('visible');
+            return;
+        }
+
+        const parentSite = getParentSite();
+
+        // Render header logo if configured
+        if (logoContainer && parentSite.logo) {
+            logoContainer.innerHTML = parentSite.url
+                ? `<a href="${parentSite.url}" target="_blank" rel="noopener" class="parent-logo-link">
+                       <img src="${parentSite.logo}" alt="${parentSite.name}" class="parent-logo">
+                   </a>`
+                : `<img src="${parentSite.logo}" alt="${parentSite.name}" class="parent-logo">`;
+            logoContainer.classList.add('visible');
+        }
+
+        // Render footer branding text
+        if (brandingContainer && parentSite.name) {
+            const nameHtml = parentSite.url
+                ? `<a href="${parentSite.url}" target="_blank" rel="noopener">${parentSite.name}</a>`
+                : parentSite.name;
+
+            brandingContainer.innerHTML = `
+                <span class="parent-branding-text">
+                    ${t('parentBranding.partOf')} ${nameHtml} ${t('parentBranding.tools')}
+                </span>
+            `;
+            brandingContainer.classList.add('visible');
+        }
     }
 
     /**
@@ -1267,7 +1312,10 @@ class FirstContactApp {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize i18n system first (German is default)
+    // Load runtime config first
+    await loadConfig();
+
+    // Initialize i18n system (German is default)
     await initI18n();
 
     // Then create the app

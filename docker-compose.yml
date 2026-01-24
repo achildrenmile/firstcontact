@@ -6,3 +6,8 @@ services:
     ports:
       - "8080:80"
     restart: unless-stopped
+    environment:
+      # Optional: Configure parent site branding
+      # PARENT_SITE_NAME: "OE Radio"
+      # PARENT_SITE_URL: "https://oeradio.at"
+      # PARENT_SITE_LOGO: "https://oeradio.at/logo.png"

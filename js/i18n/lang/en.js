@@ -1299,5 +1299,11 @@ export default {
             title: 'Contact',
             text: 'For questions about data processing, contact:'
         }
+    },
+
+    // Parent Branding
+    parentBranding: {
+        partOf: 'Part of',
+        tools: 'Tools'
     }
 };

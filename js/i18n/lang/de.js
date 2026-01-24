@@ -1299,5 +1299,11 @@ export default {
             title: 'Kontakt',
             text: 'Bei Fragen zur Datenverarbeitung wenden Sie sich an:'
         }
+    },
+
+    // Parent Branding
+    parentBranding: {
+        partOf: 'Ein Teil von',
+        tools: 'Tools'
     }
 };

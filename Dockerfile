@@ -13,7 +13,7 @@ RUN npm install
 COPY js/ ./js/
 COPY css/ ./css/
 COPY scripts/ ./scripts/
-COPY index.html favicon.svg world.json VERSION ./
+COPY index.html favicon.svg world.json VERSION config.json ./
 
 # Run build script
 RUN npm run build
@@ -23,6 +23,10 @@ FROM nginx:alpine
 
 # Copy built files from builder
 COPY --from=builder /app/dist/ /usr/share/nginx/html/
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 # Nginx configuration with caching and compression
 RUN echo 'server { \
@@ -37,6 +41,11 @@ RUN echo 'server { \
         try_files /index.html =404; \
     } \
     location ~* \.html$ { \
+        add_header Cache-Control "no-cache, no-store, must-revalidate"; \
+    } \
+    \
+    # Config.json: no cache (runtime config) \
+    location = /config.json { \
         add_header Cache-Control "no-cache, no-store, must-revalidate"; \
     } \
     \
@@ -58,4 +67,6 @@ RUN echo 'server { \
 }' > /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+# Use entrypoint to inject env vars at runtime
+ENTRYPOINT ["/docker-entrypoint.sh"]

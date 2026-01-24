@@ -84,7 +84,8 @@ console.log('   Generated: index.html');
 console.log('[4/4] Copying static assets...');
 copyFileSync(join(ROOT, 'favicon.svg'), join(DIST, 'favicon.svg'));
 copyFileSync(join(ROOT, 'world.json'), join(DIST, 'world.json'));
-console.log('   Copied: favicon.svg, world.json');
+copyFileSync(join(ROOT, 'config.json'), join(DIST, 'config.json'));
+console.log('   Copied: favicon.svg, world.json, config.json');
 
 // Summary
 const jsSize = (jsResult.metafile.outputs[jsOutputFile].bytes / 1024).toFixed(1);
@@ -97,5 +98,6 @@ Output: dist/
   - index.html
   - favicon.svg
   - world.json
+  - config.json
 ───────────────────────────────
 `);
