@@ -4,10 +4,10 @@ services:
   firstcontact:
     build: .
     ports:
-      - "8080:80"
+      - "127.0.0.1:3401:80"
     restart: unless-stopped
     environment:
       # Optional: Configure parent site branding
-      # PARENT_SITE_NAME: "OE Radio"
-      # PARENT_SITE_URL: "https://oeradio.at"
-      # PARENT_SITE_LOGO: "https://oeradio.at/logo.png"
+      PARENT_SITE_NAME: "OE Radio"
+      PARENT_SITE_URL: "https://oeradio.at"
+      PARENT_SITE_LOGO: "https://oeradio.at/wp-content/uploads/2026/01/oeradiologo-300x200.png"
